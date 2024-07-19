@@ -1,58 +1,53 @@
-import axios from "axios";
+import { renderShowPage } from "./show";
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+export async function renderEditPage(container: HTMLElement, id: string) {
+  try {
+    const response = await fetch(`/api/listings/${id}`);
+    const listing = await response.json();
 
-  if (id) {
-    try {
-      const response = await axios.get(`/listings/${id}`);
-      const listing = response.data;
+    container.innerHTML = `
+      <h3>Edit Listing</h3>
+      <form id="editForm">
+        <input type="text" name="title" value="${listing.title}" placeholder="Enter title" />
+        <br /><br />
+        <textarea name="description" placeholder="Enter description">${listing.description}</textarea>
+        <br /><br />
+        <input type="text" name="image" value="${listing.image}" placeholder="Enter image URL/Link" />
+        <br /><br />
+        <input type="number" name="price" value="${listing.price}" placeholder="Enter the price" />
+        <br /><br />
+        <input type="text" name="location" value="${listing.location}" placeholder="Enter the location" />
+        <br /><br />
+        <input type="text" name="country" value="${listing.country}" placeholder="Enter the country" />
+        <button type="submit">Save</button>
+      </form>
+    `;
 
-      const form = document.getElementById(
-        "editListingForm"
-      ) as HTMLFormElement;
-
-      (document.getElementById("listingId") as HTMLInputElement).value =
-        listing.id;
-      (document.getElementById("listingTitle") as HTMLInputElement).value =
-        listing.title;
-      (
-        document.getElementById("listingDescription") as HTMLInputElement
-      ).value = listing.description;
-      (document.getElementById("listingImage") as HTMLInputElement).value =
-        listing.image;
-      (document.getElementById("listingPrice") as HTMLInputElement).value =
-        listing.price;
-      (document.getElementById("listingLocation") as HTMLInputElement).value =
-        listing.location;
-      (document.getElementById("listingCountry") as HTMLInputElement).value =
-        listing.country;
-
-      form.addEventListener("submit", async (event) => {
+    const editForm = document.getElementById("editForm") as HTMLFormElement;
+    if (editForm) {
+      editForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-
-        const formData = new FormData(form);
+        const formData = new FormData(editForm);
         const updatedListing = {
           title: formData.get("title"),
           description: formData.get("description"),
           image: formData.get("image"),
-          price: parseFloat(formData.get("price") as string),
+          price: formData.get("price"),
           location: formData.get("location"),
           country: formData.get("country"),
         };
 
-        try {
-          await axios.put(`/listings/${id}`, updatedListing, {
-            headers: { "Content-Type": "application/json" },
-          });
-          window.location.href = `/src/pages/show.html?id=${id}`;
-        } catch (error) {
-          console.error("There was an error updating the listing:", error);
-        }
+        await fetch(`/api/listings/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedListing),
+        });
+
+        window.history.pushState({}, "", `/show/${id}`);
+        renderShowPage(container, id);
       });
-    } catch (error) {
-      console.error("There was an error fetching the listing:", error);
     }
+  } catch (error) {
+    console.error("Error rendering edit page:", error);
   }
-});
+}

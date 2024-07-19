@@ -1,50 +1,45 @@
-import axios from "axios";
+import { fetchListings, renderListings } from ".";
+import { renderEditPage } from "./edit";
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+export async function renderShowPage(container: HTMLElement, id: string) {
+  try {
+    const response = await fetch(`/api/listings/${id}`);
+    const listing = await response.json();
 
-  if (id) {
-    try {
-      const response = await axios.get(`/listings/${id}`);
-      const listing = response.data;
+    container.innerHTML = `
+      <h3>Listing Details:</h3>
+      <ul>
+        <li>Title: ${listing.title}</li>
+        <li>Description: ${listing.description}</li>
+        <img src = " ${listing.image}"></li>
+        <li>Price: ${listing.price}</li>
+        <li>Location: ${listing.location}</li>
+        <li>Country: ${listing.country}</li>
+      </ul>
+      <button id="editButton">Edit</button>
+      <form id="deleteForm" method="POST" action="#">
+        <button type="submit" id="deleteButton">Delete this listing</button>
+      </form>
+    `;
 
-      const listingDetails = document.getElementById("listingDetails");
-      if (listingDetails) {
-        listingDetails.innerHTML = `
-          <li>Title: ${listing.title}</li>
-          <li>Description: ${listing.description}</li>
-          <li><img src="${listing.image}"> </li>
-          <li>Price: ${listing.price}</li>
-          <li>Location: ${listing.location}</li>
-          <li>Country: ${listing.country}</li>
-        `;
-      }
-
-      const editButton = document.getElementById("editButton");
-      if (editButton) {
-        editButton.addEventListener("click", () => {
-          window.location.href = `/src/pages/edit.html?id=${id}`;
-        });
-      }
-
-      const deleteForm = document.getElementById(
-        "deleteForm"
-      ) as HTMLFormElement;
-      if (deleteForm) {
-        deleteForm.addEventListener("submit", async (event) => {
-          event.preventDefault();
-
-          try {
-            await axios.delete(`/listings/${id}`);
-            window.location.href = `/src/pages/index.html`;
-          } catch (error) {
-            console.error("There was an error deleting the listing:", error);
-          }
-        });
-      }
-    } catch (error) {
-      console.error("There was an error fetching the listing:", error);
+    const editButton = document.getElementById("editButton");
+    if (editButton) {
+      editButton.addEventListener("click", () => {
+        window.history.pushState({}, "", `/edit/${id}`);
+        renderEditPage(container, id);
+      });
     }
+
+    const deleteForm = document.getElementById("deleteForm") as HTMLFormElement;
+    if (deleteForm) {
+      deleteForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await fetch(`/api/listings/${id}`, { method: "DELETE" });
+        window.history.pushState({}, "", `/listings`);
+        fetchListings().then((listings) => renderListings(container, listings));
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching listing details:", error);
   }
-});
+}

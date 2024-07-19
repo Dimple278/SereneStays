@@ -1,28 +1,46 @@
-import axios from "axios";
+import { fetchListings, renderListings } from ".";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("newListingForm") as HTMLFormElement;
+export function renderNewPage(container: HTMLElement) {
+  container.innerHTML = `
+    <h3>Add New Listing</h3>
+    <form id="newForm">
+      <input type="text" name="title" placeholder="Enter title" />
+      <br /><br />
+      <textarea name="description" placeholder="Enter description"></textarea>
+      <br /><br />
+      <input type="text" name="image" placeholder="Enter image URL/Link" />
+      <br /><br />
+      <input type="number" name="price" placeholder="Enter the price" />
+      <br /><br />
+      <input type="text" name="location" placeholder="Enter the location" />
+      <br /><br />
+      <input type="text" name="country" placeholder="Enter the country" />
+      <button type="submit">Add</button>
+    </form>
+  `;
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  const newForm = document.getElementById("newForm") as HTMLFormElement;
+  if (newForm) {
+    newForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(newForm);
+      const newListing = {
+        title: formData.get("title"),
+        description: formData.get("description"),
+        image: formData.get("image"),
+        price: formData.get("price"),
+        location: formData.get("location"),
+        country: formData.get("country"),
+      };
 
-    const formData = new FormData(form);
-    const listing = {
-      title: formData.get("title"),
-      description: formData.get("description"),
-      image: formData.get("image"),
-      price: parseFloat(formData.get("price") as string),
-      location: formData.get("location"),
-      country: formData.get("country"),
-    };
-
-    try {
-      await axios.post("http://localhost:3000/listings", listing, {
+      await fetch("/api/listings", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newListing),
       });
-      window.location.href = "/";
-    } catch (error) {
-      console.error("There was an error creating the listing:", error);
-    }
-  });
-});
+
+      window.history.pushState({}, "", `/listings`);
+      fetchListings().then((listings) => renderListings(container, listings));
+    });
+  }
+}
