@@ -330,7 +330,7 @@ body::-webkit-scrollbar-thumb,
     padding-bottom: 18px;
 }
 
-.akash {
+.dimple {
     z-index: 10;
     font-size: .8rem;
     background-color: rgba(16, 15, 15, 0.592);
@@ -345,12 +345,12 @@ body::-webkit-scrollbar-thumb,
     bottom: 10px;
 }
 
-.akash a {
+.dimple a {
     color: white;
     text-decoration: none;
 }
 
-/* indes.ejs style -------------------------------------------------------------------------------------*/
+/* indes.js style -------------------------------------------------------------------------------------*/
 @media (max-width: 769px) {
     .index-res {
         display: flex !important;
@@ -387,7 +387,7 @@ body::-webkit-scrollbar-thumb,
         margin-left: 15px;
     }
 }
-/* update.ejs------------------- */
+/* update.js------------------- */
 
 #imagePreview img,.listingImg-update{
     height: 150px;
