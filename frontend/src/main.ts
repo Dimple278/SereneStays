@@ -5,6 +5,7 @@ import { renderEditPage } from "./scripts/edit";
 import { renderNewPage } from "./scripts/new";
 import { loadNavbar } from "./components/navbar";
 import { loadFooter } from "./components/footer";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 // Define an interface for route parameters
 interface RouteParams {
