@@ -107,7 +107,7 @@ export function renderNewPage(container: HTMLElement) {
         price: formData.get("price"),
         location: formData.get("location"),
         country: formData.get("country"),
-        category: formData.get("category"),
+        // category: formData.get("category"),
       };
 
       await axios.post("/api/listings", newListing);
