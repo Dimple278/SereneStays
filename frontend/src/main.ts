@@ -1,64 +1,94 @@
+import UniversalRouter, { Route } from "universal-router";
 import { fetchListings, renderListings } from "./scripts/index";
 import { renderShowPage } from "./scripts/show";
 import { renderEditPage } from "./scripts/edit";
 import { renderNewPage } from "./scripts/new";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const mainContent = document.getElementById("main-content");
+// Define an interface for route parameters
+interface RouteParams {
+  id?: string;
+}
 
-  async function navigate(event: Event) {
-    event.preventDefault();
-    const target = event.target as HTMLAnchorElement;
-    const page = target
-      ? target.dataset.link
-      : window.location.pathname.slice(1);
+// Get the main content area of the page
+const mainContent = document.getElementById("main-content");
 
-    if (page) {
-      window.history.pushState({}, "", `/${page}`);
-
+// Define route handlers
+const routes: Route[] = [
+  {
+    path: "/",
+    action: async () => {
       if (mainContent) {
-        if (page === "listings") {
-          const listings = await fetchListings();
-          renderListings(mainContent, listings);
-        } else if (page === "new") {
-          renderNewPage(mainContent);
-        } else if (page.startsWith("show")) {
-          const id = page.split("/")[1];
+        const listings = await fetchListings();
+        renderListings(mainContent, listings);
+      }
+    },
+  },
+  {
+    path: "/listings",
+    action: async () => {
+      if (mainContent) {
+        const listings = await fetchListings();
+        renderListings(mainContent, listings);
+      }
+    },
+  },
+  {
+    path: "/new",
+    action: () => {
+      if (mainContent) {
+        renderNewPage(mainContent);
+      }
+    },
+  },
+  {
+    path: "/show/:id",
+    action: ({ params }: { params: RouteParams }) => {
+      if (mainContent) {
+        const { id } = params;
+        if (id) {
           renderShowPage(mainContent, id);
-        } else if (page.startsWith("edit")) {
-          const id = page.split("/")[1];
+        }
+      }
+    },
+  },
+  {
+    path: "/edit/:id",
+    action: ({ params }: { params: RouteParams }) => {
+      if (mainContent) {
+        const { id } = params;
+        if (id) {
           renderEditPage(mainContent, id);
         }
       }
-    }
-  }
+    },
+  },
+];
 
-  document.querySelectorAll("nav a[data-link]").forEach((link) => {
-    link.addEventListener("click", navigate);
+// Create the router instance
+const router = new UniversalRouter(routes);
+
+// Handle navigation
+async function navigate(path: string) {
+  window.history.pushState({}, "", path);
+  await router.resolve({ pathname: path });
+}
+
+// Add click event listeners to all navigation links
+document.querySelectorAll("nav a[data-link]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    const target = event.target as HTMLAnchorElement;
+    const page = target.dataset.link;
+    if (page) {
+      navigate(`/${page}`);
+    }
   });
-
-  window.onpopstate = () => {
-    const path = window.location.pathname.slice(1);
-    if (mainContent) {
-      if (path === "listings") {
-        fetchListings().then((listings) =>
-          renderListings(mainContent, listings)
-        );
-      } else if (path === "new") {
-        renderNewPage(mainContent);
-      } else if (path.startsWith("show")) {
-        const id = path.split("/")[1];
-        renderShowPage(mainContent, id);
-      } else if (path.startsWith("edit")) {
-        const id = path.split("/")[1];
-        renderEditPage(mainContent, id);
-      }
-    }
-  };
-
-  // Initial load
-  const initialPath = window.location.pathname.slice(1);
-  if (initialPath) {
-    navigate(new Event("popstate"));
-  }
 });
+
+// Handle browser navigation (back/forward buttons)
+window.onpopstate = () => {
+  navigate(window.location.pathname);
+};
+
+// Initial load
+navigate(window.location.pathname);

@@ -1,5 +1,3 @@
-import { renderShowPage } from "./show";
-
 interface Listing {
   id: string;
   title: string;
@@ -29,17 +27,4 @@ export function renderListings(container: HTMLElement, listings: Listing[]) {
         .join("")}
     </ul>
   `;
-
-  container.querySelectorAll("a[data-link]").forEach((link) => {
-    link.addEventListener("click", async (event) => {
-      event.preventDefault();
-      const target = event.target as HTMLAnchorElement;
-      const page = target.dataset.link;
-      if (page) {
-        window.history.pushState({}, "", page);
-        const id = page.split("/")[1];
-        renderShowPage(container, id);
-      }
-    });
-  });
 }
