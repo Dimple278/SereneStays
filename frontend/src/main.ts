@@ -3,6 +3,8 @@ import { fetchListings, renderListings } from "./scripts/index";
 import { renderShowPage } from "./scripts/show";
 import { renderEditPage } from "./scripts/edit";
 import { renderNewPage } from "./scripts/new";
+import { loadNavbar } from "./components/navbar";
+import { loadFooter } from "./components/footer";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -11,6 +13,10 @@ interface RouteParams {
 
 // Get the main content area of the page
 const mainContent = document.getElementById("main-content");
+
+// Inject navbar and footer
+loadNavbar();
+loadFooter();
 
 // Define route handlers
 const routes: Route[] = [
