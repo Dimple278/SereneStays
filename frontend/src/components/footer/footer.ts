@@ -1,5 +1,5 @@
 export function loadFooter() {
-  fetch("/src/components/footer.html")
+  fetch("/src/components/footer/footer.html")
     .then((response) => response.text())
     .then((data) => {
       document.querySelector("body")!.insertAdjacentHTML("beforeend", data);

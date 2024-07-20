@@ -1,5 +1,5 @@
 export async function loadNavbar() {
-  const response = await fetch("/src/components/navbar.html");
+  const response = await fetch("/src/components/header/navbar.html");
   const navbarHTML = await response.text();
   const header = document.getElementById("header");
 

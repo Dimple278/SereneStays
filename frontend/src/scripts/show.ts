@@ -1,6 +1,7 @@
 import axios from "axios";
 import { fetchListings, renderListings } from ".";
 import { renderEditPage } from "./edit";
+// import { renderEditPage } from "../components/editFrom/edit";
 
 export async function renderShowPage(container: HTMLElement, id: string) {
   try {

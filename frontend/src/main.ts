@@ -1,10 +1,11 @@
 import UniversalRouter, { Route } from "universal-router";
 import { fetchListings, renderListings } from "./scripts/index";
 import { renderShowPage } from "./scripts/show";
+// import { renderEditPage } from "./components/editFrom/edit";
 import { renderEditPage } from "./scripts/edit";
-import { renderNewPage } from "./scripts/new";
-import { loadNavbar } from "./components/navbar";
-import { loadFooter } from "./components/footer";
+import { renderNewPage } from "./components/newForm/new";
+import { loadNavbar } from "./components/header/navbar";
+import { loadFooter } from "./components/footer/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // Define an interface for route parameters
