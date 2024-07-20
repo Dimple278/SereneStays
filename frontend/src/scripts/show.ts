@@ -1,10 +1,11 @@
+import axios from "axios";
 import { fetchListings, renderListings } from ".";
 import { renderEditPage } from "./edit";
 
 export async function renderShowPage(container: HTMLElement, id: string) {
   try {
-    const response = await fetch(`/api/listings/${id}`);
-    const listing = await response.json();
+    const response = await axios.get(`/api/listings/${id}`);
+    const listing = response.data;
 
     container.innerHTML = `
       <h3>Listing Details:</h3>
@@ -35,6 +36,7 @@ export async function renderShowPage(container: HTMLElement, id: string) {
       deleteForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         await fetch(`/api/listings/${id}`, { method: "DELETE" });
+        // await axios.delete(`/api/listings/${id}`);
         window.history.pushState({}, "", `/listings`);
         fetchListings().then((listings) => renderListings(container, listings));
       });

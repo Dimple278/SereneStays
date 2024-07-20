@@ -1,3 +1,4 @@
+import axios from "axios";
 import { fetchListings, renderListings } from ".";
 
 export function renderNewPage(container: HTMLElement) {
@@ -33,11 +34,7 @@ export function renderNewPage(container: HTMLElement) {
         country: formData.get("country"),
       };
 
-      await fetch("/api/listings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newListing),
-      });
+      await axios.post("/api/listings", newListing);
 
       window.history.pushState({}, "", `/listings`);
       fetchListings().then((listings) => renderListings(container, listings));

@@ -1,9 +1,9 @@
 import { renderShowPage } from "./show";
-
+import axios from "axios";
 export async function renderEditPage(container: HTMLElement, id: string) {
   try {
-    const response = await fetch(`/api/listings/${id}`);
-    const listing = await response.json();
+    const response = await axios.get(`/api/listings/${id}`);
+    const listing = response.data;
 
     container.innerHTML = `
       <h3>Edit Listing</h3>
@@ -37,11 +37,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
           country: formData.get("country"),
         };
 
-        await fetch(`/api/listings/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedListing),
-        });
+        await axios.put(`/api/listings/${id}`, updatedListing);
 
         window.history.pushState({}, "", `/show/${id}`);
         renderShowPage(container, id);

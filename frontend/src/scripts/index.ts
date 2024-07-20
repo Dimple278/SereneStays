@@ -1,3 +1,5 @@
+import axios from "axios";
+
 interface Listing {
   id: string;
   title: string;
@@ -5,8 +7,8 @@ interface Listing {
 
 export async function fetchListings() {
   try {
-    const response = await fetch("/api/listings");
-    const listings: Listing[] = await response.json();
+    const response = await axios.get("/api/listings");
+    const listings: Listing[] = response.data;
     return listings;
   } catch (error) {
     console.error("Error fetching listings:", error);
