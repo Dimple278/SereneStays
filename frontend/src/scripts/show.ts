@@ -1,13 +1,13 @@
 import axios from "axios";
 import { fetchListings, renderListings } from ".";
 import { renderEditPage } from "./edit";
-// import { renderEditPage } from "../components/editFrom/edit";
+import { loadCss } from "../utils/loadCss";
 
 export async function renderShowPage(container: HTMLElement, id: string) {
   try {
     const response = await axios.get(`/api/listings/${id}`);
     const listing = response.data;
-
+    loadCss("/src/styles/show.css");
     container.innerHTML = `
       <div class="card">
         <div class="card-header">

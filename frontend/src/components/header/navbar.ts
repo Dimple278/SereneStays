@@ -1,4 +1,7 @@
+import { loadCss } from "../../utils/loadCss";
+
 export async function loadNavbar() {
+  loadCss("/src/styles/navbar.css");
   const response = await fetch("/src/components/header/navbar.html");
   const navbarHTML = await response.text();
   const header = document.getElementById("header");

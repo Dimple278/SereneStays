@@ -17,6 +17,7 @@ interface RouteParams {
 const mainContent = document.getElementById("main-content");
 
 // Inject navbar and footer
+
 loadNavbar();
 loadFooter();
 
