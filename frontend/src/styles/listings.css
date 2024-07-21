@@ -1,11 +1,11 @@
 body {
-    /* font-family: 'Plus Jakarta Sans', sans-serif !important; */
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-family: 'Inknut Antiqua', serif;
-    font-family: 'Plus Jakarta Sans', sans-serif;
     font-family: 'Poppins', sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+
 }
 
 .container {
@@ -150,7 +150,7 @@ body::-webkit-scrollbar-thumb,
     cursor: default;
 }
 
-/* new.ejs style -------------------------------------------------------------------------------------*/
+/* new.js style -------------------------------------------------------------------------------------*/
 .form-label {
     font-weight: 700;
 }
@@ -202,7 +202,7 @@ body::-webkit-scrollbar-thumb,
 
 }
 
-/* edit.ejs style -------------------------------------------------------------------------------------*/
+/* edit.js style -------------------------------------------------------------------------------------*/
 @media (max-width: 768px) {
     .edit-btn {
         width: 4rem !important;
@@ -350,7 +350,7 @@ body::-webkit-scrollbar-thumb,
     text-decoration: none;
 }
 
-/* indes.js style -------------------------------------------------------------------------------------*/
+/* index.js style -------------------------------------------------------------------------------------*/
 @media (max-width: 769px) {
     .index-res {
         display: flex !important;

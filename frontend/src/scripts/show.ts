@@ -7,22 +7,40 @@ export async function renderShowPage(container: HTMLElement, id: string) {
   try {
     const response = await axios.get(`/api/listings/${id}`);
     const listing = response.data;
+
     loadCss("/src/styles/show.css");
+
     container.innerHTML = `
-      <div class="card">
-        <div class="card-header">
-          <h3>${listing.title}</h3>
-        </div>
-        <div class="card-body">
-          <img src="${
-            listing.image
-          }" class="card-img-top mb-3" alt="listing_image">
-          <p class="card-text"><strong>Description:</strong> ${
-            listing.description
-          }</p>
-          <p class="card-text"><strong>Price:</strong> &#8377;${listing.price.toLocaleString(
-            "en-IN"
-          )}</p>
+      <style>
+        @media (max-width:768px) {
+          .alert {
+            left: 17%;
+          }
+        }
+      </style>
+     
+      <div class="row mt-3 show-main">
+        <div class="show-body">
+          <div class="col-8 offset-2">
+            <h3 class="ms-3">${listing.title}</h3>
+          </div>
+          <div class="card col-8 offset-2 show-card listing-card">
+            <div class="show-card-img">
+              <img src="${
+                listing.image
+              }" class="card-img-top show-img" alt="listing_image">
+            </div>
+            <div class="card-body ms-1">
+              <p class="card-text"><b>Owned by :</b> <b><i>@${
+                // listing.owner.username
+                1
+              }</i></b></p>
+              <p class="card-text"><b>Description :</b> ${
+                listing.description
+              }</p>
+              <p class="card-text"><b>Price :</b> &#8377; ${listing.price.toLocaleString(
+                "en-IN"
+              )}</p>
           <p class="card-text"><strong>Location:</strong> ${
             listing.location
           }</p>
@@ -35,9 +53,10 @@ export async function renderShowPage(container: HTMLElement, id: string) {
       </div>
     `;
 
-    const editButton = document.getElementById("editButton");
+    const editButton = document.querySelector(".edit-btn");
     if (editButton) {
-      editButton.addEventListener("click", () => {
+      editButton.addEventListener("click", (event) => {
+        event.preventDefault();
         window.history.pushState({}, "", `/edit/${id}`);
         renderEditPage(container, id);
       });
