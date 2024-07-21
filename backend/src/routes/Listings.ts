@@ -1,64 +1,43 @@
 import { Router } from "express";
-import ListingModel from "../models/Listing";
 import { wrapAsync } from "../utils/wrapAsync";
 import ExpressError from "../utils/ExpressError";
+import {
+  getListings,
+  getListingById,
+  createListing,
+  updateListing,
+  deleteListing,
+} from "../controllers/listings";
+import {
+  validateCreateListing,
+  validateUpdateListing,
+  validateListingId,
+  validateQuery,
+} from "../middleware/validate";
 
 const router = Router();
 
 // Index Route
-router.get(
-  "/api/listings",
-  wrapAsync(async (req, res) => {
-    const allListings = await ListingModel.findAll();
-    res.json(allListings);
-  })
-);
+router.get("/api/listings", validateQuery, wrapAsync(getListings));
 
-//Get listing by id Route(Show Route)
-router.get(
-  "/api/listings/:id",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await ListingModel.findById(parseInt(id));
-    if (!listing) {
-      return res.status(404).json({ error: "Listing not found" });
-    }
-    res.json(listing);
-  })
-);
+// Get listing by id Route (Show Route)
+router.get("/api/listings/:id", validateListingId, wrapAsync(getListingById));
 
-//Create route
-router.post(
-  "/api/listings",
-  wrapAsync(async (req, res, next) => {
-    const newListing = await ListingModel.save(req.body);
-    res.status(201).json(newListing);
-  })
-);
+// Create route
+router.post("/api/listings", validateCreateListing, wrapAsync(createListing));
 
-// update route
+// Update route
 router.put(
   "/api/listings/:id",
-  wrapAsync(async (req, res) => {
-    const updatedListing = await ListingModel.update(
-      Number(req.params.id),
-      req.body
-    );
-    res.json(updatedListing);
-  })
+  validateListingId,
+  validateUpdateListing,
+  wrapAsync(updateListing)
 );
 
-//delete route
-router.delete(
-  "/api/listings/:id",
-  wrapAsync(async (req, res) => {
-    const id = Number(req.params.id);
-    await ListingModel.delete(id);
-    res.redirect("/api/listings");
-  })
-);
+// Delete route
+router.delete("/api/listings/:id", validateListingId, wrapAsync(deleteListing));
 
-//all other route req ---------
+// All other route requests
 router.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found!"));
 });
