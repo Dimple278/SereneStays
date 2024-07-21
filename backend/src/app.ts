@@ -5,7 +5,7 @@ import db from "./db";
 import cors from "cors";
 
 // import listingRouter from "./routes/listings";
-import listingRouter from "./routes/Listings";
+import listingRouter from "./routes/listings";
 
 dotenv.config();
 
