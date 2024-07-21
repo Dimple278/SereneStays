@@ -1,41 +1,54 @@
+// routes/listings.ts
 import { Router } from "express";
-import { wrapAsync } from "../utils/wrapAsync";
-import ExpressError from "../utils/ExpressError";
 import {
-  getListings,
   getListingById,
+  getListings,
   createListing,
   updateListing,
   deleteListing,
 } from "../controllers/listings";
 import {
-  validateCreateListing,
-  validateUpdateListing,
-  validateListingId,
+  validateBody,
+  validateParams,
   validateQuery,
 } from "../middleware/validate";
+import {
+  createListingSchema,
+  updateListingSchema,
+  listingIdSchema,
+  querySchema,
+} from "../schemas/listing";
+import { wrapAsync } from "../utils/wrapAsync";
+import ExpressError from "../utils/ExpressError";
 
 const router = Router();
 
-// Index Route
-router.get("/api/listings", validateQuery, wrapAsync(getListings));
+router.get("/api/listings", validateQuery(querySchema), wrapAsync(getListings));
 
-// Get listing by id Route (Show Route)
-router.get("/api/listings/:id", validateListingId, wrapAsync(getListingById));
+router.get(
+  "/api/listings/:id",
+  validateParams(listingIdSchema),
+  wrapAsync(getListingById)
+);
 
-// Create route
-router.post("/api/listings", validateCreateListing, wrapAsync(createListing));
+router.post(
+  "/api/listings",
+  validateBody(createListingSchema),
+  wrapAsync(createListing)
+);
 
-// Update route
 router.put(
   "/api/listings/:id",
-  validateListingId,
-  validateUpdateListing,
+  validateParams(listingIdSchema),
+  validateBody(updateListingSchema),
   wrapAsync(updateListing)
 );
 
-// Delete route
-router.delete("/api/listings/:id", validateListingId, wrapAsync(deleteListing));
+router.delete(
+  "/api/listings/:id",
+  validateParams(listingIdSchema),
+  wrapAsync(deleteListing)
+);
 
 // All other route requests
 router.all("*", (req, res, next) => {
