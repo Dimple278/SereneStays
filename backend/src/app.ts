@@ -4,6 +4,7 @@ import db from "./db";
 
 import cors from "cors";
 
+// import listingRouter from "./routes/listings";
 import listingRouter from "./routes/Listings";
 
 dotenv.config();
@@ -53,6 +54,13 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 app.use(listingRouter);
+
+//error handling midlleware---------
+app.use((err, req, res, next) => {
+  // res.send("something went wrong");
+  let { statusCode = 500, message = "Something went wrong!" } = err;
+  res.status(statusCode).render("listings/error.ejs", { message });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
