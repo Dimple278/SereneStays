@@ -1,5 +1,5 @@
-import { renderShowPage } from "./show";
 import axios from "axios";
+import { renderShowPage } from "./show";
 
 export async function renderEditPage(container: HTMLElement, id: string) {
   try {
