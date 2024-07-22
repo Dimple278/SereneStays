@@ -30,7 +30,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
             <div class="row mb-3">
               <div class="col-10">
                 <label for="image" class="form-label">Upload New Image</label>
-                <input type="file" name="listing[image]" class="form-control border border-black border-opacity-50 imageInput" id="verify-img" onchange="previewImage()">
+                <input type="file" name="listing[image]" class="form-control border border-black border-opacity-50 imageInput" id="verify-img">
                 <p id="errorContainer"></p>
               </div>
               <div class="col-2">
@@ -47,7 +47,6 @@ export async function renderEditPage(container: HTMLElement, id: string) {
             </div>
             <div class="m-b3">
               <label for="category-added" class="form-label">Previous Category</label>
-              
             </div>
             <div class="m-b3">
               <label for="category" class="form-label">Choose Category</label>
@@ -105,12 +104,10 @@ export async function renderEditPage(container: HTMLElement, id: string) {
               <input type="text" value="${listing.location}" name="listing[location]" class="form-control border border-black border-opacity-50" required>
               <div class="invalid-feedback">Location should be valid</div>
             </div>
-            <button class="btn btn-success mb-3 styleBtn">Edit</button>
+            <button type="submit" class="btn btn-success mb-3 styleBtn">Edit</button>
           </form>
         </div>
       </div>
-      <script src="/js/editImg-size.js"></script>
-      <script src="/js/image-preview.js"></script>
     `;
 
     const editForm = document.getElementById("editForm") as HTMLFormElement;
@@ -118,20 +115,30 @@ export async function renderEditPage(container: HTMLElement, id: string) {
       editForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(editForm);
-        const updatedListing = {
-          title: formData.get("listing[title]"),
-          description: formData.get("listing[description]"),
-          image: formData.get("listing[image]"),
-          price: formData.get("listing[price]"),
-          location: formData.get("listing[location]"),
-          country: formData.get("listing[country]"),
-          // category: formData.getAll("listing[category]"),
-        };
 
-        await axios.put(`/api/listings/${id}`, updatedListing);
+        // Log the FormData entries for debugging
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`);
+        }
 
-        window.history.pushState({}, "", `/show/${id}`);
-        renderShowPage(container, id);
+        try {
+          const updatedListing = {
+            title: formData.get("listing[title]"),
+            description: formData.get("listing[description]"),
+            // image: formData.get("listing[image]"),
+            price: formData.get("listing[price]"),
+            location: formData.get("listing[location]"),
+            country: formData.get("listing[country]"),
+            // category: formData.getAll("listing[category]"),
+          };
+
+          await axios.put(`/api/listings/${id}`, updatedListing);
+
+          window.history.pushState({}, "", `/show/${id}`);
+          renderShowPage(container, id);
+        } catch (error) {
+          console.error("Error updating listing:", error);
+        }
       });
     }
   } catch (error) {

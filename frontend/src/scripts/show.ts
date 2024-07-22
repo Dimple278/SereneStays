@@ -53,11 +53,12 @@ export async function renderShowPage(container: HTMLElement, id: string) {
       </div>
     `;
 
-    const editButton = document.querySelector(".edit-btn");
+    const editButton = document.querySelector("#editButton");
     if (editButton) {
       editButton.addEventListener("click", (event) => {
         event.preventDefault();
         window.history.pushState({}, "", `/edit/${id}`);
+
         renderEditPage(container, id);
       });
     }
