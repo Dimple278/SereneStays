@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@types/connect-flash": "^0.0.40"
+  }
+}

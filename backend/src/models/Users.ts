@@ -1,96 +1,40 @@
-// // models/User.ts
-// import db from "../db";
-
-// interface User {
-//   id?: number;
-//   email: string;
-//   fName: string;
-//   lName?: string;
-//   providerId?: string;
-//   provider?: string;
-//   image?: { url: string; filename: string };
-//   createdAt?: Date;
-//   updatedAt?: Date;
-// }
-
-// class UserModel {
-//   static async findAll() {
-//     return db("users").select("*");
-//   }
-
-//   static async findById(id: number) {
-//     return db("users").where({ id }).first();
-//   }
-
-//   static async findByEmail(email: string) {
-//     return db("users").where({ email }).first();
-//   }
-
-//   static async save(user: User) {
-//     const [newUser] = await db("users").insert(user).returning("*");
-//     return newUser;
-//   }
-
-//   static async update(id: number, user: User) {
-//     const [updatedUser] = await db("users")
-//       .where({ id })
-//       .update(user)
-//       .returning("*");
-//     return updatedUser;
-//   }
-
-//   static async delete(id: number) {
-//     return db("users").where({ id }).del();
-//   }
-// }
-
-// export default UserModel;
-
+// models/User.ts
 import db from "../db";
-
-interface User {
-  id?: number;
-  email: string;
-  fName: string;
-  lName?: string;
-  providerId?: string;
-  provider?: string;
-  image?: { url: string; filename: string };
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import bcrypt from "bcryptjs";
 
 class UserModel {
-  private tableName: string = "users";
-
-  public async create(user: User): Promise<User> {
-    const [newListing] = await db(this.tableName).insert(user).returning("*");
-    return newListing;
+  static async findByEmail(email: string) {
+    const user = await db("users").where({ email }).first();
+    return user;
+  }
+  static async findAll() {
+    const users = await db("users").select("*");
+    return users;
   }
 
-  public async save(user: User): Promise<User> {
-    return await this.create(user);
+  static async findById(id: number) {
+    const user = await db("users").where({ id }).first();
+    return user;
   }
 
-  public async findAll(): Promise<User[]> {
-    return await db(this.tableName).select("*");
+  static async save(user: any) {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser = { ...user, password: hashedPassword };
+    const [savedUser] = await db("users").insert(newUser).returning("*");
+    return savedUser;
   }
 
-  public async findById(id: number): Promise<User | undefined> {
-    return await db(this.tableName).where({ id }).first();
-  }
-
-  public async update(id: number, listing: Partial<User>): Promise<User> {
-    const [updatedUser] = await db(this.tableName)
+  static async update(id: number, user: any) {
+    const updatedUser = await db("users")
       .where({ id })
-      .update(listing)
+      .update(user)
       .returning("*");
-    return updatedUser;
+    return updatedUser[0];
   }
 
-  public async delete(id: number): Promise<void> {
-    await db(this.tableName).where({ id }).del();
+  static async delete(id: number) {
+    await db("users").where({ id }).del();
   }
 }
 
-export default new UserModel();
+export default UserModel;
