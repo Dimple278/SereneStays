@@ -21,38 +21,38 @@ import {
 import { wrapAsync } from "../utils/wrapAsync";
 import ExpressError from "../utils/ExpressError";
 
-const router = Router();
+const listingsRouter = Router();
 
-router.get("/api/listings", validateQuery(querySchema), wrapAsync(getListings));
+listingsRouter.get("/", validateQuery(querySchema), wrapAsync(getListings));
 
-router.get(
-  "/api/listings/:id",
+listingsRouter.get(
+  "/:id",
   validateParams(listingIdSchema),
   wrapAsync(getListingById)
 );
 
-router.post(
-  "/api/listings",
+listingsRouter.post(
+  "/",
   validateBody(createListingSchema),
   wrapAsync(createListing)
 );
 
-router.put(
-  "/api/listings/:id",
+listingsRouter.put(
+  "/:id",
   validateParams(listingIdSchema),
   validateBody(updateListingSchema),
   wrapAsync(updateListing)
 );
 
-router.delete(
-  "/api/listings/:id",
+listingsRouter.delete(
+  "/:id",
   validateParams(listingIdSchema),
   wrapAsync(deleteListing)
 );
 
 // All other route requests
-router.all("*", (req, res, next) => {
+listingsRouter.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found!"));
 });
 
-export default router;
+export default listingsRouter;

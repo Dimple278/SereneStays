@@ -4,9 +4,8 @@ import db from "./db";
 
 import cors from "cors";
 
-// import listingRouter from "./routes/listings";
-import listingRouter from "./routes/listings";
-import reviewRouter from "./routes/reviews";
+import router from "./routes";
+
 import errorHandler from "./middleware/errorHandler";
 
 dotenv.config();
@@ -27,8 +26,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
-app.use(reviewRouter);
-app.use(listingRouter);
+// app.use(reviewRouter);
+app.use(router);
 
 // Custom error handler
 app.use(errorHandler);

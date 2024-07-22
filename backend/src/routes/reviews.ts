@@ -15,38 +15,38 @@ import {
 import { wrapAsync } from "../utils/wrapAsync";
 import ExpressError from "../utils/ExpressError";
 
-const router = Router();
+const reviewsRouter = Router();
 
-router.get("/api/reviews", wrapAsync(getReviews));
+reviewsRouter.get("/", wrapAsync(getReviews));
 
-router.get(
-  "/api/reviews/:id",
+reviewsRouter.get(
+  "/:id",
   validateParams(reviewIdSchema),
   wrapAsync(getReviewById)
 );
 
-router.post(
-  "/api/reviews",
+reviewsRouter.post(
+  "/",
   validateBody(createReviewSchema),
   wrapAsync(createReview)
 );
 
-router.put(
-  "/api/reviews/:id",
+reviewsRouter.put(
+  "/:id",
   validateParams(reviewIdSchema),
   validateBody(updateReviewSchema),
   wrapAsync(updateReview)
 );
 
-router.delete(
-  "/api/reviews/:id",
+reviewsRouter.delete(
+  "/:id",
   validateParams(reviewIdSchema),
   wrapAsync(deleteReview)
 );
 
 // All other route requests
-router.all("*", (req, res, next) => {
+reviewsRouter.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found!"));
 });
 
-export default router;
+export default reviewsRouter;
