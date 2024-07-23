@@ -1,14 +1,13 @@
-// schemas/reviewSchema.ts
 import Joi from "joi";
 
 export const createReviewSchema = Joi.object({
   comment: Joi.string().required(),
-  rate: Joi.number().min(1).max(5).required(),
+  rating: Joi.number().min(1).max(5).required(),
 }).options({ stripUnknown: true });
 
 export const updateReviewSchema = Joi.object({
   comment: Joi.string().optional(),
-  rate: Joi.number().min(1).max(5).optional(),
+  rating: Joi.number().min(1).max(5).optional(),
 }).options({ stripUnknown: true });
 
 export const reviewIdSchema = Joi.object({

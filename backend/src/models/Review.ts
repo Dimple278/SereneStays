@@ -4,7 +4,7 @@ import db from "../db";
 interface Review {
   id?: number;
   comment: string;
-  rate: number;
+  rating: number;
   createdAt?: Date;
 }
 

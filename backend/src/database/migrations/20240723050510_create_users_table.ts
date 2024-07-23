@@ -1,25 +1,21 @@
 import { Knex } from "knex";
 
-const TABLE_NAME = "listings";
+const TABLE_NAME = "users";
 
 /**
- * Create table LISTINGS.
+ * Create table users.
  *
  * @param   {Knex} knex
- * @returns {Promise}
+ * @returns {Promise<void>}
  */
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(TABLE_NAME, (table) => {
-    table.bigIncrements("id");
-
-    table.string("title").notNullable();
-    table.text("description");
-    table.string("image").defaultTo("default link");
-    table.decimal("price", 10, 2);
-    table.string("location");
-    table.string("country");
-
-    table.timestamp("created_at").notNullable().defaultTo(knex.raw("now()"));
+    table.increments("id").primary();
+    table.string("email").notNullable().unique();
+    table.string("password").notNullable();
+    table.string("name").notNullable();
+    table.timestamp("created_at").defaultTo(knex.fn.now());
+    table.enu("role", ["superadmin", "user"]).defaultTo("user");
 
     table
       .bigInteger("created_by")
@@ -40,10 +36,10 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 /**
- * Drop table LISTINGS.
+ * Drop table users.
  *
  * @param   {Knex} knex
- * @returns {Promise}
+ * @returns {Promise<void>}
  */
 export async function down(knex: Knex): Promise<void> {
   return knex.schema.dropTable(TABLE_NAME);

@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import db from "../utils/db";
+import db from "../db";
 export class BaseModel {
   static connection: Knex = db;
   static queryBuilder() {

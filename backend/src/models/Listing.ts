@@ -3,10 +3,12 @@ import { Listing } from "../interface/listing";
 
 class ListingModel {
   private tableName: string = "listings";
-
   public async create(listing: Listing): Promise<Listing> {
     const [newListing] = await db(this.tableName)
-      .insert(listing)
+      .insert({
+        ...listing,
+        images: JSON.stringify(listing.images),
+      })
       .returning("*");
     return newListing;
   }

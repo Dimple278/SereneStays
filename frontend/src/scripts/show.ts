@@ -32,7 +32,7 @@ export async function renderShowPage(container: HTMLElement, id: string) {
             </div>
             <div class="card-body ms-1">
               <p class="card-text"><b>Owned by :</b> <b><i>@${
-                // listing.owner.username
+                // listing.owner.name
                 1
               }</i></b></p>
               <p class="card-text"><b>Description :</b> ${

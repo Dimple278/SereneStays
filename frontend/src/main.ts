@@ -1,7 +1,6 @@
 import UniversalRouter, { Route } from "universal-router";
 import { fetchListings, renderListings } from "./scripts/index";
 import { renderShowPage } from "./scripts/show";
-// import { renderEditPage } from "./components/editFrom/edit";
 import { renderEditPage } from "./scripts/edit";
 import { renderNewPage } from "./components/newForm/new";
 import { loadNavbar } from "./components/header/navbar";
@@ -17,7 +16,6 @@ interface RouteParams {
 const mainContent = document.getElementById("main-content");
 
 // Inject navbar and footer
-
 loadNavbar();
 loadFooter();
 
@@ -82,16 +80,22 @@ async function navigate(path: string) {
   await router.resolve({ pathname: path });
 }
 
-// Add click event listeners to all navigation links
-document.querySelectorAll("nav a[data-link]").forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-    const target = event.target as HTMLAnchorElement;
-    const page = target.dataset.link;
-    if (page) {
-      navigate(`/${page}`);
-    }
-  });
+// Function to handle link clicks
+function handleLinkClick(event: Event) {
+  event.preventDefault();
+  const target = event.target as HTMLAnchorElement;
+  const page = target.dataset.link;
+  if (page) {
+    navigate(`/${page}`);
+  }
+}
+
+// Add click event listeners to all navigation links using event delegation
+document.addEventListener("click", (event) => {
+  const target = event.target as HTMLAnchorElement;
+  if (target.matches("nav a[data-link]")) {
+    handleLinkClick(event);
+  }
 });
 
 // Handle browser navigation (back/forward buttons)
