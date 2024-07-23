@@ -1,17 +1,19 @@
-// src/routes/authRoutes.ts
 import { Router } from "express";
+import { signup, login, refresh } from "../controllers/auth";
+import { validateBody } from "../middleware/validate";
+import { signupSchema, loginSchema } from "../schemas/auth";
 import { wrapAsync } from "../utils/wrapAsync";
-import { login, logout, getCurrentUser } from "../controllers/auth";
+import ExpressError from "../utils/ExpressError";
 
-const router = Router();
+const authRouter = Router();
 
-// Login route
-router.post("/login", wrapAsync(login));
+authRouter.post("/signup", validateBody(signupSchema), wrapAsync(signup));
+authRouter.post("/login", validateBody(loginSchema), wrapAsync(login));
+authRouter.post("/refresh", wrapAsync(refresh));
 
-// Logout route
-router.post("/logout", logout);
+// All other route requests
+authRouter.all("*", (req, res, next) => {
+  next(new ExpressError(404, "Page Not Found!"));
+});
 
-// Route to get the current user
-router.get("/current-user", wrapAsync(getCurrentUser));
-
-export default router;
+export default authRouter;

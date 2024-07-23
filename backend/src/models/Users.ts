@@ -18,8 +18,7 @@ class UserModel {
   }
 
   static async save(user: any) {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUser = { ...user, password: hashedPassword };
+    const newUser = { ...user };
     const [savedUser] = await db("users").insert(newUser).returning("*");
     return savedUser;
   }

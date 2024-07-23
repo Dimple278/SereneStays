@@ -14,10 +14,11 @@ import {
 } from "../schemas/review";
 import { wrapAsync } from "../utils/wrapAsync";
 import ExpressError from "../utils/ExpressError";
+import { authenticate } from "../middleware/auth";
 
 const reviewsRouter = Router();
 
-reviewsRouter.get("/", wrapAsync(getReviews));
+reviewsRouter.get("/", authenticate, wrapAsync(getReviews));
 
 reviewsRouter.get(
   "/:id",
