@@ -6,6 +6,8 @@ import { renderNewPage } from "./components/newForm/new";
 import { loadNavbar } from "./components/header/navbar";
 import { loadFooter } from "./components/footer/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { renderLoginPage } from "./scripts/login";
+import { renderSignupPage } from "./scripts/signup";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -21,6 +23,22 @@ loadFooter();
 
 // Define route handlers
 const routes: Route[] = [
+  {
+    path: "/login",
+    action: async () => {
+      if (mainContent) {
+        await renderLoginPage(mainContent);
+      }
+    },
+  },
+  {
+    path: "/signup",
+    action: async () => {
+      if (mainContent) {
+        await renderSignupPage(mainContent);
+      }
+    },
+  },
   {
     path: "/",
     action: async () => {
@@ -75,7 +93,7 @@ const routes: Route[] = [
 const router = new UniversalRouter(routes);
 
 // Handle navigation
-async function navigate(path: string) {
+export async function navigate(path: string) {
   window.history.pushState({}, "", path);
   await router.resolve({ pathname: path });
 }
