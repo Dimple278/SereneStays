@@ -27,7 +27,7 @@ export async function renderShowPage(container: HTMLElement, id: string) {
           <div class="card col-8 offset-2 show-card listing-card">
             <div class="show-card-img">
               <img src="${
-                listing.image
+                listing.images
               }" class="card-img-top show-img" alt="listing_image">
             </div>
             <div class="card-body ms-1">
