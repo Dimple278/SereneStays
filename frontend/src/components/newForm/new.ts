@@ -1,5 +1,6 @@
 import axios from "axios";
-import { fetchListings, renderListings } from "../../scripts";
+import { fetchListings } from "../../utils/fetchListings";
+import { renderListings } from "../../scripts";
 
 export function renderNewPage(container: HTMLElement) {
   fetch("/src/components/newForm/newForm.html")
