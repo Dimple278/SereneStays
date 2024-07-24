@@ -19,7 +19,7 @@ import {
   querySchema,
 } from "../schemas/listing";
 import { wrapAsync } from "../utils/wrapAsync";
-import ExpressError from "../utils/ExpressError";
+import { NotFoundError } from "../error/Error";
 
 const listingsRouter = Router();
 
@@ -52,7 +52,7 @@ listingsRouter.delete(
 
 // All other route requests
 listingsRouter.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
+  next(new NotFoundError("Page Not Found!"));
 });
 
 export default listingsRouter;

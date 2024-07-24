@@ -13,7 +13,7 @@ import {
   bookingIdSchema,
 } from "../schemas/booking";
 import { wrapAsync } from "../utils/wrapAsync";
-import ExpressError from "../utils/ExpressError";
+import { NotFoundError } from "../error/Error";
 
 const bookingsRouter = Router();
 
@@ -46,7 +46,7 @@ bookingsRouter.delete(
 
 // All other route requests
 bookingsRouter.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
+  next(new NotFoundError("Page Not Found!"));
 });
 
 export default bookingsRouter;

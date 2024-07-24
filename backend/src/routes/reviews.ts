@@ -13,8 +13,9 @@ import {
   reviewIdSchema,
 } from "../schemas/review";
 import { wrapAsync } from "../utils/wrapAsync";
-import ExpressError from "../utils/ExpressError";
+
 import { authenticate } from "../middleware/auth";
+import { NotFoundError } from "../error/Error";
 
 const reviewsRouter = Router();
 
@@ -47,7 +48,7 @@ reviewsRouter.delete(
 
 // All other route requests
 reviewsRouter.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
+  next(new NotFoundError("Page Not Found!"));
 });
 
 export default reviewsRouter;

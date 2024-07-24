@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import UserModel from "../models/Users";
-import ExpressError from "../utils/ExpressError";
+
+import { NotFoundError } from "../error/Error";
 
 export const getUsers = async (
   req: Request,
@@ -19,7 +20,7 @@ export const getUserById = async (
   const { id } = req.params;
   const user = await UserModel.findById(parseInt(id));
   if (!user) {
-    throw new ExpressError(404, "User not found");
+    throw new NotFoundError("User not found");
   }
   res.json(user);
 };
@@ -41,7 +42,7 @@ export const updateUser = async (
   const { id } = req.params;
   const updatedUser = await UserModel.update(parseInt(id), req.body);
   if (!updatedUser) {
-    throw new ExpressError(404, "User not found");
+    throw new NotFoundError("User not found");
   }
   res.json(updatedUser);
 };

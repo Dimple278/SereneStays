@@ -17,52 +17,41 @@ import { IUser } from "../interface/user";
 
 // Signup handler
 export const signup = async (req: Request, res: Response) => {
-  try {
-    const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-    const existingUser = await UserModel.findByEmail(email);
-    if (existingUser) {
-      throw new BadRequestError("Email already in use");
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await UserModel.save({
-      name,
-      email,
-      password: hashedPassword,
-    });
-
-    res.status(201).json({ message: "User created successfully" });
-  } catch (error) {
-    console.error(error);
-    throw new InternalServerError("Signup failed");
+  const existingUser = await UserModel.findByEmail(email);
+  if (existingUser) {
+    throw new BadRequestError("Email already in use");
   }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = await UserModel.save({
+    name,
+    email,
+    password: hashedPassword,
+  });
+
+  res.status(201).json({ message: "User created successfully" });
 };
 
 // Login handler
 export const login = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    const user = await UserModel.findByEmail(email);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedError("Invalid email or password");
-    }
-
-    const payload = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
-
-    const accessToken = await generateAccessToken(payload);
-    const refreshToken = await generateRefreshToken(payload);
-
-    res.status(200).json({ accessToken, refreshToken });
-  } catch (error) {
-    console.error(error);
-    throw new InternalServerError("Login failed");
+  const user = await UserModel.findByEmail(email);
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw new UnauthorizedError("Invalid email or password");
   }
+  const payload = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  };
+
+  const accessToken = await generateAccessToken(payload);
+  const refreshToken = await generateRefreshToken(payload);
+
+  res.status(200).json({ accessToken, refreshToken });
 };
 
 // Refresh token handler

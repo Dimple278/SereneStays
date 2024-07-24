@@ -3,7 +3,7 @@ import { signup, login, refresh } from "../controllers/auth";
 import { validateBody } from "../middleware/validate";
 import { signupSchema, loginSchema } from "../schemas/auth";
 import { wrapAsync } from "../utils/wrapAsync";
-import ExpressError from "../utils/ExpressError";
+import { NotFoundError } from "../error/Error";
 
 const authRouter = Router();
 
@@ -13,7 +13,7 @@ authRouter.post("/refresh", wrapAsync(refresh));
 
 // All other route requests
 authRouter.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
+  next(new NotFoundError("Page Not Found!"));
 });
 
 export default authRouter;

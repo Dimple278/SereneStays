@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import BookingModel from "../models/Booking";
-import ExpressError from "../utils/ExpressError";
+import { NotFoundError } from "../error/Error";
 
 export const getBookings = async (req: Request, res: Response) => {
   const allBookings = await BookingModel.findAll();
@@ -11,7 +11,7 @@ export const getBookingById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const booking = await BookingModel.findById(parseInt(id));
   if (!booking) {
-    throw new ExpressError(404, "Booking not found");
+    throw new NotFoundError("Booking not found");
   }
   res.json(booking);
 };
@@ -25,7 +25,7 @@ export const updateBooking = async (req: Request, res: Response) => {
   const { id } = req.params;
   const booking = await BookingModel.findById(parseInt(id));
   if (!booking) {
-    throw new ExpressError(404, "Booking not found");
+    throw new NotFoundError("Booking not found");
   }
   const updatedBooking = await BookingModel.update(
     Number(req.params.id),
@@ -38,7 +38,7 @@ export const deleteBooking = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const booking = await BookingModel.findById(id);
   if (!booking) {
-    throw new ExpressError(404, "Booking not found");
+    throw new NotFoundError("Booking not found");
   }
   await BookingModel.delete(id);
   res.json(booking);

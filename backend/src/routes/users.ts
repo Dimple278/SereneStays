@@ -14,7 +14,7 @@ import {
   userIdSchema,
 } from "../schemas/user";
 import { wrapAsync } from "../utils/wrapAsync";
-import ExpressError from "../utils/ExpressError";
+import { NotFoundError } from "../error/Error";
 
 const userRouter = Router();
 
@@ -35,7 +35,7 @@ userRouter.delete("/:id", validateParams(userIdSchema), wrapAsync(deleteUser));
 
 // All other route requests
 userRouter.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
+  next(new NotFoundError("Page Not Found!"));
 });
 
 export default userRouter;

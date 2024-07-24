@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import ExpressError from "../utils/ExpressError";
+import { BaseError } from "../error/Error";
 
 const errorHandler = (
-  err: ExpressError,
+  err: BaseError,
   req: Request,
   res: Response,
   next: NextFunction
