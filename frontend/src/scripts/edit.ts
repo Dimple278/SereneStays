@@ -1,5 +1,6 @@
 import axios from "axios";
 import { renderShowPage } from "./show";
+import { navigate } from "../main";
 
 export async function renderEditPage(container: HTMLElement, id: string) {
   try {
@@ -133,9 +134,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
           };
 
           await axios.put(`/api/listings/${id}`, updatedListing);
-
-          window.history.pushState({}, "", `/show/${id}`);
-          renderShowPage(container, id);
+          navigate(`/show/${id}`);
         } catch (error) {
           console.error("Error updating listing:", error);
         }

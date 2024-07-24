@@ -1,12 +1,15 @@
 import axios from "axios";
-import { fetchListings, renderListings } from ".";
 import { renderEditPage } from "./edit";
 import { loadCss } from "../utils/loadCss";
+import { navigate } from "../main";
 
 export async function renderShowPage(container: HTMLElement, id: string) {
   try {
-    const response = await axios.get(`/api/listings/${id}`);
-    const listing = response.data;
+    const listingResponse = await axios.get(`/api/listings/${id}`);
+    const reviewsResponse = await axios.get(`/api/reviews`);
+    const listing = listingResponse.data;
+    const review = reviewsResponse.data;
+    console.log("Review:", review);
 
     loadCss("/src/styles/show.css");
 
@@ -51,15 +54,41 @@ export async function renderShowPage(container: HTMLElement, id: string) {
           </form>
         </div>
       </div>
+      <div class="col-8 offset-2 mt-3">
+            <h4>Reviews</h4>
+            <div id="reviewsContainer">
+              ${review
+                .map(
+                  (review) => `
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <p class="card-text"><strong>${review.authorId}:</strong> ${
+                    review.comment
+                  }</p>
+                    <p class="card-text"><strong>Rating:</strong> ${
+                      review.rating
+                    }</p>
+                    <p class="card-text"><strong>Posted on:</strong> 
+                    ${
+                      // new Date(
+                      //   review.created_at
+                      // ).toLocaleDateString()
+                      1
+                    }
+                    </p>
+                  </div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
     `;
 
     const editButton = document.querySelector("#editButton");
     if (editButton) {
       editButton.addEventListener("click", (event) => {
         event.preventDefault();
-        window.history.pushState({}, "", `/edit/${id}`);
-
-        renderEditPage(container, id);
+        navigate(`/edit/${id}`);
       });
     }
 
@@ -68,8 +97,7 @@ export async function renderShowPage(container: HTMLElement, id: string) {
       deleteForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         await fetch(`/api/listings/${id}`, { method: "DELETE" });
-        window.history.pushState({}, "", `/listings`);
-        fetchListings().then((listings) => renderListings(container, listings));
+        navigate(`/listings`);
       });
     }
   } catch (error) {
