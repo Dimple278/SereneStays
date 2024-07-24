@@ -1,11 +1,11 @@
 import { loadCss } from "../../utils/loadCss";
 
-export function loadFooter() {
+export async function loadFooter() {
   loadCss("/src/styles/footer.css");
-  fetch("/src/components/footer/footer.html")
-    .then((response) => response.text())
-    .then((data) => {
-      document.querySelector("body")!.insertAdjacentHTML("beforeend", data);
-    })
-    .catch((error) => console.error("Error loading footer:", error));
+  const response = await fetch("/src/components/footer/footer.html");
+  const footerHTML = await response.text();
+  const footer = document.getElementById("footer");
+  if (footer) {
+    footer.innerHTML = footerHTML;
+  }
 }
