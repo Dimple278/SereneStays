@@ -16,3 +16,7 @@ export const reviewIdSchema = Joi.object({
     "any.required": "Id is required",
   }),
 }).options({ stripUnknown: true });
+
+export const listingIdSchema = Joi.object({
+  listing_id: Joi.number().integer().required(),
+});

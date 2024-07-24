@@ -40,3 +40,12 @@ export const deleteReview = async (req: Request, res: Response) => {
   await Review.delete(id);
   res.json(review);
 };
+
+export const getReviewsByListingId = async (req: Request, res: Response) => {
+  const { listing_id } = req.params;
+  const reviews = await Review.getReviewsByListingId(parseInt(listing_id));
+  if (!reviews.length) {
+    throw new NotFoundError("No reviews found for this listing");
+  }
+  res.json(reviews);
+};

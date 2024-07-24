@@ -5,6 +5,7 @@ import {
   createReview,
   updateReview,
   deleteReview,
+  getReviewsByListingId,
 } from "../controllers/reviews";
 import { validateBody, validateParams } from "../middleware/validate";
 import {
@@ -16,10 +17,15 @@ import { wrapAsync } from "../utils/wrapAsync";
 
 import { authenticate } from "../middleware/auth";
 import { NotFoundError } from "../error/Error";
+import { listingIdSchema } from "../schemas/review";
 
 const reviewsRouter = Router();
 
-reviewsRouter.get("/", authenticate, wrapAsync(getReviews));
+reviewsRouter.get(
+  "/",
+  // authenticate,
+  wrapAsync(getReviews)
+);
 
 reviewsRouter.get(
   "/:id",
@@ -44,6 +50,12 @@ reviewsRouter.delete(
   "/:id",
   validateParams(reviewIdSchema),
   wrapAsync(deleteReview)
+);
+
+reviewsRouter.get(
+  "/listing/:listing_id",
+  validateParams(listingIdSchema),
+  wrapAsync(getReviewsByListingId)
 );
 
 // All other route requests

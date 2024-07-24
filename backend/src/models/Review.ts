@@ -33,6 +33,10 @@ class ReviewModel {
   static async delete(id: number) {
     await db("reviews").where({ id }).del();
   }
+
+  static async getReviewsByListingId(listing_id: number) {
+    return db("reviews").where({ listing_id }).select("*");
+  }
 }
 
 export default ReviewModel;
