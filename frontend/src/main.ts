@@ -1,5 +1,6 @@
 import UniversalRouter, { Route } from "universal-router";
-import { fetchListings, renderListings } from "./scripts/index";
+import { renderListings } from "./scripts/index";
+import { fetchListings } from "./utils/fetchListings";
 import { renderShowPage } from "./scripts/show";
 import { renderEditPage } from "./scripts/edit";
 import { renderNewPage } from "./components/newForm/new";
