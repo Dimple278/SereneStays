@@ -8,6 +8,9 @@ body {
 
 }
 
+
+  
+
 .container {
     flex: 1;
     min-height: 70vh    ;
@@ -200,6 +203,16 @@ body::-webkit-scrollbar-thumb,
     margin-top: 3px;
     margin-left: 5px;
 
+}
+#map-container{
+    margin-top: 50px;
+    max-width: 65%;
+    max-height: 100vh;
+    margin:auto;
+}
+
+#map{
+    width: 65%;
 }
 
 /* edit.js style -------------------------------------------------------------------------------------*/

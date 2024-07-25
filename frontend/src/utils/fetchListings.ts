@@ -1,6 +1,7 @@
 import axios from "axios";
 export interface IListing {
   id: string;
+  description?: string;
   title: string;
   images: string[];
   location: string;

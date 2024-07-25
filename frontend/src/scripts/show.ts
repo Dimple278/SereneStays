@@ -4,9 +4,8 @@ import { renderListing } from "../components/renderListing";
 import { renderReviews } from "../components/renderReviews";
 import { renderBookingForm } from "../components/renderBookingForm";
 import mapboxgl from "mapbox-gl";
-// Set your Mapbox access token
-// (mapboxgl as any).accessToken = "YOUR_MAPBOX_ACCESS_TOKEN";
-(mapboxgl as any).accessToken = `process.env.MAPBOX_ACCESS_TOKEN`;
+
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 async function getCoordinates(
   location: string
@@ -15,7 +14,7 @@ async function getCoordinates(
     const response = await axios.get(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
         location
-      )}.json?access_token=YOUR_MAPBOX_ACCESS_TOKEN`
+      )}.json?access_token=${mapboxgl.accessToken}`
     );
     const data = response.data;
 
@@ -52,9 +51,13 @@ export async function renderShowPage(container: HTMLElement, id: string) {
           }
         }
       </style>
-      <div class="row mt-3 show-main">
+      
+       <div class="row mt-3 show-main">
         <div class="show-body"></div>
-        <div id="map" style="height: 400px; width: 100%;"></div>
+        <div class="map-container" id = "map-container">
+          <p class="map-title">Where you'll be &nbsp;<i class="fa-solid fa-location-crosshairs"></i></p>
+          <div id="map"></div>
+        </div>
       </div>
     `;
 

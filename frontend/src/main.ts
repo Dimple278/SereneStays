@@ -99,23 +99,23 @@ export async function navigate(path: string) {
   await router.resolve({ pathname: path });
 }
 
-// Function to handle link clicks
-function handleLinkClick(event: Event) {
-  event.preventDefault();
-  const target = event.target as HTMLAnchorElement;
-  const page = target.dataset.link;
-  if (page) {
-    navigate(`/${page}`);
-  }
-}
+// // Function to handle link clicks
+// function handleLinkClick(event: Event) {
+//   event.preventDefault();
+//   const target = event.target as HTMLAnchorElement;
+//   const page = target.dataset.link;
+//   if (page) {
+//     navigate(`/${page}`);
+//   }
+// }
 
-// Add click event listeners to all navigation links using event delegation
-document.addEventListener("click", (event) => {
-  const target = event.target as HTMLAnchorElement;
-  if (target.matches("nav a[data-link]")) {
-    handleLinkClick(event);
-  }
-});
+// // Add click event listeners to all navigation links using event delegation
+// document.addEventListener("click", (event) => {
+//   const target = event.target as HTMLAnchorElement;
+//   if (target.matches("nav a[data-link]")) {
+//     handleLinkClick(event);
+//   }
+// });
 
 // Handle browser navigation (back/forward buttons)
 window.onpopstate = () => {

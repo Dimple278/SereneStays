@@ -18,13 +18,6 @@ export function renderListings(container: HTMLElement, listings: Listing[]) {
     <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
       ${listings
         .map((listing) => {
-          const day = Math.floor(Math.random() * 4 + 2);
-          const no = Math.floor(Math.random() * 28 + 1);
-          const date = new Date().getDate() + no;
-          const dateA = new Date().getDate() + no + day;
-          const month = new Date().toLocaleString("default", {
-            month: "short",
-          });
           return `
             <div class="card col listing-card index-res" data-id="${
               listing.id
@@ -41,14 +34,13 @@ export function renderListings(container: HTMLElement, listings: Listing[]) {
                   <p class="card-text" style="display: block;">
                     <b>${listing.title}</b> <br>
                     <span>&nbsp;${listing.location}, ${listing.country}</span>
-                    <span style="display: block;">
-                      <span class="tax-info">&nbsp;${day} nights •</span> &nbsp;${date}-${dateA} &nbsp;&nbsp;${month}
-                    </span>
+                     <br>
                     <span class="price-info">
                       <span class="fw-bold">&nbsp;&#8377;${listing.price.toLocaleString(
                         "en-IN"
                       )} </span> night
                     </span>
+                   
                     <i class="tax-info tax-underline ms-1">
                       <b>&#8377;${(listing.price * 1.18).toLocaleString(
                         "en-IN"
