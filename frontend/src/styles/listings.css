@@ -1,6 +1,7 @@
 body {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-family: 'Inknut Antiqua', serif;
+    /* font-family: 'Plus Jakarta Sans', sans-serif; */
     font-family: 'Poppins', sans-serif;
     display: flex;
     flex-direction: column;
@@ -8,12 +9,10 @@ body {
 
 }
 
-
-  
-
 .container {
     flex: 1;
     min-height: 70vh    ;
+  
 }
 
 body::-webkit-scrollbar,
@@ -153,7 +152,7 @@ body::-webkit-scrollbar-thumb,
     cursor: default;
 }
 
-/* new.js style -------------------------------------------------------------------------------------*/
+/* new.ejs style -------------------------------------------------------------------------------------*/
 .form-label {
     font-weight: 700;
 }
@@ -204,18 +203,8 @@ body::-webkit-scrollbar-thumb,
     margin-left: 5px;
 
 }
-#map-container{
-    margin-top: 50px;
-    max-width: 65%;
-    max-height: 100vh;
-    margin:auto;
-}
 
-#map{
-    width: 65%;
-}
-
-/* edit.js style -------------------------------------------------------------------------------------*/
+/* edit.ejs style -------------------------------------------------------------------------------------*/
 @media (max-width: 768px) {
     .edit-btn {
         width: 4rem !important;
@@ -363,7 +352,7 @@ body::-webkit-scrollbar-thumb,
     text-decoration: none;
 }
 
-/* index.js style -------------------------------------------------------------------------------------*/
+/* indes.ejs style -------------------------------------------------------------------------------------*/
 @media (max-width: 769px) {
     .index-res {
         display: flex !important;
@@ -400,7 +389,7 @@ body::-webkit-scrollbar-thumb,
         margin-left: 15px;
     }
 }
-/* update.js------------------- */
+/* update.ejs------------------- */
 
 #imagePreview img,.listingImg-update{
     height: 150px;

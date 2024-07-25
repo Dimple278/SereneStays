@@ -1,9 +1,8 @@
 import axios from "axios";
 import { navigate } from "../main";
 import { IListing } from "../utils/fetchListings";
-import { loadCss } from "../utils/loadCss";
 
-export function renderListing(container: HTMLElement, listing: IListing) {
+export function renderShowListing(container: HTMLElement, listing: IListing) {
   container.innerHTML += `
     <div class="col-8 offset-2">
       <h3 class="ms-3">${listing.title}</h3>

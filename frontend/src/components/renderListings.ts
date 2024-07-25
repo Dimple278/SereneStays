@@ -1,6 +1,4 @@
-import { navigate } from "../main"; // Adjust the import path if necessary
-import { renderFilter } from "../components/renderFilter";
-
+import { navigate } from "../main";
 interface Listing {
   id: string;
   title: string;
@@ -10,13 +8,7 @@ interface Listing {
   price: number;
 }
 
-// Function to render the listings on the page
-export async function renderListings(
-  container: HTMLElement,
-  listings: Listing[]
-) {
-  renderFilter(container);
-
+export function renderListings(container: HTMLElement, listings: Listing[]) {
   container.innerHTML += `
     <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
       ${listings

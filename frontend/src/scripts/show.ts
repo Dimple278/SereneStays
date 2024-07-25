@@ -1,6 +1,6 @@
 import axios from "axios";
 import { loadCss } from "../utils/loadCss";
-import { renderListing } from "../components/renderListing";
+import { renderShowListing } from "../components/renderShowListing";
 import { renderReviews } from "../components/renderReviews";
 import { renderBookingForm } from "../components/renderBookingForm";
 import mapboxgl from "mapbox-gl";
@@ -63,7 +63,7 @@ export async function renderShowPage(container: HTMLElement, id: string) {
 
     const showBody = container.querySelector(".show-body") as HTMLElement;
 
-    renderListing(showBody, listing);
+    renderShowListing(showBody, listing);
     renderReviews(showBody, reviews);
     renderBookingForm(showBody, id, listing.price);
 
