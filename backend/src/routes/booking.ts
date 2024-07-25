@@ -5,6 +5,7 @@ import {
   createBooking,
   updateBooking,
   deleteBooking,
+  getBookingsByListingId,
 } from "../controllers/bookings";
 import { validateBody, validateParams } from "../middleware/validate";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../schemas/booking";
 import { wrapAsync } from "../utils/wrapAsync";
 import { NotFoundError } from "../error/Error";
+import { listingIdSchema } from "../schemas/review";
 
 const bookingsRouter = Router();
 
@@ -42,6 +44,12 @@ bookingsRouter.delete(
   "/:id",
   validateParams(bookingIdSchema),
   wrapAsync(deleteBooking)
+);
+
+bookingsRouter.get(
+  "/listing/:listing_id",
+  validateParams(listingIdSchema),
+  wrapAsync(getBookingsByListingId)
 );
 
 // All other route requests

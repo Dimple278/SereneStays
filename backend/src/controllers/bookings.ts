@@ -43,3 +43,14 @@ export const deleteBooking = async (req: Request, res: Response) => {
   await BookingModel.delete(id);
   res.json(booking);
 };
+
+export const getBookingsByListingId = async (req: Request, res: Response) => {
+  const { listing_id } = req.params;
+  const bookings = await BookingModel.getBookingsByListingId(
+    parseInt(listing_id)
+  );
+  if (!bookings.length) {
+    throw new NotFoundError("No reviews found for this listing");
+  }
+  res.json(bookings);
+};

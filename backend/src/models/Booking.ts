@@ -36,6 +36,10 @@ class BookingModel {
   static async delete(id: number) {
     await db("bookings").where({ id }).del();
   }
+
+  static async getBookingsByListingId(listing_id: number) {
+    return db("bookings").where({ listing_id }).select("*");
+  }
 }
 
 export default BookingModel;
