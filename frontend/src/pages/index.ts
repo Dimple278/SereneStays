@@ -1,5 +1,6 @@
 import { navigate } from "../main"; // Adjust the import path if necessary
 import { renderFilter } from "../components/renderFilter";
+import { fetchListingsByCategory } from "../utils/fetchListings";
 
 interface Listing {
   id: string;
@@ -66,6 +67,19 @@ export async function renderListings(
       if (id) {
         navigate(`/show/${id}`);
       }
+    });
+  });
+
+  // Add event listeners for each filter
+  const filterButtons = container.querySelectorAll(".filter");
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const category = button.getAttribute("data-category") || "ALL";
+      console.log(`Filter clicked: ${category}`);
+      const filteredlistings = await fetchListingsByCategory(category);
+      console.log(filteredlistings);
+      renderListings(container, filteredlistings);
     });
   });
 }

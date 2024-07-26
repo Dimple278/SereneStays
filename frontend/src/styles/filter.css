@@ -16,19 +16,19 @@
     margin: 5px 2px 0px 2px;
 }
 
-#filters > a {
+#filters > div {
     margin: 0px 1.25rem;
     text-decoration: none;
 }
 
 @media (max-width:768px) {
-    #filters > a {
+    #filters > div {
         margin: 0px .95rem;
     }
 }
 
 @media (max-width:425px) {
-    #filters > a {
+    #filters > div {
         margin: 0px .65rem;
     }
 }
