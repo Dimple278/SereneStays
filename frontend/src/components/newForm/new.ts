@@ -1,6 +1,6 @@
 import axios from "axios";
-import { fetchListings } from "../../utils/fetchListings";
-import { renderListings } from "../../scripts";
+
+import { navigate } from "../../main";
 
 export function renderNewPage(container: HTMLElement) {
   fetch("/src/components/newForm/newForm.html")
@@ -24,11 +24,7 @@ export function renderNewPage(container: HTMLElement) {
           };
 
           await axios.post("/api/listings", newListing);
-
-          window.history.pushState({}, "", `/listings`);
-          fetchListings().then((listings) =>
-            renderListings(container, listings)
-          );
+          navigate("/listigs");
         });
       }
     })

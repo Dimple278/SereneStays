@@ -1,21 +1,22 @@
-import axios from "axios";
-export interface IListing {
-  id: string;
-  description?: string;
-  title: string;
-  images: string[];
-  location: string;
-  country: string;
-  price: number;
-}
+import { IListing } from "../interfaces/listing";
 
-export async function fetchListings() {
-  try {
-    const response = await axios.get("/api/listings");
-    const listings: IListing[] = response.data;
-    return listings;
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    return [];
+export async function fetchListingsByCategory(
+  category: string
+): Promise<IListing[]> {
+  const response = await fetch(
+    `/api/listings?category=${encodeURIComponent(category)}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch listings");
   }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
 }

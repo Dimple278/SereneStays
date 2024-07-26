@@ -1,20 +1,12 @@
 import { navigate } from "../main"; // Adjust the import path if necessary
 import { renderFilter } from "../components/renderFilter";
 import { fetchListingsByCategory } from "../utils/fetchListings";
-
-interface Listing {
-  id: string;
-  title: string;
-  images: string[];
-  location: string;
-  country: string;
-  price: number;
-}
+import { IListing } from "../interfaces/listing";
 
 // Function to render the listings on the page
 export async function renderListings(
   container: HTMLElement,
-  listings: Listing[]
+  listings: IListing[]
 ) {
   renderFilter(container);
 

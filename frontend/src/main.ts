@@ -1,14 +1,14 @@
 import UniversalRouter, { Route } from "universal-router";
-import { renderListings } from "./scripts/index";
-import { fetchListings } from "./utils/fetchListings";
-import { renderShowPage } from "./scripts/show";
-import { renderEditPage } from "./scripts/edit";
+import { renderListings } from "./pages/index";
+import { fetchListingsByCategory } from "./utils/fetchListings";
+import { renderShowPage } from "./pages/show";
+import { renderEditPage } from "./pages/edit";
 import { renderNewPage } from "./components/newForm/new";
 import { loadNavbar } from "./components/header/navbar";
 import { loadFooter } from "./components/footer/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { renderLoginPage } from "./scripts/login";
-import { renderSignupPage } from "./scripts/signup";
+import { renderLoginPage } from "./pages/login";
+import { renderSignupPage } from "./pages/signup";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -44,7 +44,7 @@ const routes: Route[] = [
     path: "/",
     action: async () => {
       if (mainContent) {
-        const listings = await fetchListings();
+        const listings = await fetchListingsByCategory("ALL");
         renderListings(mainContent, listings);
       }
     },
@@ -53,7 +53,7 @@ const routes: Route[] = [
     path: "/listings",
     action: async () => {
       if (mainContent) {
-        const listings = await fetchListings();
+        const listings = await fetchListingsByCategory("ALL");
         renderListings(mainContent, listings);
       }
     },

@@ -13,16 +13,6 @@ export async function renderBookingForm(
   listingId: string,
   listingPrice: number
 ) {
-  // Add the unavailable CSS directly
-  const style = document.createElement("style");
-  style.innerHTML = `
-    .unavailable {
-      background-color: #ffdddd;
-      cursor: not-allowed;
-    }
-  `;
-  document.head.appendChild(style);
-
   const bookingFormContainer = document.createElement("div");
   bookingFormContainer.className = "col-8 offset-2 mt-3";
   bookingFormContainer.innerHTML = `
@@ -155,7 +145,7 @@ export async function renderBookingForm(
         total_price: totalPrice,
       });
       alert("Booking successful!");
-      navigate(`/listings/${listingId}`);
+      navigate(`/listings/show/${listingId}`);
     } catch (error) {
       console.error("Error creating booking:", error);
       alert("Failed to create booking.");
