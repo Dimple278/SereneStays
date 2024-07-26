@@ -21,6 +21,32 @@ export async function up(knex: Knex): Promise<void> {
     table.text("description").notNullable();
     table.string("location").notNullable();
     table.string("country").notNullable();
+    table
+      .enu("category", [
+        "Beachfront",
+        "Cabins",
+        "OMG",
+        "Lake",
+        "Design",
+        "Amazing Pools",
+        "Farms",
+        "Amazing Views",
+        "Rooms",
+        "Lakefront",
+        "Tiny Homes",
+        "Countryside",
+        "Treehouse",
+        "Trending",
+        "Tropical",
+        "National Parks",
+        "Castles",
+        "Camping",
+        "Top Of The World",
+        "Luxe",
+        "Iconic Cities",
+        "Earth Homes",
+      ])
+      .notNullable();
     table.decimal("price", 10, 2).notNullable();
     table.json("images").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());

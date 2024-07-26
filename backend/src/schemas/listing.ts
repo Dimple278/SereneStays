@@ -67,6 +67,9 @@ export const listingIdSchema = Joi.object({
 
 // Define the schema for query parameters
 export const querySchema = Joi.object({
+  category: Joi.string().optional().messages({
+    "string.base": "Category must be a string",
+  }),
   sort: Joi.string().valid("asc", "desc").optional().messages({
     "string.base": "Sort must be a string",
     "any.only": "Sort must be one of asc, desc",

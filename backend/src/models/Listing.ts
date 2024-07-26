@@ -3,6 +3,7 @@ import { Listing } from "../interface/listing";
 
 class ListingModel {
   private tableName: string = "listings";
+
   public async create(listing: Listing): Promise<Listing> {
     const [newListing] = await db(this.tableName)
       .insert({
@@ -18,7 +19,22 @@ class ListingModel {
   }
 
   public async findAll(): Promise<Listing[]> {
-    return await db(this.tableName).select("*");
+    const listings = await db("listings").select("*");
+    // console.log("All listings:", listings);
+    return listings;
+  }
+
+  public async findByCategory(category: string): Promise<Listing[]> {
+    if (category === "ALL") {
+      return this.findAll();
+    }
+    console.log(`Listings for category${category}`);
+    const listings = await db("listings")
+      .select("*")
+      .where("category", category);
+
+    console.log(`Listings for category ${category}:`, listings);
+    return listings;
   }
 
   public async findById(id: number): Promise<Listing | undefined> {

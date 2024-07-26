@@ -4,7 +4,8 @@ import ListingModel from "../models/Listing";
 import { NotFoundError } from "../error/Error";
 
 export const getListings = async (req: Request, res: Response) => {
-  const allListings = await ListingModel.findAll();
+  const category = (req.query.category as string) || "ALL";
+  const allListings = await ListingModel.findByCategory(category);
   res.json(allListings);
 };
 
