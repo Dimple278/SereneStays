@@ -101,13 +101,13 @@ export async function renderFilter(container: HTMLElement) {
           <i class="fa-solid fa-angle-right"></i>
         </div>
       </div>
-      <div class="tax-toggle tax-filter-icon filterIcon me-2 ms-2" onclick="filterClick()">
+      <div class="tax-toggle tax-filter-icon filterIcon me-2 ms-2 ">
         <div class="form-check form-switch form-check-reverse pe-1" style="cursor: pointer;">
           <i class="fa-solid fa-sliders" id="filter-icon"></i>
           <label class="form-check-label" for="filter-icon" style="cursor: pointer;">Filters</label>
         </div>
       </div>
-      <div class="tax-toggle tax-filter-icon-small filterIcon me-2 ms-2" onclick="filterClick()">
+      <div class="tax-toggle tax-filter-icon-small filterIcon me-2 ms-2">
         <div class="form-check form-switch form-check-reverse pe-0">
           <i class="fa-solid fa-sliders ps-1" id="filter-icon" style="cursor: pointer;"></i>
         </div>
