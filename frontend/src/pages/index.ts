@@ -1,5 +1,6 @@
-import { navigate } from "../main"; // Adjust the import path if necessary
+import { navigate } from "../main";
 import { renderFilter } from "../components/renderFilter";
+import { renderFilterModal } from "../components/renderFilterModal";
 import { fetchListingsByCategory } from "../utils/fetchListings";
 import { IListing } from "../interfaces/listing";
 
@@ -10,6 +11,7 @@ export async function renderListings(
 ) {
   renderFilter(container);
 
+  renderFilterModal;
   container.innerHTML += `
     <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
       ${listings
@@ -34,13 +36,11 @@ export async function renderListings(
                     <span class="price-info">
                       <span class="fw-bold">&nbsp;&#8377;${listing.price.toLocaleString(
                         "en-IN"
-                      )} </span> night
+                      )} </span> night 
                     </span>
-                    <i class="tax-info tax-underline ms-1">
-                      <b>&#8377;${(listing.price * 1.18).toLocaleString(
-                        "en-IN"
-                      )}</b> &nbsp;total after taxes
-                    </i>
+                    <i class="tax-info tax-underline ms-1"><i class="rs-sign"><b> &#8377;</i>${(
+                      listing.price * 1.18
+                    ).toLocaleString("en-IN")}</b> &nbsp;total after taxes</i>
                   </p>
                 </div>
               </div>
@@ -73,5 +73,28 @@ export async function renderListings(
       console.log(filteredlistings);
       renderListings(container, filteredlistings);
     });
+  });
+
+  // Add event listeners for the tax switches
+  const taxSwitches = document.querySelectorAll(".tax-switch");
+  taxSwitches.forEach((taxSwitch) => {
+    taxSwitch.addEventListener("change", () => {
+      const isChecked = (taxSwitch as HTMLInputElement).checked;
+      const listingCards = document.querySelectorAll(".listing-card");
+      listingCards.forEach((card) => {
+        const taxInfo = card.querySelector(".tax-info") as HTMLElement;
+        if (isChecked) {
+          taxInfo.style.display = "none";
+        } else {
+          taxInfo.style.display = "inline";
+        }
+      });
+    });
+  });
+
+  // Trigger the switch change event on page load to apply the initial state
+  taxSwitches.forEach((taxSwitch) => {
+    const event = new Event("change");
+    taxSwitch.dispatchEvent(event);
   });
 }
