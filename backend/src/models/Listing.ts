@@ -70,6 +70,13 @@ class ListingModel {
 
     return query;
   }
+
+  public async search(query: string): Promise<Listing[]> {
+    return await db(this.tableName)
+      .select("*")
+      .where("title", "ilike", `%${query}%`)
+      .orWhere("description", "ilike", `%${query}%`);
+  }
 }
 
 export default new ListingModel();

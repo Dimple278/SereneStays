@@ -7,6 +7,7 @@ import {
   updateListing,
   deleteListing,
   filterListings,
+  searchListings,
 } from "../controllers/listings";
 import {
   validateBody,
@@ -28,6 +29,9 @@ listingsRouter.get(
   validateQuery(querySchema),
   wrapAsync(filterListings)
 );
+
+// Search route
+listingsRouter.get("/search", wrapAsync(searchListings));
 
 listingsRouter.get("/", validateQuery(querySchema), wrapAsync(getListings));
 

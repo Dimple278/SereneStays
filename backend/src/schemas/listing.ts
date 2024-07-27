@@ -26,7 +26,7 @@ export const createListingSchema = Joi.object({
   image: Joi.string().allow("", null).messages({
     "string.base": "Image must be a string",
   }),
-  category: Joi.array().items(Joi.string().allow("")).optional().messages({
+  category: Joi.string().optional().messages({
     "string.base": "Category must be a string",
   }),
 }).options({ stripUnknown: true });

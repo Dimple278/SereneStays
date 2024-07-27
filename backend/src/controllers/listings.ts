@@ -54,6 +54,19 @@ export const filterListings = async (req: Request, res: Response) => {
     maxPrice ? parseFloat(maxPrice as string) : undefined,
     country as string
   );
+  if (!filterListings) {
+    throw new NotFoundError("No such Listings found");
+  }
 
   res.json(filteredListings);
+};
+
+export const searchListings = async (req: Request, res: Response) => {
+  const query = req.query.q as string;
+  console.log(query);
+  const listings = await ListingModel.search(query);
+  if (!listings) {
+    throw new NotFoundError("No such Listings found");
+  }
+  res.json(listings);
 };
