@@ -5,8 +5,13 @@ import { NotFoundError } from "../error/Error";
 
 export const getListings = async (req: Request, res: Response) => {
   const category = (req.query.category as string) || "ALL";
-  const allListings = await ListingModel.findByCategory(category);
-  res.json(allListings);
+  const page = parseInt(req.query.page as string, 10) || 1; // Default to page 1
+  const limit = parseInt(req.query.limit as string, 10) || 10; // Default to 10 items per page
+
+  const listings = await ListingModel.findByCategory(category, page, limit);
+  const totalCount = await ListingModel.countByCategory(category);
+
+  res.json({ listings, totalCount });
 };
 
 export const getListingById = async (req: Request, res: Response) => {

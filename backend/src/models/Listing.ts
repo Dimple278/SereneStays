@@ -18,19 +18,37 @@ class ListingModel {
     return await this.create(listing);
   }
 
-  public async findAll(): Promise<Listing[]> {
-    const listings = await db("listings").select("*");
+  public async findAll(page: number, limit: number): Promise<Listing[]> {
+    const listings = await db("listings")
+      .select("*")
+      .offset((page - 1) * limit) // Skip the number of items for previous pages
+      .limit(limit); // Limit the number of items per page
     return listings;
   }
 
-  public async findByCategory(category: string): Promise<Listing[]> {
+  public async findByCategory(
+    category: string,
+    page: number,
+    limit: number
+  ): Promise<Listing[]> {
     if (category === "ALL") {
-      return this.findAll();
+      return this.findAll(page, limit);
     }
     const listings = await db("listings")
       .select("*")
-      .where("category", category);
+      .where("category", category)
+      .offset((page - 1) * limit) // Skip the number of items for previous pages
+      .limit(limit); // Limit the number of items per page
     return listings;
+  }
+
+  public async countByCategory(category: string): Promise<number> {
+    const query = db("listings").count("* as count");
+    if (category !== "ALL") {
+      query.where("category", category);
+    }
+    const [{ count }] = await query;
+    return parseInt(`${count}`, 10);
   }
 
   public async findById(id: number): Promise<Listing | undefined> {
