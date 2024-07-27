@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import ListingModel from "../models/Listing";
 
 import { NotFoundError } from "../error/Error";
+import { cloudinary } from "../../cloudinary";
 
 export const getListings = async (req: Request, res: Response) => {
   const category = (req.query.category as string) || "ALL";
@@ -23,21 +24,69 @@ export const getListingById = async (req: Request, res: Response) => {
   res.json(listing);
 };
 
+// Controller method to handle image uploads
 export const createListing = async (req: Request, res: Response) => {
-  const newListing = await ListingModel.save(req.body);
+  const { files, body } = req;
+  console.log(files);
+  console.log("Images:", files);
+  const images: string[] = [];
+
+  // Process uploaded images
+  if (files && Array.isArray(files)) {
+    for (const file of files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "airbnb",
+      });
+      images.push(result.secure_url);
+    }
+  }
+  console.log("Uploaded images:", images);
+  console.log("Listing body:", body);
+
+  // Create a new listing with images
+  const newListing = await ListingModel.save({
+    ...body,
+    images,
+  });
+
   res.status(201).json(newListing);
 };
 
 export const updateListing = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { files, body } = req;
+
+  // Get the existing listing
   const listing = await ListingModel.findById(parseInt(id));
   if (!listing) {
     throw new NotFoundError("Listing not found");
   }
-  const updatedListing = await ListingModel.update(
-    Number(req.params.id),
-    req.body
-  );
+
+  // Ensure images is always an array of strings
+  const existingImages: string[] = Array.isArray(listing.images)
+    ? listing.images
+    : [];
+  const newImages: string[] = [];
+
+  // Process uploaded images
+  if (files && Array.isArray(files)) {
+    for (const file of files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "airbnb",
+      });
+      newImages.push(result.secure_url);
+    }
+  }
+
+  // Combine existing images with new images
+  const updatedImages = [...existingImages, ...newImages];
+
+  // Update the listing with new data and images
+  const updatedListing = await ListingModel.update(parseInt(id), {
+    ...body,
+    images: updatedImages,
+  });
+
   res.json(updatedListing);
 };
 

@@ -22,6 +22,9 @@ import {
 } from "../schemas/listing";
 import { wrapAsync } from "../utils/wrapAsync";
 import { NotFoundError } from "../error/Error";
+import { upload } from "../../cloudinary";
+
+import { authenticate } from "../middleware/auth";
 
 const listingsRouter = Router();
 listingsRouter.get(
@@ -43,12 +46,15 @@ listingsRouter.get(
 
 listingsRouter.post(
   "/",
+  upload.array("images"),
+  // authenticate,
   validateBody(createListingSchema),
   wrapAsync(createListing)
 );
 
 listingsRouter.put(
   "/:id",
+  upload.array("images"),
   validateParams(listingIdSchema),
   validateBody(updateListingSchema),
   wrapAsync(updateListing)

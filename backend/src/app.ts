@@ -24,6 +24,8 @@ db.raw("SELECT 1")
 
 const app = express();
 
+// const bodyParser = require("body-parser");
+
 app.use(cookieParser());
 
 app.use(

@@ -8,7 +8,7 @@ class ListingModel {
     const [newListing] = await db(this.tableName)
       .insert({
         ...listing,
-        images: JSON.stringify(listing.images),
+        images: JSON.stringify(listing.images || []),
       })
       .returning("*");
     return newListing;
@@ -56,11 +56,14 @@ class ListingModel {
   }
 
   public async update(id: number, listing: Partial<Listing>): Promise<Listing> {
-    const [updatedListing] = await db(this.tableName)
+    const updatedListing = await db(this.tableName)
       .where({ id })
-      .update(listing)
+      .update({
+        ...listing,
+        images: listing.images ? JSON.stringify(listing.images) : undefined, // Ensure images is handled properly
+      })
       .returning("*");
-    return updatedListing;
+    return updatedListing[0];
   }
 
   public async delete(id: number): Promise<void> {
