@@ -1,6 +1,6 @@
 import axios from "axios";
 import { navigate } from "../main";
-import { IListing } from "../utils/fetchListings";
+import { IListing } from "../interfaces/listing";
 
 export function renderShowListing(container: HTMLElement, listing: IListing) {
   container.innerHTML += `

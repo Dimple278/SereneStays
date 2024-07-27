@@ -6,6 +6,7 @@ import {
   createListing,
   updateListing,
   deleteListing,
+  filterListings,
 } from "../controllers/listings";
 import {
   validateBody,
@@ -22,6 +23,11 @@ import { wrapAsync } from "../utils/wrapAsync";
 import { NotFoundError } from "../error/Error";
 
 const listingsRouter = Router();
+listingsRouter.get(
+  "/filter",
+  validateQuery(querySchema),
+  wrapAsync(filterListings)
+);
 
 listingsRouter.get("/", validateQuery(querySchema), wrapAsync(getListings));
 

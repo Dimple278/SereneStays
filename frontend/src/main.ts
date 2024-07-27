@@ -6,7 +6,11 @@ import { renderEditPage } from "./pages/edit";
 import { renderNewPage } from "./components/newForm/new";
 import { loadNavbar } from "./components/header/navbar";
 import { loadFooter } from "./components/footer/footer";
+// Import Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
+
+// Import Bootstrap JS
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { renderLoginPage } from "./pages/login";
 import { renderSignupPage } from "./pages/signup";
 
@@ -21,6 +25,7 @@ const mainContent = document.getElementById("main-content");
 // Inject navbar and footer
 loadNavbar();
 loadFooter();
+// renderFilterModal(); // Render the filter modal
 
 // Define route handlers
 const routes: Route[] = [

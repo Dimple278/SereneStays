@@ -1,17 +1,20 @@
 import { navigate } from "../main";
 import { renderFilter } from "../components/renderFilter";
 import { renderFilterModal } from "../components/renderFilterModal";
-import { fetchListingsByCategory } from "../utils/fetchListings";
+import {
+  fetchFilteredListings,
+  fetchListingsByCategory,
+} from "../utils/fetchListings";
 import { IListing } from "../interfaces/listing";
 
-// Function to render the listings on the page
+let currentFilteredListings: IListing[] = [];
 export async function renderListings(
   container: HTMLElement,
   listings: IListing[]
 ) {
   renderFilter(container);
+  renderFilterModal(container);
 
-  renderFilterModal;
   container.innerHTML += `
     <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
       ${listings
@@ -64,12 +67,15 @@ export async function renderListings(
 
   // Add event listeners for each filter
   const filterButtons = container.querySelectorAll(".filter");
-
   filterButtons.forEach((button) => {
     button.addEventListener("click", async () => {
       const category = button.getAttribute("data-category") || "ALL";
       console.log(`Filter clicked: ${category}`);
-      const filteredlistings = await fetchListingsByCategory(category);
+      const filteredlistings = currentFilteredListings.length
+        ? currentFilteredListings.filter(
+            (listing) => listing.category === category || category === "ALL"
+          )
+        : await fetchListingsByCategory(category);
       console.log(filteredlistings);
       renderListings(container, filteredlistings);
     });
@@ -97,4 +103,26 @@ export async function renderListings(
     const event = new Event("change");
     taxSwitch.dispatchEvent(event);
   });
+
+  const applyFiltersButton = document.getElementById("applyFilters");
+  if (applyFiltersButton) {
+    applyFiltersButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const minPrice = (document.getElementById("minPrice") as HTMLInputElement)
+        .value;
+      const maxPrice = (document.getElementById("maxPrice") as HTMLInputElement)
+        .value;
+      const country = (document.getElementById("country") as HTMLInputElement)
+        .value;
+
+      currentFilteredListings = await fetchFilteredListings(
+        minPrice,
+        maxPrice,
+        country
+      );
+
+      console.log(currentFilteredListings);
+      renderListings(container, currentFilteredListings);
+    });
+  }
 }

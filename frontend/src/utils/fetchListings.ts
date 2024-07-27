@@ -20,3 +20,17 @@ export async function fetchListingsByCategory(
   console.log(data);
   return data;
 }
+
+export async function fetchFilteredListings(
+  minPrice: string,
+  maxPrice: string,
+  country: string
+): Promise<IListing[]> {
+  const params = new URLSearchParams();
+  if (minPrice) params.append("minPrice", minPrice);
+  if (maxPrice) params.append("maxPrice", maxPrice);
+  if (country) params.append("country", country);
+
+  const response = await fetch(`/api/listings/filter?${params.toString()}`);
+  return response.json();
+}

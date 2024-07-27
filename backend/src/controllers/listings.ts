@@ -45,3 +45,15 @@ export const deleteListing = async (req: Request, res: Response) => {
   await ListingModel.delete(id);
   res.redirect("/api/listings");
 };
+
+export const filterListings = async (req: Request, res: Response) => {
+  const { minPrice, maxPrice, country } = req.query;
+
+  const filteredListings = await ListingModel.findByFilters(
+    minPrice ? parseFloat(minPrice as string) : undefined,
+    maxPrice ? parseFloat(maxPrice as string) : undefined,
+    country as string
+  );
+
+  res.json(filteredListings);
+};

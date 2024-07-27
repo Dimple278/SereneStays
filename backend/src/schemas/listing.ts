@@ -70,6 +70,14 @@ export const querySchema = Joi.object({
   category: Joi.string().optional().messages({
     "string.base": "Category must be a string",
   }),
+  minPrice: Joi.number().optional().min(0).messages({
+    "number.base": "Minimum price must be a number",
+    "number.min": "Minimum price must be at least 0",
+  }),
+  maxPrice: Joi.number().optional().min(0).messages({
+    "number.base": "Maximum price must be a number",
+    "number.min": "Maximum price must be at least 0",
+  }),
   sort: Joi.string().valid("asc", "desc").optional().messages({
     "string.base": "Sort must be a string",
     "any.only": "Sort must be one of asc, desc",

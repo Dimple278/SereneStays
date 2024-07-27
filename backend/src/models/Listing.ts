@@ -20,7 +20,6 @@ class ListingModel {
 
   public async findAll(): Promise<Listing[]> {
     const listings = await db("listings").select("*");
-    // console.log("All listings:", listings);
     return listings;
   }
 
@@ -28,12 +27,9 @@ class ListingModel {
     if (category === "ALL") {
       return this.findAll();
     }
-    console.log(`Listings for category${category}`);
     const listings = await db("listings")
       .select("*")
       .where("category", category);
-
-    console.log(`Listings for category ${category}:`, listings);
     return listings;
   }
 
@@ -51,6 +47,28 @@ class ListingModel {
 
   public async delete(id: number): Promise<void> {
     await db(this.tableName).where({ id }).del();
+  }
+
+  public async findByFilters(
+    minPrice?: number,
+    maxPrice?: number,
+    country?: string
+  ): Promise<Listing[]> {
+    let query = db(this.tableName).select("*");
+
+    if (minPrice !== undefined) {
+      query = query.where("price", ">=", minPrice);
+    }
+
+    if (maxPrice !== undefined) {
+      query = query.where("price", "<=", maxPrice);
+    }
+
+    if (country) {
+      query = query.where("country", "ILIKE", `%${country}%`);
+    }
+
+    return query;
   }
 }
 
