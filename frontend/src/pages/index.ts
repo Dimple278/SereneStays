@@ -9,6 +9,15 @@ import {
 import { IListing } from "../interfaces/listing";
 
 let currentFilteredListings: IListing[] = [];
+// Debouncing utility function
+let debounceTimer: NodeJS.Timeout;
+const debounce = (func: Function, delay: number) => {
+  return (...args: any[]) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => func(...args), delay);
+  };
+};
+
 export async function renderListings(
   container: HTMLElement,
   listings: IListing[]
@@ -19,8 +28,8 @@ export async function renderListings(
   container.innerHTML += `
     <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
       ${listings
-        .map((listing) => {
-          return `
+        .map(
+          (listing) => `
             <div class="card col listing-card index-res" data-id="${
               listing.id
             }">
@@ -49,8 +58,8 @@ export async function renderListings(
                 </div>
               </div>
             </div>
-          `;
-        })
+          `
+        )
         .join("")}
     </div>
   `;
@@ -90,11 +99,7 @@ export async function renderListings(
       const listingCards = document.querySelectorAll(".listing-card");
       listingCards.forEach((card) => {
         const taxInfo = card.querySelector(".tax-info") as HTMLElement;
-        if (isChecked) {
-          taxInfo.style.display = "none";
-        } else {
-          taxInfo.style.display = "inline";
-        }
+        taxInfo.style.display = isChecked ? "none" : "inline";
       });
     });
   });
@@ -105,6 +110,7 @@ export async function renderListings(
     taxSwitch.dispatchEvent(event);
   });
 
+  // Apply Filters Button event listener
   const applyFiltersButton = document.getElementById("applyFilters");
   if (applyFiltersButton) {
     applyFiltersButton.addEventListener("click", async (event) => {
@@ -121,38 +127,31 @@ export async function renderListings(
         maxPrice,
         country
       );
-
-      console.log(currentFilteredListings);
       renderListings(container, currentFilteredListings);
     });
   }
+  const performSearch = async () => {
+    const query = (document.getElementById("mySearchInput") as HTMLInputElement)
+      .value;
+    if (query.length >= 1) {
+      const searchResults = await searchListings(query);
+      currentFilteredListings = searchResults; // Update global filtered listings
+      renderListings(container, searchResults);
+    } else {
+      renderListings(container, currentFilteredListings); // Re-render with cached filtered listings
+    }
+  };
 
-  // Real-time search functionality
-  const searchForm = document.getElementById("searchBox") as HTMLFormElement;
+  // Handle input for search box with debounce
   const searchInput = document.getElementById(
     "mySearchInput"
   ) as HTMLInputElement;
+  searchInput.addEventListener("input", debounce(performSearch, 300));
 
-  if (searchForm && searchInput) {
-    searchForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); // Prevent default form submission
-      const query = searchInput.value;
-      if (query.length >= 1) {
-        const searchResults = await searchListings(query);
-        currentFilteredListings = searchResults; // Update the filtered list
-        renderListings(container, searchResults);
-      }
-    });
-
-    searchInput.addEventListener("input", async () => {
-      const query = searchInput.value;
-      if (query.length >= 1) {
-        const searchResults = await searchListings(query);
-        currentFilteredListings = searchResults; // Update the filtered list
-        renderListings(container, searchResults);
-      } else {
-        renderListings(container, currentFilteredListings); // Re-render filtered listings if search input is cleared
-      }
-    });
-  }
+  // Handle form submission
+  const searchForm = document.getElementById("searchBox") as HTMLFormElement;
+  searchForm.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Prevent traditional form submission
+    await performSearch(); // Call search function
+  });
 }
