@@ -34,3 +34,18 @@ export async function fetchFilteredListings(
   const response = await fetch(`/api/listings/filter?${params.toString()}`);
   return response.json();
 }
+
+export async function searchListings(query: string): Promise<IListing[]> {
+  try {
+    const response = await fetch(
+      `/api/listings/search?q=${encodeURIComponent(query)}`
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    return [];
+  }
+}

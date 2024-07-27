@@ -4,6 +4,7 @@ import { renderFilterModal } from "../components/renderFilterModal";
 import {
   fetchFilteredListings,
   fetchListingsByCategory,
+  searchListings,
 } from "../utils/fetchListings";
 import { IListing } from "../interfaces/listing";
 
@@ -123,6 +124,35 @@ export async function renderListings(
 
       console.log(currentFilteredListings);
       renderListings(container, currentFilteredListings);
+    });
+  }
+
+  // Real-time search functionality
+  const searchForm = document.getElementById("searchBox") as HTMLFormElement;
+  const searchInput = document.getElementById(
+    "mySearchInput"
+  ) as HTMLInputElement;
+
+  if (searchForm && searchInput) {
+    searchForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); // Prevent default form submission
+      const query = searchInput.value;
+      if (query.length >= 1) {
+        const searchResults = await searchListings(query);
+        currentFilteredListings = searchResults; // Update the filtered list
+        renderListings(container, searchResults);
+      }
+    });
+
+    searchInput.addEventListener("input", async () => {
+      const query = searchInput.value;
+      if (query.length >= 1) {
+        const searchResults = await searchListings(query);
+        currentFilteredListings = searchResults; // Update the filtered list
+        renderListings(container, searchResults);
+      } else {
+        renderListings(container, currentFilteredListings); // Re-render filtered listings if search input is cleared
+      }
     });
   }
 }

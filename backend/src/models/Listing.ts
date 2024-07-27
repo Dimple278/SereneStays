@@ -75,7 +75,9 @@ class ListingModel {
     return await db(this.tableName)
       .select("*")
       .where("title", "ilike", `%${query}%`)
-      .orWhere("description", "ilike", `%${query}%`);
+      // .orWhere("description", "ilike", `%${query}%`)
+      .orWhere("location", "ilike", `%${query}%`)
+      .orWhere("country", "ilike", `%${query}%`);
   }
 }
 
