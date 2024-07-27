@@ -1,10 +1,14 @@
 import { IListing } from "../interfaces/listing";
 
 export async function fetchListingsByCategory(
-  category: string
-): Promise<IListing[]> {
+  category: string,
+  page: number,
+  limit: number
+): Promise<{ listings: IListing[]; totalCount: number }> {
   const response = await fetch(
-    `/api/listings?category=${encodeURIComponent(category)}`,
+    `/api/listings?category=${encodeURIComponent(
+      category
+    )}&page=${page}&limit=${limit}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -17,7 +21,7 @@ export async function fetchListingsByCategory(
   }
 
   const data = await response.json();
-  console.log(data);
+  console.log("Fetched listings:", data.listings);
   return data;
 }
 

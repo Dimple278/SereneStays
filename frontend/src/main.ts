@@ -21,7 +21,7 @@ interface RouteParams {
 
 // Get the main content area of the page
 const mainContent = document.getElementById("main-content");
-
+// const listingContainer = document.getElementById("listings-container");
 // Inject navbar and footer
 loadNavbar();
 loadFooter();
@@ -49,8 +49,14 @@ const routes: Route[] = [
     path: "/",
     action: async () => {
       if (mainContent) {
-        const listings = await fetchListingsByCategory("ALL");
-        renderListings(mainContent, listings);
+        const page = 1; // Initial page
+        const listingsPerPage = 10; // Number of listings per page
+        const { listings, totalCount } = await fetchListingsByCategory(
+          "ALL",
+          page,
+          listingsPerPage
+        );
+        renderListings(mainContent, listings, totalCount);
       }
     },
   },
@@ -58,8 +64,14 @@ const routes: Route[] = [
     path: "/listings",
     action: async () => {
       if (mainContent) {
-        const listings = await fetchListingsByCategory("ALL");
-        renderListings(mainContent, listings);
+        const page = 1; // Initial page
+        const listingsPerPage = 10; // Number of listings per page
+        const { listings, totalCount } = await fetchListingsByCategory(
+          "ALL",
+          page,
+          listingsPerPage
+        );
+        renderListings(mainContent, listings, totalCount);
       }
     },
   },

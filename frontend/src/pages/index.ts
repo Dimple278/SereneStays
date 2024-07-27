@@ -9,6 +9,10 @@ import {
 import { IListing } from "../interfaces/listing";
 
 let currentFilteredListings: IListing[] = [];
+let currentCategory = "ALL";
+let currentPage = 1;
+const listingsPerPage = 10;
+
 // Debouncing utility function
 let debounceTimer: NodeJS.Timeout;
 const debounce = (func: Function, delay: number) => {
@@ -20,7 +24,8 @@ const debounce = (func: Function, delay: number) => {
 
 export async function renderListings(
   container: HTMLElement,
-  listings: IListing[]
+  listings: IListing[],
+  totalCount: number
 ) {
   renderFilter(container);
   renderFilterModal(container);
@@ -81,13 +86,14 @@ export async function renderListings(
     button.addEventListener("click", async () => {
       const category = button.getAttribute("data-category") || "ALL";
       console.log(`Filter clicked: ${category}`);
-      const filteredlistings = currentFilteredListings.length
-        ? currentFilteredListings.filter(
-            (listing) => listing.category === category || category === "ALL"
-          )
-        : await fetchListingsByCategory(category);
-      console.log(filteredlistings);
-      renderListings(container, filteredlistings);
+      currentCategory = category;
+      currentPage = 1; // Reset to first page for new category
+      const { listings, totalCount } = await fetchListingsByCategory(
+        category,
+        currentPage,
+        listingsPerPage
+      );
+      renderListings(container, listings, totalCount);
     });
   });
 
@@ -127,7 +133,7 @@ export async function renderListings(
         maxPrice,
         country
       );
-      renderListings(container, currentFilteredListings);
+      renderListings(container, currentFilteredListings, totalCount);
     });
   }
   const performSearch = async () => {
@@ -136,9 +142,9 @@ export async function renderListings(
     if (query.length >= 1) {
       const searchResults = await searchListings(query);
       currentFilteredListings = searchResults; // Update global filtered listings
-      renderListings(container, searchResults);
+      renderListings(container, searchResults, totalCount);
     } else {
-      renderListings(container, currentFilteredListings); // Re-render with cached filtered listings
+      renderListings(container, currentFilteredListings, totalCount); // Re-render with cached filtered listings
     }
   };
 
@@ -154,4 +160,28 @@ export async function renderListings(
     event.preventDefault(); // Prevent traditional form submission
     await performSearch(); // Call search function
   });
+
+  // Pagination
+  const totalPages = Math.ceil(totalCount / listingsPerPage);
+  const paginationContainer = document.createElement("div");
+  paginationContainer.className =
+    "pagination-container d-flex justify-content-center mt-3";
+
+  for (let page = 1; page <= totalPages; page++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = page.toString();
+    pageButton.className = "pagination-button btn btn-outline-danger mx-1 ";
+    pageButton.addEventListener("click", async () => {
+      currentPage = page;
+      const { listings } = await fetchListingsByCategory(
+        currentCategory,
+        currentPage,
+        listingsPerPage
+      );
+      renderListings(container, listings, totalCount);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  container.appendChild(paginationContainer);
 }
