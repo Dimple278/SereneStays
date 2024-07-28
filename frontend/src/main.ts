@@ -3,7 +3,7 @@ import { renderListings } from "./pages/index";
 import { fetchListingsByCategory } from "./utils/fetchListings";
 import { renderShowPage } from "./pages/show";
 import { renderEditPage } from "./pages/edit";
-import { renderNewPage } from "./components/newForm/new";
+import { renderNewPage } from "./pages/new";
 import { loadNavbar } from "./components/header/navbar";
 import { loadFooter } from "./components/footer/footer";
 // Import Bootstrap CSS
