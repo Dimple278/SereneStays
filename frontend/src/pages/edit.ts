@@ -1,5 +1,4 @@
 import axios from "axios";
-import { renderShowPage } from "./show";
 import { navigate } from "../main";
 
 export async function renderEditPage(container: HTMLElement, id: string) {
@@ -8,135 +7,175 @@ export async function renderEditPage(container: HTMLElement, id: string) {
     const listing = response.data;
 
     container.innerHTML = `
-      <div class="row mt-0 mx-auto">
-        <div class="col-md-8 mx-auto">
-          <br><br>
-          <h3>Edit Your Listing</h3>
-          <form id="editForm" method="post" action="/listings/${listing._id}?_method=PUT" class="needs-validation" novalidate enctype="multipart/form-data">
-            <div class="mb-3">
-              <label for="title" class="form-label">Title</label>
-              <input type="text" value="${listing.title}" name="listing[title]" class="form-control border border-black border-opacity-50" required>
-              <div class="valid-feedback">Title looks good!</div>
-              <div class="invalid-feedback">Title should be valid</div>
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Description</label>
-              <textarea cols="20" rows="3" name="listing[description]" class="form-control border border-black border-opacity-50" required>${listing.description}</textarea>
-              <div class="invalid-feedback">Please enter a short description.</div>
-            </div>
-            <div class="mb-3">
-              <label for="image" class="form-label">Original Image Preview</label><br>
-              <img src="${listing.image}" alt="Original Image" class="listingImg">
-            </div>
-            <div class="row mb-3">
-              <div class="col-10">
-                <label for="image" class="form-label">Upload New Image</label>
-                <input type="file" name="listing[image]" class="form-control border border-black border-opacity-50 imageInput" id="verify-img">
-                <p id="errorContainer"></p>
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-md-8 mx-auto">
+            <h3>Edit Your Listing</h3>
+            <form id="editForm" class="needs-validation" novalidate enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" value="${
+                  listing.title
+                }" name="title" class="form-control" required>
+                <div class="valid-feedback">Title looks good!</div>
+                <div class="invalid-feedback">Title is required.</div>
               </div>
-              <div class="col-2">
-                <label class="form-control border border-white" style="margin-left: -15px;font-weight: 700;" for="verify">Verify</label>
-                <input type="checkbox" checked id="verify" class="form-btn btn ms-2 border border-black border-opacity-50" required style="height: 25px; width:25px;">
-                <div class="invalid-feedback">Verify</div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea cols="20" rows="3" name="description" class="form-control" required>${
+                  listing.description
+                }</textarea>
+                <div class="invalid-feedback">Description is required.</div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label for="image" class="form-label">Update Image Preview</label><br>
-              <div id="imagePreview" class="listingImg">
-                <img src="/Icon/listing-img-pre.png" alt="demo">
+              <div class="mb-3">
+                <label class="form-label">Original Image Preview</label><br>
+                ${listing.images
+                  .map(
+                    (img: string) => `
+                  <img src="${img}" alt="Original Image" class="img-thumbnail mb-3" style="width: 150px; height: auto;">
+                `
+                  )
+                  .join("")}
               </div>
-            </div>
-            <div class="m-b3">
-              <label for="category-added" class="form-label">Previous Category</label>
-            </div>
-            <div class="m-b3">
-              <label for="category" class="form-label">Choose Category</label>
-              <div class="category-choose">
-                <p><b>Single choose :</b> Click &nbsp;&nbsp;</p>
-                <p><b>Multiple choose :</b> Ctrl + Click</p>
+              <div class="mb-3">
+                <label for="images" class="form-label">Upload New Images</label>
+                <input type="file" name="images" class="form-control" id="imageInput" multiple>
+                <div class="invalid-feedback">Please upload images.</div>
               </div>
-              <select id="category" name="listing[category]" class="form-select border border-black border-opacity-50 mb-2" multiple style="font-size: .95rem;">
-                <option value="Beachfront">Beachfront</option>
-                <option value="Cabins">Cabins</option>
-                <option value="Omg">OMG</option>
-                <option value="Lake">Lake</option>
-                <option value="Design">Design</option>
-                <option value="Amazing Pools">Amazing pools</option>
-                <option value="Farms">Farms</option>
-                <option value="Amazing Views">Amazing views</option>
-                <option value="Rooms">Rooms</option>
-                <option value="Lakefront">Lakefront</option>
-                <option value="Tiny Homes">Tiny homes</option>
-                <option value="Countryside">Countryside</option>
-                <option value="Treehouse">Treehouse</option>
-                <option value="Trending">Trending</option>
-                <option value="Tropical">Tropical</option>
-                <option value="National Parks">National parks</option>
-                <option value="Casties">Casties</option>
-                <option value="Camping">Camping</option>
-                <option value="Top Of The World">Top of the world</option>
-                <option value="Luxe">Luxe</option>
-                <option value="Iconic Cities">Iconic cities</option>
-                <option value="Earth Homes">Earth homes</option>
-              </select>
-            </div>
-            <div class="row">
-              <div class="mb-3 col-md-4">
-                <label for="price" class="form-label">Price</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
+              <div class="mb-3">
+                <label class="form-label">New Images Preview</label><br>
+                <div id="imagePreview" class="border p-2"></div>
+              </div>
+              <div class="mb-3">
+                <label for="category" class="form-label">Choose Category</label>
+                <select id="category" name="category" class="form-select" multiple>
+                  <option value="Beachfront">Beachfront</option>
+                  <option value="Cabins">Cabins</option>
+                  <option value="Omg">OMG</option>
+                  <option value="Lake">Lake</option>
+                  <option value="Design">Design</option>
+                  <option value="Amazing Pools">Amazing pools</option>
+                  <option value="Farms">Farms</option>
+                  <option value="Amazing Views">Amazing views</option>
+                  <option value="Rooms">Rooms</option>
+                  <option value="Lakefront">Lakefront</option>
+                  <option value="Tiny Homes">Tiny homes</option>
+                  <option value="Countryside">Countryside</option>
+                  <option value="Treehouse">Treehouse</option>
+                  <option value="Trending">Trending</option>
+                  <option value="Tropical">Tropical</option>
+                  <option value="National Parks">National parks</option>
+                  <option value="Casties">Casties</option>
+                  <option value="Camping">Camping</option>
+                  <option value="Top Of The World">Top of the world</option>
+                  <option value="Luxe">Luxe</option>
+                  <option value="Iconic Cities">Iconic cities</option>
+                  <option value="Earth Homes">Earth homes</option>
+                </select>
+              </div>
+              <div class="row">
+                <div class="mb-3 col-md-4">
+                  <label for="price" class="form-label">Price</label>
+                  <div class="input-group mb-3">
                     <span class="input-group-text">₹</span>
-                  </div>
-                  <input type="number" value="${listing.price}" name="listing[price]" class="form-control border border-black border-opacity-50" required>
-                  <div class="input-group-append">
+                    <input type="number" value="${
+                      listing.price
+                    }" name="price" class="form-control" required>
                     <span class="input-group-text">.00</span>
                   </div>
+                  <div class="invalid-feedback">Price is required.</div>
                 </div>
-                <div class="invalid-feedback">Price should be valid</div>
+                <div class="mb-3 col-md-8">
+                  <label for="country" class="form-label">Country</label>
+                  <input type="text" value="${
+                    listing.country
+                  }" name="country" class="form-control" required>
+                  <div class="invalid-feedback">Country is required.</div>
+                </div>
               </div>
-              <div class="mb-3 col-md-8">
-                <label for="country" class="form-label">Country</label>
-                <input type="text" value="${listing.country}" name="listing[country]" class="form-control border border-black border-opacity-50" required>
-                <div class="invalid-feedback">Country name should be valid</div>
+              <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" value="${
+                  listing.location
+                }" name="location" class="form-control" required>
+                <div class="invalid-feedback">Location is required.</div>
               </div>
+              <button type="submit" class="btn btn-success mb-3">Edit</button>
+            </form>
+             <div id="loading" class="loading-overlay align-items-center justify-content-center" style="display: none;">
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span class="ms-2 ">Editing...</span>
             </div>
-            <div class="mb-3">
-              <label for="location" class="form-label">Location</label>
-              <input type="text" value="${listing.location}" name="listing[location]" class="form-control border border-black border-opacity-50" required>
-              <div class="invalid-feedback">Location should be valid</div>
-            </div>
-            <button type="submit" class="btn btn-success mb-3 styleBtn">Edit</button>
-          </form>
+          </div>
         </div>
       </div>
     `;
 
-    const editForm = document.getElementById("editForm") as HTMLFormElement;
+    const editForm = document.getElementById(
+      "editForm"
+    ) as HTMLFormElement | null;
+    const imageInput = document.getElementById(
+      "imageInput"
+    ) as HTMLInputElement | null;
+    const imagePreview = document.getElementById(
+      "imagePreview"
+    ) as HTMLDivElement | null;
+    const loadingScreen = document.getElementById(
+      "loading"
+    ) as HTMLDivElement | null;
+
+    if (imageInput && imagePreview) {
+      imageInput.addEventListener("change", () => {
+        if (imageInput.files) {
+          imagePreview.innerHTML = ""; // Clear previous previews
+          Array.from(imageInput.files).forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const imgElement = document.createElement("img");
+              imgElement.src = e.target?.result as string;
+              imgElement.classList.add("img-thumbnail", "mb-3");
+              imgElement.style.width = "150px";
+              imgElement.style.height = "auto";
+              imagePreview.appendChild(imgElement);
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+      });
+    }
+
     if (editForm) {
       editForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(editForm);
 
-        // Log the FormData entries for debugging
-        for (const [key, value] of formData.entries()) {
-          console.log(`${key}: ${value}`);
+        if (loadingScreen) {
+          loadingScreen.style.display = "flex"; // Show loading screen
+          container.style.opacity = "0.5"; // Dim the background
         }
 
         try {
-          const updatedListing = {
-            title: formData.get("listing[title]"),
-            description: formData.get("listing[description]"),
-            // image: formData.get("listing[image]"),
-            price: formData.get("listing[price]"),
-            location: formData.get("listing[location]"),
-            country: formData.get("listing[country]"),
-            // category: formData.getAll("listing[category]"),
-          };
+          await axios.put(`/api/listings/${id}`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
 
-          await axios.put(`/api/listings/${id}`, updatedListing);
+          if (loadingScreen) {
+            loadingScreen.style.display = "none"; // Hide loading screen
+            container.style.opacity = "1"; // Restore background opacity
+          }
+
           navigate(`/show/${id}`);
         } catch (error) {
           console.error("Error updating listing:", error);
+
+          if (loadingScreen) {
+            loadingScreen.style.display = "none"; // Hide loading screen
+            container.style.opacity = "1"; // Restore background opacity
+          }
         }
       });
     }

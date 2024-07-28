@@ -79,7 +79,8 @@ export const updateListing = async (req: Request, res: Response) => {
   }
 
   // Combine existing images with new images
-  const updatedImages = [...existingImages, ...newImages];
+  // const updatedImages = [...existingImages, ...newImages];
+  const updatedImages = newImages;
 
   // Update the listing with new data and images
   const updatedListing = await ListingModel.update(parseInt(id), {

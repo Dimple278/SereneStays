@@ -47,7 +47,7 @@ export async function renderListings(
                   <img class="heart heart-r" src="/Icon/heart-red.png" alt="like" style="opacity: 1; z-index: 5;">
                   <img class="heart heart-b" src="/Icon/heart-black.png" alt="like" style="z-index: 6;">
                   <img src="${
-                    listing.images
+                    listing.images[0]
                   }" class="card-img-top" alt="listing_image" />
                 </div>
                 <div class="card-body mt-1 ms-2">

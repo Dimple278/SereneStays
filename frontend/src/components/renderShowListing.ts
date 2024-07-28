@@ -10,7 +10,7 @@ export function renderShowListing(container: HTMLElement, listing: IListing) {
     <div class="card col-8 offset-2 show-card listing-card">
       <div class="show-card-img">
         <img src="${
-          listing.images
+          listing.images[0]
         }" class="card-img-top show-img" alt="listing_image">
       </div>
       <div class="card-body ms-1">
