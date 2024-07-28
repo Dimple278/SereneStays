@@ -28,28 +28,43 @@ export async function fetchListingsByCategory(
 export async function fetchFilteredListings(
   minPrice: string,
   maxPrice: string,
-  country: string
-): Promise<IListing[]> {
+  country: string,
+  page: number,
+  limit: number
+): Promise<{ listings: IListing[]; totalCount: number }> {
   const params = new URLSearchParams();
   if (minPrice) params.append("minPrice", minPrice);
   if (maxPrice) params.append("maxPrice", maxPrice);
   if (country) params.append("country", country);
+  params.append("page", page.toString());
+  params.append("limit", limit.toString());
 
   const response = await fetch(`/api/listings/filter?${params.toString()}`);
-  return response.json();
+  if (!response.ok) {
+    throw new Error("Failed to fetch filtered listings");
+  }
+  const data = await response.json();
+  return data;
 }
 
-export async function searchListings(query: string): Promise<IListing[]> {
+export async function searchListings(
+  query: string,
+  page: number,
+  limit: number
+): Promise<{ listings: IListing[]; totalCount: number }> {
   try {
     const response = await fetch(
-      `/api/listings/search?q=${encodeURIComponent(query)}`
+      `/api/listings/search?q=${encodeURIComponent(
+        query
+      )}&page=${page}&limit=${limit}`
     );
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error("Failed to search listings");
     }
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error("Error fetching search results:", error);
-    return [];
+    console.error("Error searching listings:", error);
+    throw error;
   }
 }

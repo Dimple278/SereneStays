@@ -10,6 +10,10 @@ import { IListing } from "../interfaces/listing";
 
 let currentFilteredListings: IListing[] = [];
 let currentCategory = "ALL";
+let currentSearchQuery = "";
+let currentMinPrice = "";
+let currentMaxPrice = "";
+let currentCountry = "";
 let currentPage = 1;
 const listingsPerPage = 10;
 
@@ -85,14 +89,15 @@ export async function renderListings(
   filterButtons.forEach((button) => {
     button.addEventListener("click", async () => {
       const category = button.getAttribute("data-category") || "ALL";
-      console.log(`Filter clicked: ${category}`);
       currentCategory = category;
+      currentSearchQuery = ""; // Reset search query when a new filter is applied
       currentPage = 1; // Reset to first page for new category
       const { listings, totalCount } = await fetchListingsByCategory(
         category,
         currentPage,
         listingsPerPage
       );
+      currentFilteredListings = listings; // Update global filtered listings
       renderListings(container, listings, totalCount);
     });
   });
@@ -121,28 +126,44 @@ export async function renderListings(
   if (applyFiltersButton) {
     applyFiltersButton.addEventListener("click", async (event) => {
       event.preventDefault();
-      const minPrice = (document.getElementById("minPrice") as HTMLInputElement)
-        .value;
-      const maxPrice = (document.getElementById("maxPrice") as HTMLInputElement)
-        .value;
-      const country = (document.getElementById("country") as HTMLInputElement)
+      currentMinPrice = (
+        document.getElementById("minPrice") as HTMLInputElement
+      ).value;
+      currentMaxPrice = (
+        document.getElementById("maxPrice") as HTMLInputElement
+      ).value;
+      currentCountry = (document.getElementById("country") as HTMLInputElement)
         .value;
 
-      currentFilteredListings = await fetchFilteredListings(
-        minPrice,
-        maxPrice,
-        country
+      currentCategory = "ALL"; // Reset category when filters are applied
+      currentSearchQuery = ""; // Reset search query when filters are applied
+      currentPage = 1; // Reset to first page for new filters
+      const { listings, totalCount } = await fetchFilteredListings(
+        currentMinPrice,
+        currentMaxPrice,
+        currentCountry,
+        currentPage,
+        listingsPerPage
       );
-      renderListings(container, currentFilteredListings, totalCount);
+      currentFilteredListings = listings; // Update global filtered listings
+      renderListings(container, listings, totalCount);
     });
   }
+
   const performSearch = async () => {
     const query = (document.getElementById("mySearchInput") as HTMLInputElement)
       .value;
+    currentSearchQuery = query; // Update global search query
     if (query.length >= 1) {
-      const searchResults = await searchListings(query);
-      currentFilteredListings = searchResults; // Update global filtered listings
-      renderListings(container, searchResults, totalCount);
+      currentCategory = "ALL"; // Reset category when search is performed
+      currentPage = 1; // Reset to first page for new search
+      const { listings, totalCount } = await searchListings(
+        query,
+        currentPage,
+        listingsPerPage
+      );
+      currentFilteredListings = listings; // Update global filtered listings
+      renderListings(container, listings, totalCount);
     } else {
       renderListings(container, currentFilteredListings, totalCount); // Re-render with cached filtered listings
     }
@@ -170,15 +191,35 @@ export async function renderListings(
   for (let page = 1; page <= totalPages; page++) {
     const pageButton = document.createElement("button");
     pageButton.textContent = page.toString();
-    pageButton.className = "pagination-button btn btn-outline-danger mx-1 ";
+    pageButton.className = "pagination-button btn btn-outline-danger mx-1";
     pageButton.addEventListener("click", async () => {
       currentPage = page;
-      const { listings } = await fetchListingsByCategory(
-        currentCategory,
-        currentPage,
-        listingsPerPage
-      );
-      renderListings(container, listings, totalCount);
+      let listingsData;
+      if (currentSearchQuery) {
+        // Fetch search results if a search query is active
+        listingsData = await searchListings(
+          currentSearchQuery,
+          currentPage,
+          listingsPerPage
+        );
+      } else if (currentMinPrice || currentMaxPrice || currentCountry) {
+        // Fetch filtered listings if filters are active
+        listingsData = await fetchFilteredListings(
+          currentMinPrice,
+          currentMaxPrice,
+          currentCountry,
+          currentPage,
+          listingsPerPage
+        );
+      } else {
+        // Fetch category listings if a category filter is active
+        listingsData = await fetchListingsByCategory(
+          currentCategory,
+          currentPage,
+          listingsPerPage
+        );
+      }
+      renderListings(container, listingsData.listings, listingsData.totalCount);
     });
     paginationContainer.appendChild(pageButton);
   }

@@ -102,25 +102,40 @@ export const deleteListing = async (req: Request, res: Response) => {
 
 export const filterListings = async (req: Request, res: Response) => {
   const { minPrice, maxPrice, country } = req.query;
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
 
-  const filteredListings = await ListingModel.findByFilters(
+  const listings = await ListingModel.findByFilters(
+    minPrice ? parseFloat(minPrice as string) : undefined,
+    maxPrice ? parseFloat(maxPrice as string) : undefined,
+    country as string,
+    page,
+    limit
+  );
+  const totalCount = await ListingModel.countByFilters(
     minPrice ? parseFloat(minPrice as string) : undefined,
     maxPrice ? parseFloat(maxPrice as string) : undefined,
     country as string
   );
-  if (!filterListings) {
+
+  if (!listings.length) {
     throw new NotFoundError("No such Listings found");
   }
 
-  res.json(filteredListings);
+  res.json({ listings, totalCount });
 };
 
 export const searchListings = async (req: Request, res: Response) => {
   const query = req.query.q as string;
-  console.log(query);
-  const listings = await ListingModel.search(query);
-  if (!listings) {
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+
+  const listings = await ListingModel.search(query, page, limit);
+  const totalCount = await ListingModel.countSearch(query);
+
+  if (!listings.length) {
     throw new NotFoundError("No such Listings found");
   }
-  res.json(listings);
+
+  res.json({ listings, totalCount });
 };

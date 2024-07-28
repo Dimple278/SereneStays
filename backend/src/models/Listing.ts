@@ -70,35 +70,78 @@ class ListingModel {
     await db(this.tableName).where({ id }).del();
   }
 
-  public async findByFilters(
-    minPrice?: number,
-    maxPrice?: number,
-    country?: string
+  public async search(
+    query: string,
+    page: number,
+    limit: number
   ): Promise<Listing[]> {
-    let query = db(this.tableName).select("*");
-
-    if (minPrice !== undefined) {
-      query = query.where("price", ">=", minPrice);
-    }
-
-    if (maxPrice !== undefined) {
-      query = query.where("price", "<=", maxPrice);
-    }
-
-    if (country) {
-      query = query.where("country", "ILIKE", `%${country}%`);
-    }
-
-    return query;
-  }
-
-  public async search(query: string): Promise<Listing[]> {
     return await db(this.tableName)
       .select("*")
       .where("title", "ilike", `%${query}%`)
-      // .orWhere("description", "ilike", `%${query}%`)
+      .orWhere("location", "ilike", `%${query}%`)
+      .orWhere("country", "ilike", `%${query}%`)
+      .offset((page - 1) * limit)
+      .limit(limit);
+  }
+
+  public async countSearch(query: string): Promise<number> {
+    const [{ count }] = await db(this.tableName)
+      .count("* as count")
+      .where("title", "ilike", `%${query}%`)
       .orWhere("location", "ilike", `%${query}%`)
       .orWhere("country", "ilike", `%${query}%`);
+    return parseInt(`${count}`, 10);
+  }
+
+  public async findByFilters(
+    minPrice?: number,
+    maxPrice?: number,
+    country?: string,
+    page?: number,
+    limit?: number
+  ): Promise<Listing[]> {
+    let listingsQuery = db(this.tableName).select("*");
+
+    if (minPrice !== undefined) {
+      listingsQuery = listingsQuery.where("price", ">=", minPrice);
+    }
+
+    if (maxPrice !== undefined) {
+      listingsQuery = listingsQuery.where("price", "<=", maxPrice);
+    }
+
+    if (country) {
+      listingsQuery = listingsQuery.where("country", "ILIKE", `%${country}%`);
+    }
+
+    return await listingsQuery.offset((page - 1) * limit).limit(limit);
+  }
+
+  public async countByFilters(
+    minPrice?: number,
+    maxPrice?: number,
+    country?: string
+  ): Promise<number> {
+    let totalCountQuery = db(this.tableName).count("* as count");
+
+    if (minPrice !== undefined) {
+      totalCountQuery = totalCountQuery.where("price", ">=", minPrice);
+    }
+
+    if (maxPrice !== undefined) {
+      totalCountQuery = totalCountQuery.where("price", "<=", maxPrice);
+    }
+
+    if (country) {
+      totalCountQuery = totalCountQuery.where(
+        "country",
+        "ILIKE",
+        `%${country}%`
+      );
+    }
+
+    const [{ count }] = await totalCountQuery;
+    return parseInt(`${count}`, 10);
   }
 }
 
