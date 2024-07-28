@@ -1,7 +1,7 @@
 import db from "../db";
 import { Listing } from "../interface/listing";
-
-class ListingModel {
+import { BaseModel } from "./base";
+class ListingModel extends BaseModel {
   private tableName: string = "listings";
 
   public async create(listing: Listing): Promise<Listing> {

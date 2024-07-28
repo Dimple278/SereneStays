@@ -1,8 +1,9 @@
 // models/User.ts
 import db from "../db";
 import bcrypt from "bcryptjs";
+import { BaseModel } from "./base";
 
-class UserModel {
+class UserModel extends BaseModel {
   static async findByEmail(email: string) {
     const user = await db("users").where({ email }).first();
     return user;

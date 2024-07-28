@@ -24,7 +24,7 @@ import { wrapAsync } from "../utils/wrapAsync";
 import { NotFoundError } from "../error/Error";
 import { upload } from "../../cloudinary";
 
-import { authenticate } from "../middleware/auth";
+import { authenticate, authorize } from "../middleware/auth";
 
 const listingsRouter = Router();
 listingsRouter.get(
@@ -47,7 +47,8 @@ listingsRouter.get(
 listingsRouter.post(
   "/",
   upload.array("images"),
-  // authenticate,
+  authenticate,
+  // authorize,
   validateBody(createListingSchema),
   wrapAsync(createListing)
 );
@@ -55,6 +56,8 @@ listingsRouter.post(
 listingsRouter.put(
   "/:id",
   upload.array("images"),
+  authenticate,
+  authorize,
   validateParams(listingIdSchema),
   validateBody(updateListingSchema),
   wrapAsync(updateListing)
@@ -62,6 +65,8 @@ listingsRouter.put(
 
 listingsRouter.delete(
   "/:id",
+  authenticate,
+  authorize,
   validateParams(listingIdSchema),
   wrapAsync(deleteListing)
 );

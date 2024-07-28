@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
+import { AuthRequest, Params } from "../interface/auth.interface";
 import ListingModel from "../models/Listing";
-
-import { NotFoundError } from "../error/Error";
+import { NotFoundError, UnauthorizedError } from "../error/Error";
 import { cloudinary } from "../../cloudinary";
+import { IUser } from "../interface/user";
+import { Listing } from "../interface/listing";
 
 export const getListings = async (req: Request, res: Response) => {
   const category = (req.query.category as string) || "ALL";
@@ -15,9 +17,12 @@ export const getListings = async (req: Request, res: Response) => {
   res.json({ listings, totalCount });
 };
 
-export const getListingById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const listing = await ListingModel.findById(parseInt(id));
+export const getListingById = async (
+  req: AuthRequest<{ id: string }>,
+  res: Response
+) => {
+  const id = parseInt(req.params.id as string, 10);
+  const listing = await ListingModel.findById(id);
   if (!listing) {
     throw new NotFoundError("Listing not found");
   }
@@ -25,10 +30,14 @@ export const getListingById = async (req: Request, res: Response) => {
 };
 
 // Controller method to handle image uploads
-export const createListing = async (req: Request, res: Response) => {
+export const createListing = async (req: AuthRequest, res: Response) => {
   const { files, body } = req;
-  console.log(files);
-  console.log("Images:", files);
+  const user = req.user as IUser;
+
+  if (!user) {
+    throw new UnauthorizedError("User not authenticated");
+  }
+
   const images: string[] = [];
 
   // Process uploaded images
@@ -40,24 +49,28 @@ export const createListing = async (req: Request, res: Response) => {
       images.push(result.secure_url);
     }
   }
-  console.log("Uploaded images:", images);
-  console.log("Listing body:", body);
 
-  // Create a new listing with images
-  const newListing = await ListingModel.save({
+  // Ensure the body conforms to the Listing interface
+  const newListingData: Listing = {
     ...body,
     images,
-  });
+    owner_id: user.id,
+  };
+  // Create a new listing with images
+  const newListing = await ListingModel.save(newListingData);
 
   res.status(201).json(newListing);
 };
 
-export const updateListing = async (req: Request, res: Response) => {
-  const { id } = req.params;
+export const updateListing = async (
+  req: AuthRequest<{ id: string }>,
+  res: Response
+) => {
+  const id = parseInt(req.params.id as string, 10);
   const { files, body } = req;
 
   // Get the existing listing
-  const listing = await ListingModel.findById(parseInt(id));
+  const listing = await ListingModel.findById(id);
   if (!listing) {
     throw new NotFoundError("Listing not found");
   }
@@ -79,11 +92,10 @@ export const updateListing = async (req: Request, res: Response) => {
   }
 
   // Combine existing images with new images
-  // const updatedImages = [...existingImages, ...newImages];
   const updatedImages = newImages;
 
   // Update the listing with new data and images
-  const updatedListing = await ListingModel.update(parseInt(id), {
+  const updatedListing = await ListingModel.update(id, {
     ...body,
     images: updatedImages,
   });
@@ -91,12 +103,24 @@ export const updateListing = async (req: Request, res: Response) => {
   res.json(updatedListing);
 };
 
-export const deleteListing = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
+export const deleteListing = async (
+  req: AuthRequest<Params>,
+  res: Response
+) => {
+  const id = parseInt(req.params.id as string, 10);
+  const user = req.user as IUser;
+
   const listing = await ListingModel.findById(id);
   if (!listing) {
     throw new NotFoundError("Listing not found");
   }
+
+  if (listing.owner_id !== user.id && user.role !== "superadmin") {
+    throw new UnauthorizedError(
+      "You are not authorized to delete this listing"
+    );
+  }
+
   await ListingModel.delete(id);
   res.redirect("/api/listings");
 };
