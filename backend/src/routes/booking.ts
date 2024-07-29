@@ -16,6 +16,7 @@ import {
 import { wrapAsync } from "../utils/wrapAsync";
 import { NotFoundError } from "../error/Error";
 import { listingIdSchema } from "../schemas/review";
+import { authenticate, authorizeBooking } from "../middleware/auth";
 
 const bookingsRouter = Router();
 
@@ -28,26 +29,32 @@ bookingsRouter.get(
 );
 
 bookingsRouter.post(
-  "/",
+  "/listing/:listing_id",
+  authenticate,
   validateBody(createBookingSchema),
   wrapAsync(createBooking)
 );
 
 bookingsRouter.put(
   "/:id",
+  authenticate,
   validateParams(bookingIdSchema),
   validateBody(updateBookingSchema),
+  authorizeBooking,
   wrapAsync(updateBooking)
 );
 
 bookingsRouter.delete(
   "/:id",
+  authenticate,
   validateParams(bookingIdSchema),
+  authorizeBooking,
   wrapAsync(deleteBooking)
 );
 
 bookingsRouter.get(
   "/listing/:listing_id",
+  // authenticate,
   validateParams(listingIdSchema),
   wrapAsync(getBookingsByListingId)
 );

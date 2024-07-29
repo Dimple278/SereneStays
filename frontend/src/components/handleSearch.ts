@@ -1,4 +1,4 @@
-import { searchListings } from "../utils/fetchListings";
+import { searchListings } from "../api/fetchListings";
 import { renderListings } from "./renderListings";
 import { IListing } from "../interfaces/listing";
 

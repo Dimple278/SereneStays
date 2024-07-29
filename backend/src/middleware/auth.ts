@@ -10,6 +10,8 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../error/Error";
+import BookingModel from "../models/Booking";
+import Review from "../models/Review";
 
 // Middleware to authenticate user
 export async function authenticate(
@@ -91,4 +93,62 @@ export const authorize = async (
   }
 
   next();
+};
+
+export const authorizeBooking = async (
+  req: AuthRequest<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  const user = req.user;
+
+  if (!user) {
+    throw new UnauthorizedError("User not authenticated");
+  }
+
+  const booking = await BookingModel.findById(parseInt(id));
+  if (!booking) {
+    throw new NotFoundError("Booking not found");
+  }
+  console.log("booking.user_id:", booking.user_id);
+  console.log("user.id:", user.id);
+
+  if (booking.userId !== user.id && user.role !== "superadmin") {
+    throw new UnauthorizedError("User not authorized to perform this action");
+  }
+
+  next();
+};
+
+export const authorizeReviewOwner = async (
+  req: AuthRequest<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user as IUser;
+    const { id } = req.params;
+
+    const review = await Review.findById(parseInt(id, 10)); // Ensure id is parsed as a number with base 10
+    if (!review) {
+      throw new NotFoundError("Review not found");
+    }
+
+    console.log("review.authorId:", review.authorId);
+    console.log("user.id:", user.id);
+    console.log("typeof user.id:", typeof user.id);
+    console.log("typeof review.authorId:", typeof parseInt(review.authorId));
+    console.log(parseInt(review.authorId) !== user.id);
+    // Convert user.id to a string for comparison
+    if (parseInt(review.authorId) !== user.id) {
+      throw new UnauthorizedError(
+        "You are not authorized to perform this action"
+      );
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 };

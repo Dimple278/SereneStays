@@ -15,17 +15,13 @@ import {
 } from "../schemas/review";
 import { wrapAsync } from "../utils/wrapAsync";
 
-import { authenticate } from "../middleware/auth";
+import { authenticate, authorizeReviewOwner } from "../middleware/auth";
 import { NotFoundError } from "../error/Error";
 import { listingIdSchema } from "../schemas/review";
 
 const reviewsRouter = Router();
 
-reviewsRouter.get(
-  "/",
-  // authenticate,
-  wrapAsync(getReviews)
-);
+reviewsRouter.get("/", wrapAsync(getReviews));
 
 reviewsRouter.get(
   "/:id",
@@ -33,21 +29,19 @@ reviewsRouter.get(
   wrapAsync(getReviewById)
 );
 
-reviewsRouter.post(
-  "/",
-  validateBody(createReviewSchema),
-  wrapAsync(createReview)
-);
-
 reviewsRouter.put(
   "/:id",
-  validateParams(reviewIdSchema),
+  authenticate,
+  authorizeReviewOwner,
+  // validateParams(reviewIdSchema),
   validateBody(updateReviewSchema),
   wrapAsync(updateReview)
 );
 
 reviewsRouter.delete(
   "/:id",
+  authenticate,
+  authorizeReviewOwner,
   validateParams(reviewIdSchema),
   wrapAsync(deleteReview)
 );
@@ -56,6 +50,13 @@ reviewsRouter.get(
   "/listing/:listing_id",
   validateParams(listingIdSchema),
   wrapAsync(getReviewsByListingId)
+);
+
+reviewsRouter.post(
+  "/listing/:listing_id/",
+  authenticate,
+  validateBody(createReviewSchema),
+  wrapAsync(createReview)
 );
 
 // All other route requests

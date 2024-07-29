@@ -1,4 +1,4 @@
-import { fetchListingsByCategory } from "../utils/fetchListings";
+import { fetchListingsByCategory } from "../api/fetchListings";
 import { renderListings } from "./renderListings";
 
 let currentPage = 1;

@@ -1,6 +1,6 @@
 import UniversalRouter, { Route } from "universal-router";
 import { renderListings } from "./pages/index";
-import { fetchListingsByCategory } from "./utils/fetchListings";
+import { fetchListingsByCategory } from "./api/fetchListings";
 import { renderShowPage } from "./pages/show";
 import { renderEditPage } from "./pages/edit";
 import { renderNewPage } from "./pages/new";

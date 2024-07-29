@@ -1,7 +1,7 @@
 import {
   fetchFilteredListings,
   fetchListingsByCategory,
-} from "../utils/fetchListings";
+} from "../api/fetchListings";
 import { renderListings } from "../components/renderListings";
 
 let currentCategory = "ALL";

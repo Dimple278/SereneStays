@@ -1,15 +1,5 @@
 import db from "../db";
-
-interface Booking {
-  id?: number;
-  user_id: number;
-  listing_id: number;
-  start_date: string;
-  end_date: string;
-  total_price: number;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { IBooking } from "../interface/booking";
 
 class BookingModel {
   static async findAll() {
@@ -20,12 +10,12 @@ class BookingModel {
     return db("bookings").where({ id }).first();
   }
 
-  static async save(booking: Booking) {
+  static async save(booking: IBooking) {
     const [newBooking] = await db("bookings").insert(booking).returning("*");
     return newBooking;
   }
 
-  static async update(id: number, booking: Booking) {
+  static async update(id: number, booking: IBooking) {
     const [updatedBooking] = await db("bookings")
       .where({ id })
       .update(booking)

@@ -5,7 +5,7 @@ import {
   fetchFilteredListings,
   fetchListingsByCategory,
   searchListings,
-} from "../utils/fetchListings";
+} from "../api/fetchListings";
 import { IListing } from "../interfaces/listing";
 
 let currentFilteredListings: IListing[] = [];
@@ -121,7 +121,10 @@ export async function renderListings(
     taxSwitch.dispatchEvent(event);
   });
 
-  // Apply Filters Button event listener
+  /**
+   * Perform filter on listing based on catorgy from input field
+   *
+   */
   const applyFiltersButton = document.getElementById("applyFilters");
   if (applyFiltersButton) {
     applyFiltersButton.addEventListener("click", async (event) => {

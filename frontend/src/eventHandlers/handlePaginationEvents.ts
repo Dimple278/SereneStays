@@ -2,7 +2,7 @@ import {
   fetchFilteredListings,
   fetchListingsByCategory,
   searchListings,
-} from "../utils/fetchListings";
+} from "../api/fetchListings";
 import { renderListings } from "../components/renderListings";
 import { IListing } from "../interfaces/listing";
 

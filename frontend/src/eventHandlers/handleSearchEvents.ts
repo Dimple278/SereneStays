@@ -1,4 +1,4 @@
-import { searchListings } from "../utils/fetchListings";
+import { searchListings } from "../api/fetchListings";
 import { debounce } from "../utils/debouncer";
 import { renderListings } from "../components/renderListings";
 

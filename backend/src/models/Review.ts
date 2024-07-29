@@ -1,12 +1,6 @@
 // models/Review.ts
 import db from "../db";
-
-interface Review {
-  id?: number;
-  comment: string;
-  rating: number;
-  createdAt?: Date;
-}
+import { Review } from "../interface/review";
 
 class ReviewModel {
   static async findAll() {
@@ -35,7 +29,10 @@ class ReviewModel {
   }
 
   static async getReviewsByListingId(listing_id: number) {
-    return db("reviews").where({ listing_id }).select("*");
+    return db("reviews")
+      .join("users", "reviews.author_id", "users.id")
+      .select("reviews.*", "users.name as authorName")
+      .where("reviews.listing_id", listing_id);
   }
 }
 

@@ -1,12 +1,7 @@
 import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import { jwtDecode } from "jwt-decode";
 import { navigate } from "../main";
-
-interface JwtPayload {
-  id: number;
-}
 
 export async function renderBookingForm(
   container: HTMLElement,
@@ -130,20 +125,21 @@ export async function renderBookingForm(
     );
 
     const token = localStorage.getItem("token");
-    let userId = 0; // Initialize userId with a default value
-    if (token) {
-      const decoded: JwtPayload = jwtDecode(token);
-      userId = decoded.id;
-    }
 
     try {
-      await axios.post(`/api/bookings`, {
-        user_id: userId,
-        listing_id: listingId,
-        start_date: startDate,
-        end_date: endDate,
-        total_price: totalPrice,
-      });
+      await axios.post(
+        `/api/bookings/listing/${listingId}`,
+        {
+          start_date: startDate,
+          end_date: endDate,
+          total_price: totalPrice,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert("Booking successful!");
       navigate(`/listings/show/${listingId}`);
     } catch (error) {
