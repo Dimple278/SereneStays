@@ -5,9 +5,18 @@ import { renderReviewForm, renderEditReviewModal } from "./reviewForm";
 import { deleteReview, submitReviewForm, updateReview } from "../api/reviewAPI";
 
 export async function renderReviews(container: HTMLElement, listingId: string) {
-  const reviewsResponse = await axios.get(`/api/reviews/listing/${listingId}`);
-  const reviews = reviewsResponse.data;
-  console.log("Reviews:", reviews);
+  let reviews: IReview[] = [];
+  // let errorOccurred = false;
+
+  try {
+    const reviewsResponse = await axios.get(
+      `/api/reviews/listing/${listingId}`
+    );
+    reviews = reviewsResponse.data;
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    // errorOccurred = true;
+  }
 
   const token = localStorage.getItem("token");
   const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null; // Decodes user info from token
@@ -18,12 +27,12 @@ export async function renderReviews(container: HTMLElement, listingId: string) {
     <h4>Reviews</h4>
     <hr class="mt-2">
     <div class="col-8 offset-2">
-      ${currUser ? renderReviewForm() : ""}
-      ${
-        reviews.length > 0
-          ? renderReviewsList(reviews, currUser)
-          : "<p>No reviews yet.</p>"
-      }
+      ${renderReviewForm()}
+       ${
+         reviews.length > 0
+           ? renderReviewsList(reviews, currUser)
+           : "<p>No reviews yet.</p>"
+       }
     </div>
   `;
 
@@ -49,7 +58,7 @@ export async function renderReviews(container: HTMLElement, listingId: string) {
 
 function renderReviewsList(reviews: IReview[], currUser: any) {
   return `
-    <p><b>All Reviews</b></p>
+    
     <div class="row m-1 review-main">
       ${reviews
         .map(

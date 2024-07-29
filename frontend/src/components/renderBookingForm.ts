@@ -51,6 +51,44 @@ export async function renderBookingForm(
     }
   };
 
+  const initializeFlatpickr = (unavailableDates: Date[] = []) => {
+    flatpickr(startDateInput, {
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      onChange: calculateTotalPrice,
+      disable: unavailableDates,
+      onDayCreate: (dObj, dStr, fp, dayElem) => {
+        const date = dayElem.dateObj;
+        const isUnavailable = unavailableDates.some(
+          (unavailableDate) => unavailableDate.getTime() === date.getTime()
+        );
+
+        if (isUnavailable) {
+          dayElem.classList.add("unavailable");
+          dayElem.title = "Already booked";
+        }
+      },
+    });
+
+    flatpickr(endDateInput, {
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      onChange: calculateTotalPrice,
+      disable: unavailableDates,
+      onDayCreate: (dObj, dStr, fp, dayElem) => {
+        const date = dayElem.dateObj;
+        const isUnavailable = unavailableDates.some(
+          (unavailableDate) => unavailableDate.getTime() === date.getTime()
+        );
+
+        if (isUnavailable) {
+          dayElem.classList.add("unavailable");
+          dayElem.title = "Already booked";
+        }
+      },
+    });
+  };
+
   const disableUnavailableDates = async () => {
     try {
       const bookingsResponse = await axios.get(
@@ -73,43 +111,10 @@ export async function renderBookingForm(
       });
 
       console.log("Unavailable dates:", unavailableDates);
-      flatpickr(startDateInput, {
-        enableTime: false,
-        dateFormat: "Y-m-d",
-        onChange: calculateTotalPrice,
-        disable: unavailableDates,
-        onDayCreate: (dObj, dStr, fp, dayElem) => {
-          const date = dayElem.dateObj;
-          const isUnavailable = unavailableDates.some(
-            (unavailableDate) => unavailableDate.getTime() === date.getTime()
-          );
-
-          if (isUnavailable) {
-            dayElem.classList.add("unavailable");
-            dayElem.title = "Already booked";
-          }
-        },
-      });
-
-      flatpickr(endDateInput, {
-        enableTime: false,
-        dateFormat: "Y-m-d",
-        onChange: calculateTotalPrice,
-        disable: unavailableDates,
-        onDayCreate: (dObj, dStr, fp, dayElem) => {
-          const date = dayElem.dateObj;
-          const isUnavailable = unavailableDates.some(
-            (unavailableDate) => unavailableDate.getTime() === date.getTime()
-          );
-
-          if (isUnavailable) {
-            dayElem.classList.add("unavailable");
-            dayElem.title = "Already booked";
-          }
-        },
-      });
+      initializeFlatpickr(unavailableDates);
     } catch (error) {
       console.error("Error fetching bookings:", error);
+      initializeFlatpickr(); // Initialize flatpickr without unavailable dates
     }
   };
 

@@ -9,9 +9,7 @@ import { renderMap } from "../components/renderMap";
 export async function renderShowPage(container: HTMLElement, id: string) {
   try {
     const listingResponse = await axios.get(`/api/listings/${id}`);
-    const reviewsResponse = await axios.get(`/api/reviews`);
     const listing = listingResponse.data;
-    const reviews = reviewsResponse.data;
 
     loadCss("/src/styles/show.css");
 
