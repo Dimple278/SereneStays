@@ -52,7 +52,11 @@ class ListingModel extends BaseModel {
   }
 
   public async findById(id: number): Promise<Listing | undefined> {
-    return await db(this.tableName).where({ id }).first();
+    return await db(this.tableName)
+      .select(`${this.tableName}.*`, "users.name as ownerName")
+      .join("users", `${this.tableName}.owner_id`, "users.id") // Join the users table on owner_id
+      .where(`${this.tableName}.id`, id)
+      .first();
   }
 
   public async update(id: number, listing: Partial<Listing>): Promise<Listing> {

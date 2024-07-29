@@ -1,4 +1,6 @@
 export interface IListing {
+  ownerId: any;
+  ownerName: any;
   id: string;
   description?: string;
   title: string;

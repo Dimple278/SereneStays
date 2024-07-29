@@ -27,6 +27,7 @@ export async function renderBookingForm(
       </div>
       <button type="submit" class="btn btn-success">Book Now</button>
     </form>
+    <hr class="my-4">
   `;
   container.appendChild(bookingFormContainer);
 

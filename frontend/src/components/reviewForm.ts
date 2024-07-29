@@ -61,7 +61,7 @@ export function renderEditReviewModal(): HTMLElement {
                   <textarea class="form-control" name="review[comment]" id="edit-comment" cols="30" rows="3" required></textarea>
                   <div class="invalid-feedback">Please add some comments for review</div>
                 </div>
-                <button type="submit" class="btn btn-success mb-3 styleBtn">Update</button>
+                <button type="submit" data-bs-dismiss="modal" class="btn btn-success mb-3 styleBtn">Update</button>
               </form>
             </div>
           </div>
