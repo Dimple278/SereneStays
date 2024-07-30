@@ -92,7 +92,7 @@ export const updateListing = async (
   }
 
   // Combine existing images with new images
-  const updatedImages = newImages;
+  const updatedImages = newImages.length > 0 ? newImages : existingImages;
 
   // Update the listing with new data and images
   const updatedListing = await ListingModel.update(id, {
@@ -115,14 +115,9 @@ export const deleteListing = async (
     throw new NotFoundError("Listing not found");
   }
 
-  if (listing.owner_id !== user.id && user.role !== "superadmin") {
-    throw new UnauthorizedError(
-      "You are not authorized to delete this listing"
-    );
-  }
-
   await ListingModel.delete(id);
-  res.redirect("/api/listings");
+  // res.redirect("/api/listings");
+  res.json("deleted Listing");
 };
 
 export const filterListings = async (req: Request, res: Response) => {

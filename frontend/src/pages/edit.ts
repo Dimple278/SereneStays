@@ -5,6 +5,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
   try {
     const response = await axios.get(`/api/listings/${id}`);
     const listing = response.data;
+    const token = localStorage.getItem("token");
 
     container.innerHTML = `
       <div class="container mt-5">
@@ -160,6 +161,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
           await axios.put(`/api/listings/${id}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
             },
           });
 

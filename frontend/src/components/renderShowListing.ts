@@ -78,8 +78,18 @@ export function renderShowListing(container: HTMLElement, listing: IListing) {
   if (deleteForm) {
     deleteForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      await axios.delete(`/api/listings/${listing.id}`);
-      navigate(`/listings`);
+      console.log(listing.id);
+      try {
+        await axios.delete(`/api/listings/${listing.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        navigate(`/listings`);
+      } catch (error) {
+        console.error("Error deleting listing:", error);
+        alert("Failed to delete listing.");
+      }
     });
   }
 }
