@@ -6,7 +6,7 @@ const s = config.jwt.secret!;
 
 // Generate access token
 export async function generateAccessToken(
-  payload: Pick<IUser, "id" | "name" | "email">
+  payload: Pick<IUser, "id" | "name" | "email" | "image">
 ) {
   return sign(payload, s, {
     expiresIn: config.jwt.accessExpiration,
@@ -15,7 +15,7 @@ export async function generateAccessToken(
 
 // Generate refresh token
 export async function generateRefreshToken(
-  payload: Pick<IUser, "id" | "name" | "email">
+  payload: Pick<IUser, "id" | "name" | "email" | "image">
 ) {
   return sign(payload, s, {
     expiresIn: config.jwt.refreshTokenExpiration,

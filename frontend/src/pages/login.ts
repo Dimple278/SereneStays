@@ -33,7 +33,10 @@ export function renderLoginPage(container: HTMLElement) {
       localStorage.setItem("token", response.data.accessToken);
       messageDiv.innerHTML =
         '<div class="alert alert-success">Login successful!</div>';
-      setTimeout(() => navigate("/"), 2000); // Redirect to home page after 2 seconds
+      setTimeout(() => {
+        navigate("/");
+        window.location.reload(); // Reload the page to reflect changes
+      }, 2000); // Redirect to home page after 2 seconds
     } catch (error: any) {
       console.error("Error:", error);
 

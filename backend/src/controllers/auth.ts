@@ -46,6 +46,7 @@ export const login = async (req: Request, res: Response) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    image: user.image,
   };
 
   const accessToken = await generateAccessToken(payload);
@@ -61,13 +62,14 @@ export async function refresh(req: Request, res: Response) {
 
     const decoded = verify(refreshToken, config.jwt.secret!) as Pick<
       IUser,
-      "id" | "name" | "email"
+      "id" | "name" | "email" | "image"
     >;
 
     const payload = {
       id: decoded.id,
       name: decoded.name,
       email: decoded.email,
+      image: decoded.image,
     };
 
     const newAccessToken = await generateAccessToken(payload);

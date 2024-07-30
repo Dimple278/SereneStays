@@ -20,6 +20,7 @@ export async function renderReviews(container: HTMLElement, listingId: string) {
 
   const token = localStorage.getItem("token");
   const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null; // Decodes user info from token
+  console.log("Current user:", currUser);
 
   const reviewsContainer = document.createElement("div");
   reviewsContainer.className = "col-8 offset-2 mt-3";

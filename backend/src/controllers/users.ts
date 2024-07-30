@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import UserModel from "../models/Users";
-
-import { NotFoundError } from "../error/Error";
+import { NotFoundError, BadRequestError } from "../error/Error";
 
 export const getUsers = async (
   req: Request,
@@ -30,8 +29,19 @@ export const createUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const newUser = await UserModel.save(req.body);
-  res.status(201).json(newUser);
+  const { email } = req.body;
+  const existingUser = await UserModel.findByEmail(email);
+  if (existingUser) {
+    throw new BadRequestError("Email already in use");
+  }
+
+  const newUser = {
+    ...req.body,
+    image: req.file?.path || null, // Add image path
+  };
+
+  const createdUser = await UserModel.save(newUser);
+  res.status(201).json(createdUser);
 };
 
 export const updateUser = async (
@@ -40,11 +50,23 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const updatedUser = await UserModel.update(parseInt(id), req.body);
-  if (!updatedUser) {
+  const { email } = req.body;
+
+  const existingUser = await UserModel.findByEmail(email);
+  if (existingUser && existingUser.id !== parseInt(id)) {
+    throw new BadRequestError("Email already in use");
+  }
+
+  const updatedUser = {
+    ...req.body,
+    image: req.file?.path || req.body.image, // Update image path if a new file is uploaded
+  };
+
+  const user = await UserModel.update(parseInt(id), updatedUser);
+  if (!user) {
     throw new NotFoundError("User not found");
   }
-  res.json(updatedUser);
+  res.json(user);
 };
 
 export const deleteUser = async (

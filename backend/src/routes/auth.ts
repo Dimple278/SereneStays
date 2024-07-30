@@ -5,6 +5,7 @@ import { signupSchema, loginSchema } from "../schemas/auth";
 import { wrapAsync } from "../utils/wrapAsync";
 import { NotFoundError } from "../error/Error";
 import { upload } from "../../cloudinary";
+import { createUser } from "../controllers/users";
 
 const authRouter = Router();
 
@@ -12,8 +13,9 @@ authRouter.post(
   "/signup",
   upload.single("image"),
   validateBody(signupSchema),
-  wrapAsync(signup)
+  wrapAsync(createUser)
 );
+
 authRouter.post(
   "/login",
   upload.single("image"),

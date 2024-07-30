@@ -15,6 +15,7 @@ import {
 } from "../schemas/user";
 import { wrapAsync } from "../utils/wrapAsync";
 import { NotFoundError } from "../error/Error";
+import { upload } from "../../cloudinary";
 
 const userRouter = Router();
 

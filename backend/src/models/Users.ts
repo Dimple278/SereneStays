@@ -8,6 +8,7 @@ class UserModel extends BaseModel {
     const user = await db("users").where({ email }).first();
     return user;
   }
+
   static async findAll() {
     const users = await db("users").select("*");
     return users;
@@ -20,16 +21,23 @@ class UserModel extends BaseModel {
 
   static async save(user: any) {
     const newUser = { ...user };
+    if (newUser.password) {
+      newUser.password = await bcrypt.hash(newUser.password, 10);
+    }
     const [savedUser] = await db("users").insert(newUser).returning("*");
     return savedUser;
   }
 
   static async update(id: number, user: any) {
-    const updatedUser = await db("users")
+    const updatedUser = { ...user };
+    if (updatedUser.password) {
+      updatedUser.password = await bcrypt.hash(updatedUser.password, 10);
+    }
+    const [result] = await db("users")
       .where({ id })
-      .update(user)
+      .update(updatedUser)
       .returning("*");
-    return updatedUser[0];
+    return result;
   }
 
   static async delete(id: number) {

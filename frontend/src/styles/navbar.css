@@ -10,6 +10,13 @@
     height: 5.5rem;
 }
 
+#user-icon-container img {
+    width: 24px;  /* Adjust the width as needed */
+    height: 24px;  /* Adjust the height as needed */
+    border-radius: 50%;  /* This makes the image circular */
+    object-fit: cover;  /* Ensures the image covers the area without distortion */
+  }
+
 #nav-main {
     display: flex;
     flex-direction: column;
