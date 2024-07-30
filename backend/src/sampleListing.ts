@@ -14,12 +14,13 @@ export const sampleListings = [
     category: "Beachfront",
   },
   {
-    owner_id: 4,
+    owner_id: 2,
     title: "Modern Loft in Downtown",
     description:
       "Stay in the heart of the city in this stylish loft apartment. Perfect for urban explorers!",
     images: [
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602391833977-358a52198938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzJ8fGNhbXBpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 1200,
     location: "New York City",
@@ -41,12 +42,13 @@ export const sampleListings = [
     category: "Countryside",
   },
   {
-    owner_id: 4,
+    owner_id: 2,
     title: "Historic Villa in Tuscany",
     description:
       "Experience the charm of Tuscany in this beautifully restored villa. Explore the rolling hills and vineyards.",
     images: [
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG90ZWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602391833977-358a52198938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzJ8fGNhbXBpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 2500,
     location: "Florence",
@@ -54,7 +56,7 @@ export const sampleListings = [
     category: "Design",
   },
   {
-    owner_id: 5,
+    owner_id: 2,
     title: "Secluded Treehouse Getaway",
     description:
       "Live among the treetops in this unique treehouse retreat. A true nature lover's paradise.",
@@ -68,12 +70,13 @@ export const sampleListings = [
     category: "OMG",
   },
   {
-    owner_id: 6,
+    owner_id: 2,
     title: "Beachfront Paradise",
     description:
       "Step out of your door onto the sandy beach. This beachfront condo offers the ultimate relaxation.",
     images: [
       "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGhvdGVsc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602391833977-358a52198938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzJ8fGNhbXBpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 2000,
     location: "Cancun",
@@ -95,11 +98,12 @@ export const sampleListings = [
     category: "Lake",
   },
   {
-    owner_id: 4,
+    owner_id: 2,
     title: "Luxury Penthouse with City Views",
     description:
       "Indulge in luxury living with panoramic city views from this stunning penthouse apartment.",
     images: [
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2t5JTIwdmFjYXRpb258ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 3500,
@@ -108,7 +112,7 @@ export const sampleListings = [
     category: "Cabins",
   },
   {
-    owner_id: 5,
+    owner_id: 2,
     title: "Ski-In/Ski-Out Chalet",
     description:
       "Hit the slopes right from your doorstep in this ski-in/ski-out chalet in the Swiss Alps.",
@@ -122,12 +126,14 @@ export const sampleListings = [
     category: "Amazing Views",
   },
   {
-    owner_id: 6,
+    owner_id: 2,
     title: "Safari Lodge in the Serengeti",
     description:
       "Experience the thrill of the wild in a comfortable safari lodge. Witness the Great Migration up close.",
     images: [
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c2FmYXJpfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      "",
     ],
     price: 2800,
     location: "Serengeti",
@@ -140,6 +146,7 @@ export const sampleListings = [
     description:
       "Relax in a private bungalow surrounded by lush gardens and exotic wildlife. Enjoy the tranquility of Bali.",
     images: [
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dmlsbGFzJTIwY2hpbmF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 1300,
@@ -162,7 +169,7 @@ export const sampleListings = [
     category: "Lake",
   },
   {
-    owner_id: 4,
+    owner_id: 2,
     title: "Glamorous Beach House",
     description:
       "Step into luxury in this glamorous beach house. Enjoy the beautiful sunset views and modern amenities.",
@@ -176,11 +183,12 @@ export const sampleListings = [
     category: "Beachfront",
   },
   {
-    owner_id: 5,
+    owner_id: 2,
     title: "Eco-friendly Farm Stay",
     description:
       "Experience sustainable living on an eco-friendly farm. Perfect for those looking to connect with nature.",
     images: [
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1533750349088-cd871a92f312?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZmFybSUyMGxpdmluZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 1100,
@@ -189,11 +197,12 @@ export const sampleListings = [
     category: "Farms",
   },
   {
-    owner_id: 6,
+    owner_id: 2,
     title: "Scenic Lake House",
     description:
       "Relax by the lake in this scenic lake house. Perfect for fishing, boating, and enjoying the great outdoors.",
     images: [
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1503174971373-b1f69850bded?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c2NlbmljJTIwbGFrZSUyMGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
     ],
     price: 1700,
@@ -207,6 +216,7 @@ export const sampleListings = [
     description:
       "Escape to this charming cottage in the countryside. Enjoy the tranquility and natural beauty of the surroundings.",
     images: [
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1562782379-6e8a1f3f342c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y291bnRyeXNpZGUlMjBjb3R0YWdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
     ],
     price: 1300,
@@ -215,11 +225,12 @@ export const sampleListings = [
     category: "Countryside",
   },
   {
-    owner_id: 4,
+    owner_id: 2,
     title: "Unique Earth Home",
     description:
       "Stay in a unique earth home, built with sustainable materials and offering a one-of-a-kind experience.",
     images: [
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1552413193-0459aeb29f41?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZWFydGglMjBob21lfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
     ],
     price: 1900,
@@ -228,7 +239,7 @@ export const sampleListings = [
     category: "Cabins",
   },
   {
-    owner_id: 5,
+    owner_id: 2,
     title: "Stunning Castle Stay",
     description:
       "Live like royalty in this stunning castle. Explore the historical grounds and enjoy luxurious amenities.",
@@ -242,7 +253,7 @@ export const sampleListings = [
     category: "Design",
   },
   {
-    owner_id: 6,
+    owner_id: 2,
     title: "Treehouse Adventure",
     description:
       "Experience the adventure of staying in a treehouse. Surrounded by nature, this unique stay is perfect for thrill-seekers.",
@@ -262,6 +273,7 @@ export const sampleListings = [
       "Indulge in luxury with a private villa featuring its own pool. Perfect for a relaxing and private vacation.",
     images: [
       "https://images.unsplash.com/photo-1518471370113-84a79102b65c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJpdmF0ZSUyMHZpbGxhJTIwcG9vbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 5000,
     location: "Santorini",
@@ -269,12 +281,13 @@ export const sampleListings = [
     category: "Lake",
   },
   {
-    owner_id: 4,
+    owner_id: 2,
     title: "Modern Glass House",
     description:
       "Stay in a modern glass house with stunning views and sleek design. A unique and stylish experience.",
     images: [
       "https://images.unsplash.com/photo-1508386462706-9b8df60d9d93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2xhc3MlMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 3100,
     location: "Los Angeles",
@@ -282,7 +295,7 @@ export const sampleListings = [
     category: "Lake",
   },
   {
-    owner_id: 5,
+    owner_id: 2,
     title: "Rustic Log Cabin",
     description:
       "Get cozy in this rustic log cabin, perfect for a winter retreat or a summer adventure in the woods.",
@@ -296,12 +309,13 @@ export const sampleListings = [
     category: "Cabins",
   },
   {
-    owner_id: 6,
+    owner_id: 2,
     title: "Exotic Beachfront Villa",
     description:
       "Escape to paradise in this exotic beachfront villa. Enjoy the crystal clear waters and white sandy beaches.",
     images: [
       "https://images.unsplash.com/photo-1534294488310-76e0b4d4d5b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZXhvdGljJTIwYmVhY2glMjB2aWxsYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 4500,
     location: "Maldives",
@@ -315,6 +329,7 @@ export const sampleListings = [
       "Stay in the heart of the city in this stylish and modern downtown loft. Perfect for exploring urban life.",
     images: [
       "https://images.unsplash.com/photo-1600180758891-e2cd4dbd7e33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bW9kZXJuJTIwbG9mdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 3000,
     location: "San Francisco",
@@ -322,7 +337,7 @@ export const sampleListings = [
     category: "Beachfront",
   },
   {
-    owner_id: 4,
+    owner_id: 2,
     title: "Secluded Forest Cabin",
     description:
       "Unplug and unwind in this secluded forest cabin. Perfect for a peaceful retreat away from the hustle and bustle.",
@@ -336,12 +351,13 @@ export const sampleListings = [
     category: "Cabins",
   },
   {
-    owner_id: 5,
+    owner_id: 2,
     title: "Luxury Penthouse Suite",
     description:
       "Indulge in luxury with this penthouse suite, offering stunning views and top-notch amenities.",
     images: [
       "https://images.unsplash.com/photo-1563120304-46b175a0bd18?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGVudGhvdXNlJTIwbHV4ZSUyMHN1aXRlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 5500,
     location: "Dubai",
@@ -349,7 +365,7 @@ export const sampleListings = [
     category: "Lake",
   },
   {
-    owner_id: 6,
+    owner_id: 2,
     title: "Bohemian Beach Bungalow",
     description:
       "Experience a laid-back lifestyle in this bohemian beach bungalow. Perfect for those looking for a unique stay.",
@@ -369,6 +385,7 @@ export const sampleListings = [
       "Step back in time in this historic countryside manor. Perfect for history buffs and those looking for a unique stay.",
     images: [
       "https://images.unsplash.com/photo-1567002993543-385d67a0d612?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y291bnRyeXNpZGUlMjBtYW5vcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
     ],
     price: 2100,
     location: "Cotswolds",

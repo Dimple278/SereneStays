@@ -5,10 +5,10 @@ export const createUserSchema = Joi.object({
     "string.email": "Email must be a valid email",
     "any.required": "Email is required",
   }),
-  fName: Joi.string().required().messages({
-    "any.required": "First name is required",
+  name: Joi.string().required().messages({
+    "any.required": "name is required",
   }),
-  lName: Joi.string().optional(),
+
   providerId: Joi.string().optional(),
   provider: Joi.string().optional(),
   image: Joi.object({
