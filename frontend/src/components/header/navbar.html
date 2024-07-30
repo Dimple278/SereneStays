@@ -2,9 +2,12 @@
   <div id="nav-main">
     <div id="nav-main-bar">
       <div class="nav-icon">
-        <a href="/listings">
-          <img class="imgAirbnb" src="/Icon/name-logo.png" alt="Airbnb" />
-        </a>
+        <img
+          class="imgAirbnb"
+          src="/Icon/name-logo.png"
+          alt="Airbnb"
+          id="nav-home"
+        />
       </div>
       <div class="nav-search nav-hover nav-search-search">
         <form
@@ -34,9 +37,10 @@
         </div>
       </div>
       <div class="user-fnx" style="display: none">
-        <a href="/profile">Profile</a>
-        <a href="/new">Airbnb your home</a>
-        <a id="auth-link" href="/login">LogIn</a>
+        <div id="nav-profile">Profile</div>
+        <div id="nav-new">Airbnb your home</div>
+        <div id="nav-auth" data-auth="signup">SignUp</div>
+        <div id="nav-auth-login">LogIn</div>
       </div>
     </div>
     <div id="nav-search-hide">

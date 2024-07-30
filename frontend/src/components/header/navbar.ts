@@ -1,4 +1,6 @@
 import { loadCss } from "../../utils/loadCss";
+import { navigate } from "../../main";
+import axios from "axios";
 
 export async function loadNavbar() {
   loadCss("/src/styles/navbar.css");
@@ -11,32 +13,41 @@ export async function loadNavbar() {
 
     const userFnx = document.querySelector(".user-fnx");
     const userIcon = document.querySelector(".nav-user");
-    const authLink = document.getElementById("auth-link") as HTMLAnchorElement;
+    const authLinkLogin = document.getElementById("nav-auth-login");
 
     // Check if the user is logged in
     const token = localStorage.getItem("token");
-    const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null;
-
-    if (currUser) {
-      const userIconContainer = document.getElementById("user-icon-container");
-      if (userIconContainer) {
-        userIconContainer.innerHTML = `
-          <img src="${currUser.image}" alt="User" id="user-img" class="user-icon" />
-          <img src="/Icon/navbar-icon.png" alt="Nav Icon" id="png-img-bar" />
-        `;
-      }
-      if (authLink) {
-        authLink.textContent = "LogOut";
-        authLink.href = "#";
-        authLink.addEventListener("click", () => {
-          localStorage.removeItem("token");
-          window.location.reload(); // Reload the page to reflect changes
+    if (token) {
+      try {
+        const userResponse = await axios.get(`/api/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
+        const currUser = userResponse.data;
+
+        const userIconContainer = document.getElementById(
+          "user-icon-container"
+        );
+        if (userIconContainer) {
+          userIconContainer.innerHTML = `
+            <img src="${currUser.image}" alt="User" id="user-img" class="user-icon" />
+            <img src="/Icon/navbar-icon.png" alt="Nav Icon" id="png-img-bar" />
+          `;
+        }
+
+        if (authLinkLogin) {
+          authLinkLogin.textContent = "LogOut";
+          authLinkLogin.addEventListener("click", () => {
+            localStorage.removeItem("token");
+            window.location.reload(); // Reload the page to reflect changes
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     } else {
-      if (authLink) {
-        authLink.textContent = "LogIn";
-        authLink.href = "/login";
+      if (authLinkLogin) {
+        authLinkLogin.textContent = "LogIn";
+        authLinkLogin.addEventListener("click", () => navigate("/login"));
       }
     }
 
@@ -48,5 +59,28 @@ export async function loadNavbar() {
             : "none";
       });
     }
+
+    // Add event listeners for navigation
+    document
+      .getElementById("nav-home")
+      ?.addEventListener("click", () => navigate("/"));
+    document
+      .getElementById("nav-profile")
+      ?.addEventListener("click", () => navigate("/profile"));
+    document
+      .getElementById("nav-new")
+      ?.addEventListener("click", () => navigate("/new"));
+
+    const authElements = document.querySelectorAll("#nav-auth");
+    authElements.forEach((element) => {
+      element.addEventListener("click", (event) => {
+        const authType = (event.target as HTMLElement).getAttribute(
+          "data-auth"
+        );
+        if (authType) {
+          navigate(`/${authType}`);
+        }
+      });
+    });
   }
 }

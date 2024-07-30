@@ -2,7 +2,6 @@ import UniversalRouter, { Route } from "universal-router";
 import { renderListings } from "./pages/index";
 import { fetchListingsByCategory } from "./api/fetchListings";
 import { renderShowPage } from "./pages/show";
-import { renderEditPage } from "./pages/edit";
 import { renderNewPage } from "./pages/new";
 import { loadNavbar } from "./components/header/navbar";
 import { loadFooter } from "./components/footer/footer";
@@ -13,6 +12,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { renderLoginPage } from "./pages/login";
 import { renderSignupPage } from "./pages/signup";
+import { renderProfilePage } from "./pages/profile";
+import { renderEditProfile } from "./components/renderEditProfile";
+import { renderEditPage } from "./pages/edit";
+import { renderMyProfile } from "./components/renderMyProfile";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -102,6 +105,22 @@ const routes: Route[] = [
         if (id) {
           renderEditPage(mainContent, id);
         }
+      }
+    },
+  },
+  {
+    path: "/profile", // Add the profile route
+    action: () => {
+      if (mainContent) {
+        renderProfilePage(mainContent);
+      }
+    },
+  },
+  {
+    path: "/edit-profile/:id",
+    action: async ({ params }: { params: RouteParams }) => {
+      if (mainContent && params.id) {
+        renderEditProfile(mainContent, params.id);
       }
     },
   },
