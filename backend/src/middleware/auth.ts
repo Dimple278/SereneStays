@@ -76,14 +76,11 @@ export const authorize = async (
   }
 
   const listing = await Listing.findById(listingId);
-  console.log("auth list", listing);
+  // console.log("auth list", listing);
 
   if (!listing) {
     throw new NotFoundError("Listing not found");
   }
-
-  console.log("user.id:", user.id);
-  console.log("listing.ownerId:", listing.ownerId);
 
   if (
     Number(listing.ownerId) !== Number(user.id) &&
