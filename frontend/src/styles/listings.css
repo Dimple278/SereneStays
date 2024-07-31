@@ -1,7 +1,6 @@
 body {
   font-family: "Plus Jakarta Sans", sans-serif !important;
   font-family: "Inknut Antiqua", serif;
-  /* font-family: 'Plus Jakarta Sans', sans-serif; */
   font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
@@ -12,18 +11,6 @@ body {
   flex: 1;
   min-height: 70vh;
 }
-
-/* .modal-backdrop.show {
-  opacity: 0.5;
-} */
-
-/* .modal-open .modal-blur {
-  filter: blur(5px);
-}  */
-
- /* .modal-open .container {
-  filter: blur(5px);
-}  */
 
 body::-webkit-scrollbar,
 #category::-webkit-scrollbar {
@@ -81,43 +68,7 @@ body::-webkit-scrollbar-thumb,
   opacity: 1;
 }
 
-@media (max-width: 1400px) and (min-width: 1199px) {
-  .heart {
-    right: 45px;
-  }
-}
 
-@media (max-width: 767px) {
-  .heart {
-    right: 105px;
-  }
-}
-
-@media (max-width: 586px) {
-  .heart {
-    position: relative;
-    top: 10px;
-    left: 10px;
-    /* right: 19vw; */
-  }
-
-  .card-img-top {
-    height: 100%;
-    position: relative;
-    top: -25px;
-  }
-
-  .heart-b {
-    left: -15px;
-  }
-}
-
-@media (width: 767px) {
-  .heart {
-    position: relative;
-    right: 100px;
-  }
-}
 
 /* -------hover effect--------------------------------------------------------------------------------------------- */
 .show-card-img {
@@ -210,27 +161,6 @@ body::-webkit-scrollbar-thumb,
   margin-right: 5px;
   margin-top: 3px;
   margin-left: 5px;
-}
-
-/* edit.ejs style -------------------------------------------------------------------------------------*/
-@media (max-width: 768px) {
-  .edit-btn {
-    width: 4rem !important;
-  }
-
-  .category-choose {
-    display: none;
-  }
-
-  #map {
-    height: 350px !important;
-  }
-
-  .mapImg {
-    /* padding: none; */
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
 }
 
 .listingImg,
@@ -361,87 +291,73 @@ body::-webkit-scrollbar-thumb,
   text-decoration: none;
 }
 
-/* indes.ejs style -------------------------------------------------------------------------------------*/
-@media (max-width: 769px) {
-  .index-res {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
+
+@media (max-width: 575px) {
+  .card {
+    height: auto;
+    margin-bottom: 2rem;
+  }
+
+  .card-img {
+    height: auto !important;
+    max-width: 100%;
+  }
+
+  .card-img-top {
+    height: auto !important;
+    max-height: 250px;
+    position: static;
+  }
+
+  .heart {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    left: auto;
+  }
+
+  .heart-b {
+    left: auto;
+  }
+
+  .card-body {
+    padding: 1rem !important;
+    margin-left: 0 !important;
   }
 
   .index-res-img {
-    width: 320px;
+    width: 100%;
   }
 
   .container {
-    display: flex !important;
-    flex-direction: column;
-    margin-bottom: 15px;
-    margin-left: 15px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
 
+@media (max-width: 586px) {
+  .heart {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    left: auto;
+  }
+
+  .card-img-top {
+    position: static;
+    top: 0;
+  }
+}
+
+/* Adjust the card-img for very small screens */
 @media (max-width: 355px) {
   .card-img {
-    max-width: 290px;
-    height: 19rem !important;
-    max-width: 290px;
-    overflow: hidden !important;
-    border-radius: 1rem !important;
-    box-shadow: 0px 6px 5px rgb(0, 0, 0) !important;
-    margin-bottom: 15px;
-    margin-left: 15px;
+    max-width: 100%;
+    height: auto !important;
+    margin-left: 0;
   }
 
   .card-text {
-    margin-left: 15px;
+    margin-left: 0;
   }
-}
-/* update.ejs------------------- */
-
-#imagePreview img,
-.listingImg-update {
-  height: 150px;
-  width: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-.update-change {
-  display: flex;
-  justify-content: space-evenly;
-  margin-bottom: 2rem;
-}
-.update-change > div input {
-  /* display: none; */
-  height: 20px;
-  width: 20px;
-  cursor: pointer;
-}
-.update-change div label {
-  font-weight: 600;
-  filter: drop-shadow(2px 0px 1px black);
-  margin-bottom: 5px;
-  cursor: pointer;
-}
-.update-change div {
-  background-color: rgb(66, 66, 82);
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 3px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-}
-#password-box,
-#image-box {
-  display: none;
-}
-.update-change div:hover {
-  box-shadow: 0px 0px 5px black;
-}
-.update-change div:active {
-  transform: scale(1.1);
 }

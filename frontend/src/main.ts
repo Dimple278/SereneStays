@@ -120,7 +120,7 @@ const routes: Route[] = [
     path: "/edit-profile/:id",
     action: async ({ params }: { params: RouteParams }) => {
       if (mainContent && params.id) {
-        renderEditProfile(mainContent, params.id);
+        renderEditProfile(mainContent);
       }
     },
   },

@@ -35,14 +35,13 @@ export async function renderListings(
   renderFilterModal(container);
 
   container.innerHTML += `
-    <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
-      ${listings
-        .map(
-          (listing) => `
-            <div class="card col listing-card index-res" data-id="${
-              listing.id
-            }">
-              <div class="index-res-img">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-4 mt-1">
+    ${listings
+      .map(
+        (listing) => `
+          <div class="col">
+            <div class="card listing-card index-res" data-id="${listing.id}">
+              <div class="index-res-img position-relative">
                 <div class="card-img">
                   <img class="heart heart-r" src="/Icon/heart-red.png" alt="like" style="opacity: 1; z-index: 5;">
                   <img class="heart heart-b" src="/Icon/heart-black.png" alt="like" style="z-index: 6;">
@@ -50,28 +49,29 @@ export async function renderListings(
                     listing.images[0]
                   }" class="card-img-top" alt="listing_image" />
                 </div>
-                <div class="card-body mt-1 ms-2">
-                  <p class="card-text" style="display: block;">
+                <div class="card-body mt-1">
+                  <p class="card-text">
                     <b>${listing.title}</b> <br>
-                    <span>&nbsp;${listing.location}, ${listing.country}</span>
+                    <span>${listing.location}, ${listing.country}</span>
                     <br>
                     <span class="price-info">
-                      <span class="fw-bold">&nbsp;&#8377;${listing.price.toLocaleString(
+                      <span class="fw-bold">&#8377;${listing.price.toLocaleString(
                         "en-IN"
                       )} </span> night 
                     </span>
-                    <i class="tax-info tax-underline ms-1"><i class="rs-sign"><b> &#8377;</i>${(
+                    <i class="tax-info tax-underline ms-1"><i class="rs-sign"><b>&#8377;</i>${(
                       listing.price * 1.18
-                    ).toLocaleString("en-IN")}</b> &nbsp;total after taxes</i>
+                    ).toLocaleString("en-IN")}</b> total after taxes</i>
                   </p>
                 </div>
               </div>
             </div>
-          `
-        )
-        .join("")}
-    </div>
-  `;
+          </div>
+        `
+      )
+      .join("")}
+  </div>
+`;
 
   // Add click event listeners to each listing card
   const listingCards = container.querySelectorAll(".listing-card");
@@ -89,6 +89,13 @@ export async function renderListings(
   filterButtons.forEach((button) => {
     button.addEventListener("click", async () => {
       const category = button.getAttribute("data-category") || "ALL";
+
+      // Remove active class from all filters
+      filterButtons.forEach((btn) => btn.classList.remove("active"));
+
+      // Add active class to clicked filter
+      button.classList.add("active");
+
       currentCategory = category;
       currentSearchQuery = ""; // Reset search query when a new filter is applied
       currentPage = 1; // Reset to first page for new category
@@ -101,6 +108,14 @@ export async function renderListings(
       renderListings(container, listings, totalCount);
     });
   });
+
+  // Preserve active filter state
+  const activeFilter = container.querySelector(
+    `.filter[data-category="${currentCategory}"]`
+  );
+  if (activeFilter) {
+    activeFilter.classList.add("active");
+  }
 
   // Add event listeners for the tax switches
   const taxSwitches = document.querySelectorAll(".tax-switch");
