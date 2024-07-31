@@ -8,6 +8,7 @@ import {
   deleteListing,
   filterListings,
   searchListings,
+  getListingsByUserId,
 } from "../controllers/listings";
 import {
   validateBody,
@@ -69,6 +70,12 @@ listingsRouter.delete(
   authorize,
   validateParams(listingIdSchema),
   wrapAsync(deleteListing)
+);
+
+listingsRouter.get(
+  "/users/:userId",
+  authenticate,
+  wrapAsync(getListingsByUserId)
 );
 
 // All other route requests

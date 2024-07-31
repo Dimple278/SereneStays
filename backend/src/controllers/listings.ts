@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AuthRequest, Params } from "../interface/auth.interface";
 import ListingModel from "../models/Listing";
 import { NotFoundError, UnauthorizedError } from "../error/Error";
@@ -158,4 +158,25 @@ export const searchListings = async (req: Request, res: Response) => {
   }
 
   res.json({ listings, totalCount });
+};
+
+export const getListingsByUserId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = req.params;
+  const { page = 1, limit = 10 } = req.query;
+
+  const listings = await ListingModel.findByUserId(
+    parseInt(userId),
+    parseInt(page as string),
+    parseInt(limit as string)
+  );
+
+  if (!listings) {
+    throw new NotFoundError("No listings found for the specified user");
+  }
+
+  res.json(listings);
 };

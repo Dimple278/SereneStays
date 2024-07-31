@@ -28,9 +28,9 @@ export const createBooking = async (
   }
 
   const { listing_id } = req.params;
-  console.log("User ID:", user.id);
-  console.log("Listing ID:", listing_id);
-  console.log("New booking data:", req.body);
+  // console.log("User ID:", user.id);
+  // console.log("Listing ID:", listing_id);
+  // console.log("New booking data:", req.body);
   const newBookingData = {
     ...req.body,
     user_id: user.id,
@@ -75,6 +75,15 @@ export const getBookingsByListingId = async (req: Request, res: Response) => {
   );
   if (!bookings.length) {
     throw new NotFoundError("No reviews found for this listing");
+  }
+  res.json(bookings);
+};
+
+export const getBookingsByUserId = async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  const bookings = await BookingModel.getBookingsByUserId(parseInt(user_id));
+  if (!bookings.length) {
+    throw new NotFoundError("No bookings found for this user");
   }
   res.json(bookings);
 };

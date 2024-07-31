@@ -54,9 +54,6 @@ export const updateUser = async (
   const { id } = req.params;
   const { email, ...body } = req.body;
   const { file } = req;
-  console.log(req);
-  console.log("Request body:", req.body);
-  console.log("Request file:", req.file);
 
   // Check if email already exists for another user
   if (email) {
@@ -106,8 +103,7 @@ export const deleteUser = async (
 export const getUserByToken = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.id; // Using req.user from authentication middleware
-    console.log("User ID:", userId);
-    console.log("User:", req.user);
+
     if (!userId) {
       return res.status(401).json({ message: "User not authenticated" });
     }

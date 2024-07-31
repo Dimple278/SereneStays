@@ -147,6 +147,19 @@ class ListingModel extends BaseModel {
     const [{ count }] = await totalCountQuery;
     return parseInt(`${count}`, 10);
   }
+
+  public async findByUserId(
+    userId: number,
+    page: number,
+    limit: number
+  ): Promise<Listing[]> {
+    const listings = await db(this.tableName)
+      .select("*")
+      .where("owner_id", userId)
+      .offset((page - 1) * limit)
+      .limit(limit);
+    return listings;
+  }
 }
 
 export default new ListingModel();

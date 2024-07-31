@@ -30,6 +30,13 @@ class BookingModel {
   static async getBookingsByListingId(listing_id: number) {
     return db("bookings").where({ listing_id }).select("*");
   }
+
+  static async getBookingsByUserId(userId: number) {
+    return db("bookings")
+      .join("listings", "bookings.listing_id", "listings.id")
+      .where("bookings.user_id", userId)
+      .select("bookings.*", "listings.title as listingTitle");
+  }
 }
 
 export default BookingModel;

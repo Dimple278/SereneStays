@@ -1,15 +1,11 @@
 import axios from "axios";
 import { navigate } from "../main";
 
-export async function renderMyProfile(container: HTMLElement) {
-  const profileContent = document.createElement("div");
-  profileContent.className = "profile-content container mt-5";
-
+export async function renderMyProfile(profileContent: HTMLElement) {
   // Retrieve the token from localStorage
   const token = localStorage.getItem("token");
   if (!token) {
     profileContent.innerHTML = `<p>Error loading profile data.</p>`;
-    container.appendChild(profileContent);
     return;
   }
 
@@ -26,15 +22,15 @@ export async function renderMyProfile(container: HTMLElement) {
     const User = userResponse.data;
 
     profileContent.innerHTML = `
-      <div class="row">
+      <div class="row mb-4 border rounded p-3 shadow-sm bg-light">
         <div class="col-md-4 text-center">
           <img src="${
             User.image || "/default-user-image.png"
           }" alt="User Image" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
         </div>
-        <div class="col-md-8">
-          <h3>${User.name}</h3>
-          <p class="text-muted">${User.email}</p>
+        <div class="col-md-8 d-flex flex-column justify-content-center">
+          <h3 class="mb-2">${User.name}</h3>
+          <p class="text-muted mb-4">${User.email}</p>
           <div class="d-flex flex-column flex-md-row">
             <button class="btn btn-primary mb-2 mb-md-0 me-md-2" id="edit-profile">Edit Profile</button>
             <button class="btn btn-danger mb-2 mb-md-0 me-md-2" id="delete-profile">Delete Profile</button>
@@ -74,6 +70,4 @@ export async function renderMyProfile(container: HTMLElement) {
     console.error("Error loading profile data:", error);
     profileContent.innerHTML = `<p>Error loading profile data.</p>`;
   }
-
-  container.appendChild(profileContent);
 }
