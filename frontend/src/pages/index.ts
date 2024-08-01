@@ -7,6 +7,7 @@ import {
   searchListings,
 } from "../api/fetchListings";
 import { IListing } from "../interfaces/listing";
+import { createNoListingsMessage } from "../utils/noListingMsg";
 
 let currentFilteredListings: IListing[] = [];
 let currentCategory = "ALL";
@@ -34,6 +35,9 @@ export async function renderListings(
   renderFilter(container);
   renderFilterModal(container);
 
+  if (listings.length === 0) {
+    container.innerHTML += createNoListingsMessage(currentCategory);
+  }
   container.innerHTML += `
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-4 mt-1">
     ${listings

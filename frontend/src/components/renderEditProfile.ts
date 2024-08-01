@@ -40,6 +40,12 @@ export async function renderEditProfile(container: HTMLElement) {
           </div>
           <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
+        <div id="loading" class="mt-3 text-center" style="display: none;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2">Updating your profile...</p>
+        </div>
       </div>
     `;
 
@@ -51,6 +57,10 @@ export async function renderEditProfile(container: HTMLElement) {
     ) as HTMLInputElement | null;
     const imagePreview = document.getElementById(
       "imagePreview"
+    ) as HTMLDivElement | null;
+
+    const loadingDiv = document.getElementById(
+      "loading"
     ) as HTMLDivElement | null;
 
     if (imageInput && imagePreview) {
@@ -72,11 +82,12 @@ export async function renderEditProfile(container: HTMLElement) {
       });
     }
 
-    if (editProfileForm) {
+    if (editProfileForm && loadingDiv) {
       editProfileForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(editProfileForm);
-
+        loadingDiv.style.display = "block"; // Show loading message
+        editProfileForm.style.display = "none"; // Hide the form
         try {
           await axios.put(`/api/users/${userId}`, formData, {
             headers: {
@@ -92,6 +103,8 @@ export async function renderEditProfile(container: HTMLElement) {
           navigate(`/profile`);
         } catch (error) {
           console.error("Error updating profile:", error);
+          loadingDiv.style.display = "none"; // Hide loading message
+          editProfileForm.style.display = "block"; // Show the form again
         }
       });
     }

@@ -2,7 +2,6 @@ import axios from "axios";
 import { navigate } from "../main";
 
 export async function renderMyProfile(profileContent: HTMLElement) {
-  // Retrieve the token from localStorage
   const token = localStorage.getItem("token");
   if (!token) {
     profileContent.innerHTML = `<p>Error loading profile data.</p>`;
@@ -14,7 +13,6 @@ export async function renderMyProfile(profileContent: HTMLElement) {
       headers: { Authorization: `Bearer ${token}` },
     });
     const currUser = currUserResponse.data;
-    console.log("Current user:", currUser);
 
     const userResponse = await axios.get(`/api/users/${currUser.id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -22,16 +20,41 @@ export async function renderMyProfile(profileContent: HTMLElement) {
     const User = userResponse.data;
 
     profileContent.innerHTML = `
-      <div class="row mb-4 border rounded p-3 shadow-sm bg-light">
-        <div class="col-md-4 text-center">
+      <style>
+        @media (min-width: 768px) {
+          .profile-content {
+            display: flex;
+            align-items: center;
+          }
+          .profile-image {
+            flex: 0 0 auto;
+            margin-right: 2rem;
+          }
+          .profile-info-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
+          .profile-info {
+            text-align: center;
+            margin-bottom: 1rem;
+          }
+        }
+      </style>
+      <div class="profile-content row mb-4 border rounded p-3 shadow-sm bg-light">
+        <div class="profile-image col-md-auto text-center mb-3 mb-md-0">
           <img src="${
             User.image || "/default-user-image.png"
-          }" alt="User Image" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+          }" alt="User Image" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
         </div>
-        <div class="col-md-8 d-flex flex-column justify-content-center">
-          <h3 class="mb-2">${User.name}</h3>
-          <p class="text-muted mb-4">${User.email}</p>
-          <div class="d-flex flex-column flex-md-row">
+        <div class="profile-info-wrapper col">
+          <div class="profile-info">
+            <h3 class="mb-2">${User.name}</h3>
+            <p class="text-muted mb-3">${User.email}</p>
+          </div>
+          <div class="d-flex flex-column flex-md-row justify-content-center">
             <button class="btn btn-primary mb-2 mb-md-0 me-md-2" id="edit-profile">Edit Profile</button>
             <button class="btn btn-danger mb-2 mb-md-0 me-md-2" id="delete-profile">Delete Profile</button>
             <button class="btn btn-secondary" id="logout">Logout</button>
@@ -44,7 +67,7 @@ export async function renderMyProfile(profileContent: HTMLElement) {
     profileContent
       .querySelector("#edit-profile")
       ?.addEventListener("click", () => {
-        navigate(`/edit-profile/${User.id}`); // Navigate to the edit profile page
+        navigate(`/edit-profile/${User.id}`);
       });
 
     profileContent
@@ -54,8 +77,8 @@ export async function renderMyProfile(profileContent: HTMLElement) {
           await axios.delete(`/api/users/${currUser.id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          localStorage.removeItem("token"); // Clear the token
-          navigate("/login"); // Redirect to login page
+          localStorage.removeItem("token");
+          navigate("/login");
         } catch (error) {
           console.error("Error deleting profile:", error);
           alert("Failed to delete profile. Please try again.");
@@ -64,7 +87,7 @@ export async function renderMyProfile(profileContent: HTMLElement) {
 
     profileContent.querySelector("#logout")?.addEventListener("click", () => {
       localStorage.removeItem("token");
-      navigate("/login"); // Redirect to login page
+      navigate("/login");
     });
   } catch (error) {
     console.error("Error loading profile data:", error);
