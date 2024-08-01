@@ -16,6 +16,7 @@ import { renderProfilePage } from "./pages/profile";
 import { renderEditProfile } from "./components/renderEditProfile";
 import { renderEditPage } from "./pages/edit";
 import { renderMyProfile } from "./components/renderMyProfile";
+import { renderDashboardPage } from "./pages/dashboard";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -30,6 +31,9 @@ loadNavbar();
 loadFooter();
 // renderFilterModal(); // Render the filter modal
 
+const token = localStorage.getItem("token");
+const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null;
+console.log(currUser.role);
 // Define route handlers
 const routes: Route[] = [
   {
@@ -109,10 +113,15 @@ const routes: Route[] = [
     },
   },
   {
-    path: "/profile", // Add the profile route
+    path: "/dashboard", // Add the profile route
     action: () => {
+      console.log(currUser);
       if (mainContent) {
-        renderProfilePage(mainContent);
+        if (currUser.role == "superadmin") {
+          renderDashboardPage(mainContent);
+        } else {
+          renderProfilePage(mainContent);
+        }
       }
     },
   },

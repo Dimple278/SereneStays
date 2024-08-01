@@ -14,6 +14,7 @@ import {
 } from "../error/Error";
 import config from "../config";
 import { IUser } from "../interface/user";
+import { rootCertificates } from "tls";
 
 // Signup handler
 export const signup = async (req: Request, res: Response) => {
@@ -47,6 +48,7 @@ export const login = async (req: Request, res: Response) => {
     name: user.name,
     email: user.email,
     image: user.image,
+    role: user.role,
   };
 
   const accessToken = await generateAccessToken(payload);
@@ -62,7 +64,7 @@ export async function refresh(req: Request, res: Response) {
 
     const decoded = verify(refreshToken, config.jwt.secret!) as Pick<
       IUser,
-      "id" | "name" | "email" | "image"
+      "id" | "name" | "email" | "image" | "role"
     >;
 
     const payload = {
@@ -70,6 +72,7 @@ export async function refresh(req: Request, res: Response) {
       name: decoded.name,
       email: decoded.email,
       image: decoded.image,
+      role: decoded.role,
     };
 
     const newAccessToken = await generateAccessToken(payload);

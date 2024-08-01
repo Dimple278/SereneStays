@@ -4,7 +4,11 @@ import { navigate } from "../main";
 import { renderReviewForm, renderEditReviewModal } from "./reviewForm";
 import { deleteReview, submitReviewForm, updateReview } from "../api/reviewAPI";
 
-export async function renderReviews(container: HTMLElement, listingId: string) {
+export async function renderReviews(
+  container: HTMLElement,
+  listingOwnerId: string,
+  listingId: string
+) {
   let reviews: IReview[] = [];
   // let errorOccurred = false;
 
@@ -28,7 +32,7 @@ export async function renderReviews(container: HTMLElement, listingId: string) {
     <h4>Reviews</h4>
     <hr class="mt-2">
     <div class="col-8 offset-2">
-      ${renderReviewForm()}
+       ${currUser && currUser.id !== listingOwnerId ? renderReviewForm() : ""}
        ${
          reviews.length > 0
            ? renderReviewsList(reviews, currUser)

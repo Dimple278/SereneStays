@@ -66,7 +66,7 @@ export async function loadNavbar() {
       ?.addEventListener("click", () => navigate("/"));
     document
       .getElementById("nav-profile")
-      ?.addEventListener("click", () => navigate("/profile"));
+      ?.addEventListener("click", () => navigate("/dashboard"));
     document
       .getElementById("nav-new")
       ?.addEventListener("click", () => navigate("/new"));
