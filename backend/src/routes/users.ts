@@ -15,9 +15,9 @@ import {
   userIdSchema,
 } from "../schemas/user";
 import { wrapAsync } from "../utils/wrapAsync";
-import { NotFoundError } from "../error/Error";
 import { upload } from "../../cloudinary";
 import { authenticate } from "../middleware/auth";
+import { NotFoundError } from "../error/NotFoundError";
 
 const userRouter = Router();
 

@@ -3,9 +3,9 @@ import { signup, login, refresh } from "../controllers/auth";
 import { validateBody } from "../middleware/validate";
 import { signupSchema, loginSchema } from "../schemas/auth";
 import { wrapAsync } from "../utils/wrapAsync";
-import { NotFoundError } from "../error/Error";
 import { upload } from "../../cloudinary";
 import { createUser } from "../controllers/users";
+import { NotFoundError } from "../error/NotFoundError";
 
 const authRouter = Router();
 

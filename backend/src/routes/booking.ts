@@ -15,9 +15,9 @@ import {
   bookingIdSchema,
 } from "../schemas/booking";
 import { wrapAsync } from "../utils/wrapAsync";
-import { NotFoundError } from "../error/Error";
 import { listingIdSchema } from "../schemas/review";
 import { authenticate, authorizeBooking } from "../middleware/auth";
+import { NotFoundError } from "../error/NotFoundError";
 
 const bookingsRouter = Router();
 

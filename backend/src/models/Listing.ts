@@ -1,10 +1,10 @@
 import db from "../db";
-import { Listing } from "../interface/listing";
+import { IListing } from "../interface/listing";
 import { BaseModel } from "./base";
 class ListingModel extends BaseModel {
   private tableName: string = "listings";
 
-  public async create(listing: Listing): Promise<Listing> {
+  public async create(listing: IListing): Promise<IListing> {
     const [newListing] = await db(this.tableName)
       .insert({
         ...listing,
@@ -14,11 +14,11 @@ class ListingModel extends BaseModel {
     return newListing;
   }
 
-  public async save(listing: Listing): Promise<Listing> {
+  public async save(listing: IListing): Promise<IListing> {
     return await this.create(listing);
   }
 
-  public async findAll(page: number, limit: number): Promise<Listing[]> {
+  public async findAll(page: number, limit: number): Promise<IListing[]> {
     const listings = await db("listings")
       .select("*")
       .offset((page - 1) * limit) // Skip the number of items for previous pages
@@ -30,7 +30,7 @@ class ListingModel extends BaseModel {
     category: string,
     page: number,
     limit: number
-  ): Promise<Listing[]> {
+  ): Promise<IListing[]> {
     if (category === "ALL") {
       return this.findAll(page, limit);
     }
@@ -51,7 +51,7 @@ class ListingModel extends BaseModel {
     return parseInt(`${count}`, 10);
   }
 
-  public async findById(id: number): Promise<Listing | undefined> {
+  public async findById(id: number): Promise<IListing | undefined> {
     return await db(this.tableName)
       .select(`${this.tableName}.*`, "users.name as ownerName")
       .join("users", `${this.tableName}.owner_id`, "users.id") // Join the users table on owner_id
@@ -59,7 +59,10 @@ class ListingModel extends BaseModel {
       .first();
   }
 
-  public async update(id: number, listing: Partial<Listing>): Promise<Listing> {
+  public async update(
+    id: number,
+    listing: Partial<IListing>
+  ): Promise<IListing> {
     const updatedListing = await db(this.tableName)
       .where({ id })
       .update({
@@ -78,7 +81,7 @@ class ListingModel extends BaseModel {
     query: string,
     page: number,
     limit: number
-  ): Promise<Listing[]> {
+  ): Promise<IListing[]> {
     return await db(this.tableName)
       .select("*")
       .where("title", "ilike", `%${query}%`)
@@ -103,7 +106,7 @@ class ListingModel extends BaseModel {
     country?: string,
     page?: number,
     limit?: number
-  ): Promise<Listing[]> {
+  ): Promise<IListing[]> {
     let listingsQuery = db(this.tableName).select("*");
 
     if (minPrice !== undefined) {
@@ -152,7 +155,7 @@ class ListingModel extends BaseModel {
     userId: number,
     page: number,
     limit: number
-  ): Promise<Listing[]> {
+  ): Promise<IListing[]> {
     const listings = await db(this.tableName)
       .select("*")
       .where("owner_id", userId)

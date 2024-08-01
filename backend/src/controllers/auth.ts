@@ -7,14 +7,11 @@ import {
   generateRefreshToken,
 } from "../utils/generateTokens";
 
-import {
-  BadRequestError,
-  InternalServerError,
-  UnauthorizedError,
-} from "../error/Error";
 import config from "../config";
 import { IUser } from "../interface/user";
-import { rootCertificates } from "tls";
+import { BadRequestError } from "../error/BadRequestError";
+import { UnauthorizedError } from "../error/UnauthorizedError";
+import { InternalServerError } from "../error/InternalServerError";
 
 // Signup handler
 export const signup = async (req: Request, res: Response) => {

@@ -22,10 +22,10 @@ import {
   querySchema,
 } from "../schemas/listing";
 import { wrapAsync } from "../utils/wrapAsync";
-import { NotFoundError } from "../error/Error";
 import { upload } from "../../cloudinary";
 
 import { authenticate, authorize } from "../middleware/auth";
+import { NotFoundError } from "../error/NotFoundError";
 
 const listingsRouter = Router();
 listingsRouter.get(

@@ -4,14 +4,12 @@ import { verify } from "jsonwebtoken";
 import { IUser } from "../interface/user";
 import { AuthRequest, Params } from "../interface/auth.interface";
 import Listing from "../models/Listing";
-import {
-  BadRequestError,
-  InternalServerError,
-  NotFoundError,
-  UnauthorizedError,
-} from "../error/Error";
 import BookingModel from "../models/Booking";
 import Review from "../models/Review";
+import { BadRequestError } from "../error/BadRequestError";
+import { InternalServerError } from "../error/InternalServerError";
+import { NotFoundError } from "../error/NotFoundError";
+import { UnauthorizedError } from "../error/UnauthorizedError";
 
 // Middleware to authenticate user
 export async function authenticate(

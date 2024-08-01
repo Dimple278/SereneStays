@@ -16,8 +16,8 @@ import {
 import { wrapAsync } from "../utils/wrapAsync";
 
 import { authenticate, authorizeReviewOwner } from "../middleware/auth";
-import { NotFoundError } from "../error/Error";
 import { listingIdSchema } from "../schemas/review";
+import { NotFoundError } from "../error/NotFoundError";
 
 const reviewsRouter = Router();
 

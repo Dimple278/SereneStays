@@ -1,4 +1,4 @@
-export interface Listing {
+export interface IListing {
   ownerId?: number;
   id?: number;
   owner_id?: number;

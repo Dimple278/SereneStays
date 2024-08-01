@@ -1,123 +1,113 @@
+// src/controllers/UserController.ts
 import { Request, Response, NextFunction } from "express";
-import UserModel from "../models/Users";
-import { NotFoundError, BadRequestError } from "../error/Error";
-import { cloudinary } from "../../cloudinary";
+import * as UserService from "../services/users";
+import { IUser } from "../interface/user";
 import { AuthRequest } from "../interface/auth.interface";
 
+/**
+ * Get all users
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
 export const getUsers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const users = await UserModel.findAll();
+  const users = await UserService.getAllUsers();
   res.json(users);
 };
 
+/**
+ * Get a user by ID
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
 export const getUserById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const user = await UserModel.findById(parseInt(id));
-  if (!user) {
-    throw new NotFoundError("User not found");
-  }
+  const user = await UserService.getUserById(parseInt(id, 10));
   res.json(user);
 };
 
+/**
+ * Create a new user
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
 export const createUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { email } = req.body;
-  const existingUser = await UserModel.findByEmail(email);
-  if (existingUser) {
-    throw new BadRequestError("Email already in use");
-  }
-
-  const newUser = {
+  const newUserData: IUser = {
     ...req.body,
     image: req.file?.path || null, // Add image path
   };
 
-  const createdUser = await UserModel.save(newUser);
+  const createdUser = await UserService.createUser(newUserData);
   res.status(201).json(createdUser);
 };
 
+/**
+ * Update an existing user
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
 export const updateUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const { email, ...body } = req.body;
-  const { file } = req;
+  const updatedUserData: IUser = {
+    ...req.body,
+    image: req.file?.path || undefined,
+  };
 
-  // Check if email already exists for another user
-  if (email) {
-    const existingUser = await UserModel.findByEmail(email);
-    if (existingUser && existingUser.id !== parseInt(id)) {
-      throw new BadRequestError("Email already in use");
-    }
-  }
-
-  // Process uploaded image
-  let updatedImage;
-  if (file) {
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: "airbnb",
-    });
-    updatedImage = result.secure_url;
-  }
-
-  // Build the update object
-  const updatedUser: any = { ...body };
-  if (email) updatedUser.email = email;
-  if (updatedImage) updatedUser.image = updatedImage;
-
-  // Check if there's something to update
-  if (Object.keys(updatedUser).length === 0) {
-    throw new BadRequestError("No data to update");
-  }
-
-  const user = await UserModel.update(parseInt(id), updatedUser);
-  if (!user) {
-    throw new NotFoundError("User not found");
-  }
-  res.json(user);
+  const updatedUser = await UserService.updateUser(
+    parseInt(id, 10),
+    updatedUserData
+  );
+  res.json(updatedUser);
 };
 
+/**
+ * Delete a user
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
 export const deleteUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const { id } = req.params;
-  await UserModel.delete(parseInt(id));
+  await UserService.deleteUser(parseInt(id, 10));
   res.status(204).send();
 };
 
-// Get the current user by token
+/**
+ * Get the current user by token
+ * @param {AuthRequest} req
+ * @param {Response} res
+ */
 export const getUserByToken = async (req: AuthRequest, res: Response) => {
-  try {
-    const userId = req.user?.id; // Using req.user from authentication middleware
+  const userId = req.user?.id;
 
-    if (!userId) {
-      return res.status(401).json({ message: "User not authenticated" });
-    }
-
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Exclude sensitive fields
-    const { password, ...userData } = user;
-    res.json(userData);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+  if (!userId) {
+    return res.status(401).json({ message: "User not authenticated" });
   }
+
+  const user = await UserService.getUserByToken(userId);
+  const { password, ...userData } = user; // Exclude sensitive fields
+  res.json(userData);
 };

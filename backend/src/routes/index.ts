@@ -1,12 +1,9 @@
 import { Router } from "express";
-// import tasksRoutes from "./task";
-// import userRoutes from "./user";
-// import authRoutes from "./auth";
-import listingsRouter from "./listings";
 import reviewsRouter from "./reviews";
 import userRouter from "./users";
 import bookingsRouter from "./booking";
 import authRouter from "./auth";
+import listingsRouter from "./Listings";
 
 const router = Router();
 
