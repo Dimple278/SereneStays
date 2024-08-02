@@ -20,9 +20,11 @@ class ListingModel extends BaseModel {
 
   public async findAll(page: number, limit: number): Promise<IListing[]> {
     const listings = await db("listings")
-      .select("*")
+      .select("listings.*", "users.name as ownerName")
+      .join("users", "listings.owner_id", "=", "users.id")
       .offset((page - 1) * limit) // Skip the number of items for previous pages
       .limit(limit); // Limit the number of items per page
+
     return listings;
   }
 
@@ -35,10 +37,12 @@ class ListingModel extends BaseModel {
       return this.findAll(page, limit);
     }
     const listings = await db("listings")
-      .select("*")
+      .select("listings.*", "users.name as ownerName")
+      .join("users", "listings.owner_id", "=", "users.id")
       .where("category", category)
       .offset((page - 1) * limit) // Skip the number of items for previous pages
       .limit(limit); // Limit the number of items per page
+
     return listings;
   }
 
