@@ -40,7 +40,7 @@ const routes: Route[] = [
     path: "/login",
     action: async () => {
       if (mainContent) {
-        await renderLoginPage(mainContent);
+        renderLoginPage(mainContent);
       }
     },
   },
@@ -48,7 +48,7 @@ const routes: Route[] = [
     path: "/signup",
     action: async () => {
       if (mainContent) {
-        await renderSignupPage(mainContent);
+        renderSignupPage(mainContent);
       }
     },
   },
