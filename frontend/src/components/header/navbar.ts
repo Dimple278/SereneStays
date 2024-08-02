@@ -38,7 +38,7 @@ export async function loadNavbar() {
           authLinkLogin.textContent = "LogOut";
           authLinkLogin.addEventListener("click", () => {
             localStorage.removeItem("token");
-            window.location.reload(); // Reload the page to reflect changes
+            navigate(`/login`);
           });
         }
       } catch (error) {
