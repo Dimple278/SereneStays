@@ -23,7 +23,7 @@ const userRouter = Router();
 
 userRouter.get("/", wrapAsync(getUsers));
 
-userRouter.get("/me", authenticate, getUserByToken);
+userRouter.get("/me", authenticate, wrapAsync(getUserByToken));
 
 userRouter.get("/:id", validateParams(userIdSchema), wrapAsync(getUserById));
 
