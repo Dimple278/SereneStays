@@ -11,7 +11,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
       <div class="container mt-5">
         <div class="row">
           <div class="col-md-8 mx-auto">
-            <h3>Edit Your Listing</h3>
+            <h3>Edit Listing</h3>
             <form id="editForm" class="needs-validation" novalidate enctype="multipart/form-data">
               <div class="mb-3">
                 <label for="title" class="form-label">Title</label>

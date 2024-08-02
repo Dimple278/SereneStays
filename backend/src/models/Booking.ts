@@ -2,8 +2,23 @@ import db from "../database/db";
 import { IBooking } from "../interface/booking";
 
 class BookingModel {
-  static async findAll() {
-    return db("bookings").select("*");
+  static async countAll(): Promise<number> {
+    const query = db("bookings").count("* as count");
+    const [{ count }] = await query;
+    return parseInt(`${count}`, 10);
+  }
+  static async findAll(page: number, limit) {
+    const bookings = await db("bookings")
+      .select(
+        "bookings.*",
+        "users.name as userName",
+        "listings.title as listingTitle"
+      )
+      .join("users", "bookings.user_id", "users.id")
+      .join("listings", "bookings.listing_id", "listings.id")
+      .offset((page - 1) * limit) // Skip the number of items for previous pages
+      .limit(limit); // Limit the number of items per page
+    return bookings;
   }
 
   static async findById(id: number) {

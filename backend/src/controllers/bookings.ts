@@ -6,13 +6,18 @@ import { IUser } from "../interface/user";
 import { IBooking } from "../interface/booking";
 
 /**
- * Get all bookings
+ * Get all bookings with pagination
  * @param {Request} req
  * @param {Response} res
  */
 export const getBookings = async (req: Request, res: Response) => {
-  const allBookings = await BookingService.getAllBookings();
-  res.json(allBookings);
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+  const { bookings, totalCount } = await BookingService.getAllBookings(
+    page,
+    limit
+  );
+  res.json({ bookings, totalCount });
 };
 
 /**

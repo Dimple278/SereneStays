@@ -15,8 +15,11 @@ export const getUsers = async (
   res: Response,
   next: NextFunction
 ) => {
-  const users = await UserService.getAllUsers();
-  res.json(users);
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+
+  const { users, totalCount } = await UserService.getAllUsers(page, limit);
+  res.json({ users, totalCount });
 };
 
 /**

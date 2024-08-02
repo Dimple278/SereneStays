@@ -6,11 +6,18 @@ import { NotFoundError } from "../error/NotFoundError";
 import { UnauthorizedError } from "../error/UnauthorizedError";
 
 /**
- * Get all bookings
- * @returns {Promise<IBooking[]>}
+ * Get all bookings with pagination
+ * @param {number} page - Page number
+ * @param {number} limit - Number of items per page
+ * @returns {Promise<{ bookings: IBooking[], totalCount: number }>}
  */
-export const getAllBookings = async (): Promise<IBooking[]> => {
-  return await BookingModel.findAll();
+export const getAllBookings = async (
+  page: number,
+  limit: number
+): Promise<{ bookings: IBooking[]; totalCount: number }> => {
+  const bookings = await BookingModel.findAll(page, limit);
+  const totalCount = await BookingModel.countAll();
+  return { bookings, totalCount };
 };
 
 /**

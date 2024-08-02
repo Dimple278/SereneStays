@@ -9,8 +9,11 @@ import { BadRequestError } from "../error/BadRequestError";
  * Get all users
  * @returns {Promise<IUser[]>}
  */
-export const getAllUsers = async (): Promise<IUser[]> => {
-  return await UserModel.findAll();
+export const getAllUsers = async (
+  page: number,
+  limit: number
+): Promise<{ users: IUser[]; totalCount: number }> => {
+  return await UserModel.findAll(page, limit);
 };
 
 /**

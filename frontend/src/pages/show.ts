@@ -1,4 +1,3 @@
-// src/pages/show.ts
 import axios from "axios";
 import { loadCss } from "../utils/loadCss";
 import { renderShowListing } from "../components/renderShowListing";

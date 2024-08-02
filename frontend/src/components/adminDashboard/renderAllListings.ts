@@ -44,9 +44,11 @@ export async function renderAllListings(
         <td >${listing.ownerName}</td>
         <td class="listing-title" data-id="${listing.id}" style="cursor:pointer;">${listing.title}</td>
         <td>
-          <i class="fas fa-edit text-primary edit-icon" data-id="${listing.id}" style="cursor: pointer;"></i>
-          &nbsp;&nbsp;&nbsp;
-          <i class="fas fa-trash-alt text-danger delete-icon" data-id="${listing.id}" style="cursor: pointer;"></i>
+         <button class="btn btn-sm btn-primary edit" data-id="${listing.id}">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-danger delete" data-id="${listing.id}">
+            <i class="fas fa-trash-alt"></i>
         </td>
       `;
       tbody.appendChild(row);
@@ -77,15 +79,15 @@ function setupActionListeners(container: HTMLElement) {
     });
   });
 
-  container.querySelectorAll(".edit-icon").forEach((icon) => {
-    icon.addEventListener("click", (event) => {
+  container.querySelectorAll(".edit").forEach((btn) => {
+    btn.addEventListener("click", (event) => {
       const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
       navigate(`/edit/${id}`);
     });
   });
 
-  container.querySelectorAll(".delete-icon").forEach((icon) => {
-    icon.addEventListener("click", async (event) => {
+  container.querySelectorAll(".delete").forEach((btn) => {
+    btn.addEventListener("click", async (event) => {
       const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
       if (id) {
         await deleteListing(id);

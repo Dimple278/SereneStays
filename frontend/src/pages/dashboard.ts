@@ -1,4 +1,6 @@
 import { renderAllBookings } from "../components/adminDashboard/renderAllBookings";
+import { renderAllListings } from "../components/adminDashboard/renderAllListings";
+import { renderAllUsers } from "../components/adminDashboard/renderAllUsers";
 
 import { renderMyBookings } from "../components/userDashboard/renderMyBookings";
 import { renderMyListings } from "../components/userDashboard/renderMyListings";
@@ -35,11 +37,11 @@ export function renderDashboardPage(container: HTMLElement) {
       if (clickedButton.id === "my-profile") {
         renderMyProfile(profileContent);
       } else if (clickedButton.id === "all-listings") {
-        // renderAllListings(profileContent);
-        // } else if (clickedButton.id === "my-listings") {
-        // renderMyListings(profileContent);
+        renderAllListings(profileContent);
       } else if (clickedButton.id === "all-users") {
-        // renderAllUsers(profileContent);
+        renderAllUsers(profileContent);
+      } else if (clickedButton.id === "all-bookings") {
+        renderAllBookings(profileContent);
       }
     });
   });

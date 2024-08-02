@@ -9,11 +9,14 @@ class UserModel extends BaseModel {
     return user;
   }
 
-  static async findAll() {
-    const users = await db("users").select("*");
-    return users;
+  static async findAll(page: number, limit: number) {
+    const users = await db("users")
+      .select("*")
+      .offset((page - 1) * limit)
+      .limit(limit);
+    const [{ count }] = await db("users").count("id as count");
+    return { users, totalCount: parseInt(String(count), 10) };
   }
-
   static async findById(id: number) {
     const user = await db("users").where({ id }).first();
     return user;
