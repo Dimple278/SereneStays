@@ -1,7 +1,7 @@
 import { navigate } from "../main";
-import { setupFilterHandlers } from "./filterHandler";
-import { setupSearchHandler } from "./searchHandler";
-import { setupPagination } from "./paginationHandler";
+import { setupFilterHandlers } from "../handlers/filterHandler";
+import { setupSearchHandler } from "../handlers/searchHandler";
+import { setupPagination } from "../handlers/paginationHandler";
 
 export function setupEventListeners(
   container: HTMLElement,

@@ -1,6 +1,6 @@
-import { renderMyBookings } from "../components/renderMyBookings";
-import { renderMyListings } from "../components/renderMyListings";
-import { renderMyProfile } from "../components/renderMyProfile";
+import { renderMyBookings } from "../components/userDashboard/renderMyBookings";
+import { renderMyListings } from "../components/userDashboard/renderMyListings";
+import { renderMyProfile } from "../components/userDashboard/renderMyProfile";
 
 export function renderProfilePage(container: HTMLElement) {
   container.innerHTML = `

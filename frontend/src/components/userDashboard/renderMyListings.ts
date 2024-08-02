@@ -1,6 +1,6 @@
 import axios from "axios";
-import { navigate } from "../main";
-import { IListing } from "../interfaces/listing";
+import { navigate } from "../../main";
+import { IListing } from "../../interfaces/listing";
 
 export async function renderMyListings(container: HTMLElement) {
   // Get token from localStorage

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { navigate } from "../main";
+import { navigate } from "../../main";
 
 export async function renderMyBookings(container: HTMLElement) {
   const token = localStorage.getItem("token");
