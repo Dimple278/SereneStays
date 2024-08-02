@@ -16,6 +16,7 @@ import { renderEditProfile } from "./components/renderEditProfile";
 import { renderEditPage } from "./pages/edit";
 
 import { renderDashboardPage } from "./pages/dashboard";
+import { getCurrUser } from "./api/getCurrUser";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -29,9 +30,8 @@ const mainContent = document.getElementById("main-content");
 loadNavbar();
 loadFooter();
 
-const token = localStorage.getItem("token");
-const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null;
-console.log(currUser.role);
+const currUser = await getCurrUser();
+
 // Define route handlers
 const routes: Route[] = [
   {
@@ -97,7 +97,7 @@ const routes: Route[] = [
     },
   },
   {
-    path: "/dashboard", // Add the profile route
+    path: "/dashboard",
     action: () => {
       console.log(currUser);
       if (mainContent) {
