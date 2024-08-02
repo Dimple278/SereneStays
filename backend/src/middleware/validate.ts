@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 
-// Higher-order function to validate the request body
 export const validateBody = (schema: Joi.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body);
@@ -12,7 +11,6 @@ export const validateBody = (schema: Joi.Schema) => {
   };
 };
 
-// Higher-order function to validate the request params
 export const validateParams = (schema: Joi.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.params);
@@ -23,7 +21,6 @@ export const validateParams = (schema: Joi.Schema) => {
   };
 };
 
-// Higher-order function to validate the request query
 export const validateQuery = (schema: Joi.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.query);
