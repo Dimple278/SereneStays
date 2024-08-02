@@ -1,6 +1,5 @@
 import UniversalRouter, { Route } from "universal-router";
 import { initializeListings } from "./pages/index";
-import { fetchListingsByCategory } from "./api/fetchListings";
 import { renderShowPage } from "./pages/show";
 import { renderNewPage } from "./pages/new";
 import { loadNavbar } from "./components/header/navbar";
@@ -15,7 +14,7 @@ import { renderSignupPage } from "./pages/signup";
 import { renderProfilePage } from "./pages/profile";
 import { renderEditProfile } from "./components/renderEditProfile";
 import { renderEditPage } from "./pages/edit";
-import { renderMyProfile } from "./components/renderMyProfile";
+
 import { renderDashboardPage } from "./pages/dashboard";
 
 // Define an interface for route parameters
@@ -25,11 +24,10 @@ interface RouteParams {
 
 // Get the main content area of the page
 const mainContent = document.getElementById("main-content");
-// const listingContainer = document.getElementById("listings-container");
+
 // Inject navbar and footer
 loadNavbar();
 loadFooter();
-// renderFilterModal(); // Render the filter modal
 
 const token = localStorage.getItem("token");
 const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null;
@@ -56,14 +54,6 @@ const routes: Route[] = [
     path: "/",
     action: async () => {
       if (mainContent) {
-        // const page = 1; // Initial page
-        // const listingsPerPage = 10; // Number of listings per page
-        // const { listings, totalCount } = await fetchListingsByCategory(
-        //   "ALL",
-        //   page,
-        //   listingsPerPage
-        // );
-        // renderListings(mainContent, listings, totalCount);
         initializeListings(mainContent);
       }
     },
@@ -72,14 +62,6 @@ const routes: Route[] = [
     path: "/listings",
     action: async () => {
       if (mainContent) {
-        // const page = 1; // Initial page
-        // const listingsPerPage = 10; // Number of listings per page
-        // const { listings, totalCount } = await fetchListingsByCategory(
-        //   "ALL",
-        //   page,
-        //   listingsPerPage
-        // );
-        // renderListings(mainContent, listings, totalCount);
         initializeListings(mainContent);
       }
     },
@@ -145,24 +127,6 @@ export async function navigate(path: string) {
   window.history.pushState({}, "", path);
   await router.resolve({ pathname: path });
 }
-
-// // Function to handle link clicks
-// function handleLinkClick(event: Event) {
-//   event.preventDefault();
-//   const target = event.target as HTMLAnchorElement;
-//   const page = target.dataset.link;
-//   if (page) {
-//     navigate(`/${page}`);
-//   }
-// }
-
-// // Add click event listeners to all navigation links using event delegation
-// document.addEventListener("click", (event) => {
-//   const target = event.target as HTMLAnchorElement;
-//   if (target.matches("nav a[data-link]")) {
-//     handleLinkClick(event);
-//   }
-// });
 
 // Handle browser navigation (back/forward buttons)
 window.onpopstate = () => {
