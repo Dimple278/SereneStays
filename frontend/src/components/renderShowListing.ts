@@ -2,6 +2,7 @@ import { navigate } from "../main";
 import { IListing } from "../interfaces/listing";
 import axios from "axios";
 import { confirmDialog } from "../utils/confirmDialogBox";
+import { deleteListing } from "../api/listings";
 
 export function renderShowListing(container: HTMLElement, listing: IListing) {
   const images = listing.images;
@@ -83,17 +84,8 @@ export function renderShowListing(container: HTMLElement, listing: IListing) {
         "Are you sure you want to delete this listing?"
       );
       if (confirmed) {
-        try {
-          await axios.delete(`/api/listings/${listing.id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          navigate(`/listings`);
-        } catch (error) {
-          console.error("Error deleting listing:", error);
-          alert("Failed to delete listing.");
-        }
+        await deleteListing(listing.id);
+        navigate(`/listings`);
       }
     });
   }
