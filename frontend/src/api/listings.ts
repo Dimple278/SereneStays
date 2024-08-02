@@ -1,4 +1,6 @@
+import axios from "axios";
 import { IListing } from "../interfaces/listing";
+const token = localStorage.getItem("token");
 
 export async function fetchListingsByCategory(
   category: string,
@@ -74,5 +76,18 @@ export async function searchListings(
   } catch (error) {
     console.error("Error searching listings:", error);
     throw error;
+  }
+}
+
+export async function deleteListing(id: string): Promise<void> {
+  try {
+    await axios.delete(`/api/listings/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting listing:", error);
+    alert("Failed to delete listing.");
   }
 }
