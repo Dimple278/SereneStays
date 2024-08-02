@@ -125,3 +125,24 @@ export const getBookingsByUserId = async (
   }
   return bookings;
 };
+
+/**
+ * Get bookings by user ID and listing ID
+ * @param {number} userId - User ID
+ * @param {number} listingId - Listing ID
+ * @returns {Promise<IBooking[]>}
+ * @throws {NotFoundError} - If no bookings are found for the user and listing
+ */
+export const getBookingsByUserAndListingId = async (
+  userId: number,
+  listingId: number
+): Promise<IBooking[]> => {
+  const bookings = await BookingModel.getBookingsByUserAndListingId(
+    userId,
+    listingId
+  );
+  if (!bookings.length) {
+    throw new NotFoundError("No bookings found for this user and listing");
+  }
+  return bookings;
+};

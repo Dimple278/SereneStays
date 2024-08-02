@@ -7,6 +7,7 @@ import {
   deleteBooking,
   getBookingsByListingId,
   getBookingsByUserId,
+  getUserBookingsForListing,
 } from "../controllers/bookings";
 import { validateBody, validateParams } from "../middleware/validate";
 import {
@@ -61,6 +62,12 @@ bookingsRouter.get(
 );
 
 bookingsRouter.get("/user/:user_id", wrapAsync(getBookingsByUserId));
+
+bookingsRouter.get(
+  "/user/listing/:listing_id",
+  authenticate,
+  wrapAsync(getUserBookingsForListing)
+);
 
 // All other route requests
 bookingsRouter.all("*", (req, res, next) => {

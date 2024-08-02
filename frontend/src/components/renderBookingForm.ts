@@ -1,9 +1,9 @@
-import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { navigate } from "../main";
 import { IBooking } from "../interfaces/booking";
 import { currUser } from "../api/getCurrUser";
+import { bookingApi } from "../api/bookings";
 
 export async function renderBookingForm(
   container: HTMLElement,
@@ -33,6 +33,10 @@ export async function renderBookingForm(
       <button type="submit" class="btn btn-success">Book Now</button>
     </form>
     <hr class="my-4">
+    <div id="userBookingsContainer">
+      <h4>Your Bookings</h4>
+      <div id="userBookingsTable"></div>
+    </div>
   `;
     container.appendChild(bookingFormContainer);
 
@@ -56,7 +60,6 @@ export async function renderBookingForm(
         totalPriceInput.value = "Invalid dates";
       }
     };
-
     const initializeFlatpickr = (unavailableDates: Date[] = []) => {
       flatpickr(startDateInput, {
         enableTime: false,
@@ -97,11 +100,8 @@ export async function renderBookingForm(
 
     const disableUnavailableDates = async () => {
       try {
-        const bookingsResponse = await axios.get(
-          `/api/bookings/listing/${listingId}`
-        );
-        console.log("Bookings:", bookingsResponse.data);
-        const bookings = bookingsResponse.data;
+        const bookings = await bookingApi.getBookingsForListing(listingId);
+        console.log("Bookings:", bookings);
 
         const unavailableDates: Date[] = bookings.flatMap((booking: any) => {
           const dates = [];
@@ -140,32 +140,28 @@ export async function renderBookingForm(
       const token = localStorage.getItem("token");
 
       try {
-        await axios.post(
-          `/api/bookings/listing/${listingId}`,
+        await bookingApi.createBooking(
+          listingId,
           {
             start_date: startDate,
             end_date: endDate,
             total_price: totalPrice,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          token!
         );
         alert("Booking successful!");
-        navigate(`/listings/show/${listingId}`);
+        await renderUserBookings(listingId);
       } catch (error) {
         console.error("Error creating booking:", error);
         alert("Failed to create booking.");
       }
     });
+
+    // Initially render user bookings
+    renderUserBookings(listingId);
   } else {
-    const bookingsResponse = await axios.get(
-      `/api/bookings/listing/${listingId}`
-    );
-    console.log("Bookings:", bookingsResponse.data);
-    const bookings = bookingsResponse.data;
+    const bookings = await bookingApi.getBookingsForListing(listingId);
+    console.log("Bookings:", bookings);
     bookingFormContainer.innerHTML = `
       <h4>Bookings for Your Listing</h4>
       <table class="table">
@@ -193,5 +189,113 @@ export async function renderBookingForm(
       <hr class="my-4">
     `;
     container.appendChild(bookingFormContainer);
+  }
+}
+
+async function renderUserBookings(listingId: string) {
+  const token = localStorage.getItem("token");
+  const userBookingsTable = document.getElementById("userBookingsTable");
+  if (!userBookingsTable) {
+    console.error("userBookingsTable element not found");
+    return;
+  }
+
+  if (!token) {
+    console.error("No token found");
+    userBookingsTable.innerHTML =
+      "<p>You must be logged in to view your bookings.</p>";
+    return;
+  }
+
+  try {
+    console.log("Fetching user bookings for listing...");
+    const userBookings = await bookingApi.getUserBookingsForListing(
+      token,
+      listingId
+    );
+    console.log("User bookings fetched:", userBookings);
+    console.log("date", userBookings.start_date);
+    console.log("end_date", userBookings.end_date);
+    console.log("sD", userBookings.startDate);
+    console.log("eD", userBookings.endDate);
+    console.log("date", new Date(userBookings.startDate));
+    console.log("price", userBookings[0].totalPrice);
+
+    if (userBookings.length === 0) {
+      userBookingsTable.innerHTML =
+        "<p>You have no bookings for this listing yet.</p>";
+      return;
+    }
+
+    userBookingsTable.innerHTML = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${userBookings
+            .map(
+              (booking: IBooking) => `
+            <tr>
+              <td>${new Date(booking.startDate).toLocaleDateString()}</td>
+              <td>${new Date(booking.endDate).toLocaleDateString()}</td>
+              <td>
+                <button class="btn btn-sm btn-primary edit-booking" data-booking-id="${
+                  booking.id
+                }">Edit</button>
+                <button class="btn btn-sm btn-danger delete-booking" data-booking-id="${
+                  booking.id
+                }">Delete</button>
+              </td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    `;
+
+    // Add event listeners for edit and delete buttons
+    userBookingsTable.querySelectorAll(".edit-booking").forEach((button) => {
+      button.addEventListener("click", handleEditBooking);
+    });
+
+    userBookingsTable.querySelectorAll(".delete-booking").forEach((button) => {
+      button.addEventListener("click", handleDeleteBooking);
+    });
+  } catch (error) {
+    console.error("Error fetching user bookings:", error);
+    userBookingsTable.innerHTML =
+      "<p>Error fetching your bookings. Please try again later.</p>";
+  }
+}
+
+async function handleEditBooking(event: Event) {
+  const bookingId = (event.target as HTMLElement).getAttribute(
+    "data-booking-id"
+  );
+  // Implement edit booking logic here
+  console.log("Edit booking:", bookingId);
+  // You can open a modal or navigate to an edit page
+}
+
+async function handleDeleteBooking(event: Event) {
+  const bookingId = (event.target as HTMLElement).getAttribute(
+    "data-booking-id"
+  );
+  if (confirm("Are you sure you want to delete this booking?")) {
+    const token = localStorage.getItem("token");
+    try {
+      await bookingApi.deleteBooking(bookingId!, token!);
+      alert("Booking deleted successfully");
+      // renderUserBookings();
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+      alert("Failed to delete booking");
+    }
   }
 }

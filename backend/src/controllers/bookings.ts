@@ -4,6 +4,7 @@ import * as BookingService from "../services/bookings";
 import { AuthRequest } from "../interface/auth.interface";
 import { IUser } from "../interface/user";
 import { IBooking } from "../interface/booking";
+import { NotFoundError } from "../error/NotFoundError";
 
 /**
  * Get all bookings with pagination
@@ -102,5 +103,23 @@ export const getBookingsByListingId = async (req: Request, res: Response) => {
 export const getBookingsByUserId = async (req: Request, res: Response) => {
   const { user_id } = req.params;
   const bookings = await BookingService.getBookingsByUserId(parseInt(user_id));
+  res.json(bookings);
+};
+
+/**
+ * Get bookings by user ID and listing ID
+ * @param {AuthRequest<{ listing_id: string }>} req - Express authenticated request object
+ * @param {Response} res - Express response object
+ */
+export const getUserBookingsForListing = async (
+  req: AuthRequest<{ listing_id: string }>,
+  res: Response
+) => {
+  const user = req.user as IUser;
+  const { listing_id } = req.params;
+  const bookings = await BookingService.getBookingsByUserAndListingId(
+    user.id,
+    parseInt(listing_id, 10)
+  );
   res.json(bookings);
 };
