@@ -1,4 +1,4 @@
-import { searchListings } from "../api/fetchListings";
+import { searchListings } from "../api/listings";
 import { renderListings } from "../components/renderListings";
 import { state, updateState } from "../state";
 import { LISTINGS_PER_PAGE } from "../constants";

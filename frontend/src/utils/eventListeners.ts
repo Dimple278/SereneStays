@@ -2,6 +2,8 @@ import { navigate } from "../main";
 import { setupFilterHandlers } from "../handlers/filterHandler";
 import { setupSearchHandler } from "../handlers/searchHandler";
 import { setupPagination } from "../handlers/paginationHandler";
+import { state, updateState } from "../state";
+import { fetchAndRenderListings } from "./fetchAndRenderListings";
 
 export function setupEventListeners(
   container: HTMLElement,
@@ -19,7 +21,10 @@ export function setupEventListeners(
 
   setupFilterHandlers(container);
   setupSearchHandler(container);
-  setupPagination(container, totalCount);
+  setupPagination(container, totalCount, state.currentPage, (page: number) => {
+    updateState({ currentPage: page });
+    fetchAndRenderListings(container);
+  });
 
   const taxSwitches = document.querySelectorAll(".tax-switch");
   taxSwitches.forEach((taxSwitch) => {

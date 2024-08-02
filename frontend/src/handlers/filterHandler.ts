@@ -1,7 +1,7 @@
 import {
   fetchFilteredListings,
   fetchListingsByCategory,
-} from "../api/fetchListings";
+} from "../api/listings";
 import { renderListings } from "../components/renderListings";
 import { state, updateState } from "../state";
 import { LISTINGS_PER_PAGE } from "../constants";
