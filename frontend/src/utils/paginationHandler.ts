@@ -16,7 +16,10 @@ export function setupPagination(container: HTMLElement, totalCount: number) {
   for (let page = 1; page <= totalPages; page++) {
     const pageButton = document.createElement("button");
     pageButton.textContent = page.toString();
-    pageButton.className = "pagination-button btn btn-outline-danger mx-1";
+    pageButton.className = `pagination-button btn btn-outline-danger mx-1 ${
+      page === state.currentPage ? "active" : ""
+    }`;
+
     pageButton.addEventListener("click", async () => {
       updateState({ currentPage: page });
       let listingsData;
