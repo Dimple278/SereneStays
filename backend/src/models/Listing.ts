@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "../database/db";
 import { IListing } from "../interface/listing";
 import { BaseModel } from "./base";
 class ListingModel extends BaseModel {

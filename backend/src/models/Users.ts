@@ -1,5 +1,5 @@
 // models/User.ts
-import db from "../db";
+import db from "../database/db";
 import bcrypt from "bcryptjs";
 import { BaseModel } from "./base";
 

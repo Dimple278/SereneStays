@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "../database/db";
 import { IBooking } from "../interface/booking";
 
 class BookingModel {

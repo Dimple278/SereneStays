@@ -3,7 +3,7 @@ import reviewsRouter from "./reviews";
 import userRouter from "./users";
 import bookingsRouter from "./booking";
 import authRouter from "./auth";
-import listingsRouter from "./Listings";
+import listingsRouter from "./listings";
 
 const router = Router();
 

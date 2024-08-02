@@ -1,5 +1,5 @@
 // models/Review.ts
-import db from "../db";
+import db from "../database/db";
 import { Review } from "../interface/review";
 
 class ReviewModel {
