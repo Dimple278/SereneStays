@@ -3,6 +3,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { navigate } from "../main";
 import { IBooking } from "../interfaces/booking";
+import { currUser } from "../api/getCurrUser";
 
 export async function renderBookingForm(
   container: HTMLElement,
@@ -10,9 +11,6 @@ export async function renderBookingForm(
   listingId: string,
   listingPrice: number
 ) {
-  const token = localStorage.getItem("token");
-  const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null;
-
   const bookingFormContainer = document.createElement("div");
   bookingFormContainer.className = "col-8 offset-2 mt-3";
 

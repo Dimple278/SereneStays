@@ -1,25 +1,13 @@
 import axios from "axios";
 import { navigate } from "../main";
 import { loadNavbar } from "../components/header/navbar"; // Import the loadNavbar function
+import { currUser } from "../api/getCurrUser";
+import { fetchUserById, updateUser } from "../api/usersAPI";
 
 export async function renderEditProfile(container: HTMLElement) {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    // Handle the case where token is not available
-    navigate("/login");
-    return;
-  }
-
-  const userId = JSON.parse(atob(token.split(".")[1])).id;
-
+  const userId = currUser.id;
   try {
-    // Fetch current user data
-    const response = await axios.get(`/api/users/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const user = response.data;
-
+    const user = await fetchUserById(userId);
     container.innerHTML = `
       <div class="container mt-5">
         <h3>Edit Profile</h3>
@@ -89,18 +77,13 @@ export async function renderEditProfile(container: HTMLElement) {
         loadingDiv.style.display = "block"; // Show loading message
         editProfileForm.style.display = "none"; // Hide the form
         try {
-          await axios.put(`/api/users/${userId}`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          await updateUser(userId, formData);
 
           // After updating the profile, refresh the navbar
           await loadNavbar();
 
-          // Navigate back to profile page or where needed
-          navigate(`/profile`);
+          // Navigate back to profile page
+          navigate(`/dashboard`);
         } catch (error) {
           console.error("Error updating profile:", error);
           loadingDiv.style.display = "none"; // Hide loading message

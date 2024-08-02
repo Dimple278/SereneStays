@@ -1,31 +1,38 @@
-class GlobalState {
-  private state: ISTATE;
+import { IState } from "../interfaces/state";
+
+export class GlobalState {
+  private state: IState;
   private static instance: GlobalState;
 
-  constructor() {
-    this.state = {};
+  private constructor() {
+    this.state = {
+      currentFilteredListings: [],
+      currentCategory: "ALL",
+      currentSearchQuery: "",
+      currentMinPrice: "",
+      currentMaxPrice: "",
+      currentCountry: "",
+      currentPage: 1,
+      listingsPerPage: 10,
+    };
   }
 
-  public setState() {}
-
-  public static getInstance() {
-    if (!this.instance) {
-      return new GlobalState();
+  public static getInstance(): GlobalState {
+    if (!GlobalState.instance) {
+      GlobalState.instance = new GlobalState();
     }
-    return this.instance;
+    return GlobalState.instance;
+  }
+
+  public getState(): IState {
+    return this.state;
+  }
+
+  public setState(newState: Partial<IState>): void {
+    this.state = { ...this.state, ...newState };
   }
 }
 
-const GLOBAL_STATE = {
-  timer: "2000",
+export const GLOBAL_STATE = {
+  debounceTimer: 300,
 };
-
-// dependency injection =>
-
-//     router class method (thiss.contrller: Controller) {
-
-//         this.controller.method()
-//         new ControllerClass().methodCall()
-//     }
-
-// singleton pattern

@@ -1,5 +1,5 @@
 import UniversalRouter, { Route } from "universal-router";
-import { renderListings } from "./pages/index";
+import { initializeListings } from "./pages/index";
 import { fetchListingsByCategory } from "./api/fetchListings";
 import { renderShowPage } from "./pages/show";
 import { renderNewPage } from "./pages/new";
@@ -56,14 +56,15 @@ const routes: Route[] = [
     path: "/",
     action: async () => {
       if (mainContent) {
-        const page = 1; // Initial page
-        const listingsPerPage = 10; // Number of listings per page
-        const { listings, totalCount } = await fetchListingsByCategory(
-          "ALL",
-          page,
-          listingsPerPage
-        );
-        renderListings(mainContent, listings, totalCount);
+        // const page = 1; // Initial page
+        // const listingsPerPage = 10; // Number of listings per page
+        // const { listings, totalCount } = await fetchListingsByCategory(
+        //   "ALL",
+        //   page,
+        //   listingsPerPage
+        // );
+        // renderListings(mainContent, listings, totalCount);
+        initializeListings(mainContent);
       }
     },
   },
@@ -71,14 +72,15 @@ const routes: Route[] = [
     path: "/listings",
     action: async () => {
       if (mainContent) {
-        const page = 1; // Initial page
-        const listingsPerPage = 10; // Number of listings per page
-        const { listings, totalCount } = await fetchListingsByCategory(
-          "ALL",
-          page,
-          listingsPerPage
-        );
-        renderListings(mainContent, listings, totalCount);
+        // const page = 1; // Initial page
+        // const listingsPerPage = 10; // Number of listings per page
+        // const { listings, totalCount } = await fetchListingsByCategory(
+        //   "ALL",
+        //   page,
+        //   listingsPerPage
+        // );
+        // renderListings(mainContent, listings, totalCount);
+        initializeListings(mainContent);
       }
     },
   },

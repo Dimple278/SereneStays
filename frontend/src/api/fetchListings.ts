@@ -39,12 +39,20 @@ export async function fetchFilteredListings(
   params.append("page", page.toString());
   params.append("limit", limit.toString());
 
-  const response = await fetch(`/api/listings/filter?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch filtered listings");
+  try {
+    const response = await fetch(`/api/listings/filter?${params.toString()}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return { listings: [], totalCount: 0 };
+      }
+      throw new Error("Failed to fetch filtered listings");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching filtered listings:", error);
+    return { listings: [], totalCount: 0 };
   }
-  const data = await response.json();
-  return data;
 }
 
 export async function searchListings(

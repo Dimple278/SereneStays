@@ -1,5 +1,5 @@
-import { renderAllBookings } from "../components/renderAllBookings";
-import { renderAllListings } from "../components/renderAllListings";
+import { renderAllBookings } from "../components/admin dashboard/renderAllBookings";
+
 import { renderMyBookings } from "../components/renderMyBookings";
 import { renderMyListings } from "../components/renderMyListings";
 import { renderMyProfile } from "../components/renderMyProfile";
@@ -35,7 +35,7 @@ export function renderDashboardPage(container: HTMLElement) {
       if (clickedButton.id === "my-profile") {
         renderMyProfile(profileContent);
       } else if (clickedButton.id === "all-listings") {
-        renderAllListings(profileContent);
+        // renderAllListings(profileContent);
         // } else if (clickedButton.id === "my-listings") {
         // renderMyListings(profileContent);
       } else if (clickedButton.id === "all-users") {
