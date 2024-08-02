@@ -1,17 +1,25 @@
-import { IListing } from "../interfaces/listing";
-import { fetchListingsByCategory } from "../api/fetchListings";
+import { deleteListing, fetchListingsByCategory } from "../../api/listings";
+import { setupPagination } from "../../handlers/paginationHandler";
+import { IListing } from "../../interfaces/listing";
+import { navigate } from "../../main";
+import { state, updateState } from "../../state"; // Make sure to import state management
 
-export async function renderAllListings(container: HTMLElement) {
+export async function renderAllListings(
+  container: HTMLElement,
+  page: number = 1
+) {
   // Clear the container
   container.innerHTML = "";
 
-  // Fetch the listings
-  const category = "ALL"; // Adjust as needed
-  const page = 1;
-  const limit = 10; // Adjust as needed
+  const category = "ALL";
+  const limit = 10;
 
   try {
-    const { listings } = await fetchListingsByCategory(category, page, limit);
+    const { listings, totalCount } = await fetchListingsByCategory(
+      category,
+      page,
+      limit
+    );
 
     // Create table structure
     const table = document.createElement("table");
@@ -31,17 +39,16 @@ export async function renderAllListings(container: HTMLElement) {
 
     listings.forEach((listing: IListing) => {
       const row = document.createElement("tr");
-
       row.innerHTML = `
-        <td>${listing.id}</td>
-        <td>${listing.ownerId}</td>
-        <td>${listing.title}</td>
+        <td >${listing.id}</td>
+        <td >${listing.ownerName}</td>
+        <td class="listing-title" data-id="${listing.id}" style="cursor:pointer;">${listing.title}</td>
         <td>
           <i class="fas fa-edit text-primary edit-icon" data-id="${listing.id}" style="cursor: pointer;"></i>
+          &nbsp;&nbsp;&nbsp;
           <i class="fas fa-trash-alt text-danger delete-icon" data-id="${listing.id}" style="cursor: pointer;"></i>
         </td>
       `;
-
       tbody.appendChild(row);
     });
 
@@ -50,23 +57,41 @@ export async function renderAllListings(container: HTMLElement) {
     container.appendChild(table);
 
     // Add event listeners for edit and delete icons
-    container.querySelectorAll(".edit-icon").forEach((icon) => {
-      icon.addEventListener("click", (event) => {
-        const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
-        // Handle edit action
-        console.log(`Edit listing with id: ${id}`);
-      });
-    });
+    setupActionListeners(container);
 
-    container.querySelectorAll(".delete-icon").forEach((icon) => {
-      icon.addEventListener("click", (event) => {
-        const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
-        // Handle delete action
-        console.log(`Delete listing with id: ${id}`);
-      });
+    // Setup pagination
+    setupPagination(container, totalCount, page, (newPage) => {
+      renderAllListings(container, newPage);
     });
   } catch (error) {
     console.error("Error fetching listings:", error);
     container.innerHTML = '<p class="text-danger">Failed to load listings.</p>';
   }
+}
+
+function setupActionListeners(container: HTMLElement) {
+  container.querySelectorAll(".listing-title").forEach((title) => {
+    title.addEventListener("click", (event) => {
+      const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
+      navigate(`/show/${id}`);
+    });
+  });
+
+  container.querySelectorAll(".edit-icon").forEach((icon) => {
+    icon.addEventListener("click", (event) => {
+      const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
+      navigate(`/edit/${id}`);
+    });
+  });
+
+  container.querySelectorAll(".delete-icon").forEach((icon) => {
+    icon.addEventListener("click", async (event) => {
+      const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
+      if (id) {
+        await deleteListing(id);
+        alert("Listing deleted");
+        navigate("/dashboard");
+      }
+    });
+  });
 }
