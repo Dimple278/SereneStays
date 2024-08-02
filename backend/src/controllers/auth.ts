@@ -13,8 +13,14 @@ import { BadRequestError } from "../error/BadRequestError";
 import { UnauthorizedError } from "../error/UnauthorizedError";
 import { InternalServerError } from "../error/InternalServerError";
 
-// Signup handler
-export const signup = async (req: Request, res: Response) => {
+/**
+ * Signup handler to create a new user
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @throws {BadRequestError} - If email is already in use
+ * @returns {Promise<void>}
+ */
+export const signup = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password } = req.body;
 
   const existingUser = await UserModel.findByEmail(email);
@@ -32,14 +38,21 @@ export const signup = async (req: Request, res: Response) => {
   res.status(201).json({ message: "User created successfully" });
 };
 
-// Login handler
-export const login = async (req: Request, res: Response) => {
+/**
+ * Login handler to authenticate a user
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @throws {UnauthorizedError} - If email or password is invalid
+ * @returns {Promise<void>}
+ */
+export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   const user = await UserModel.findByEmail(email);
   if (!user || !(await bcrypt.compare(password, user.password))) {
     throw new UnauthorizedError("Invalid email or password");
   }
+
   const payload = {
     id: user.id,
     name: user.name,
@@ -54,8 +67,16 @@ export const login = async (req: Request, res: Response) => {
   res.status(200).json({ accessToken, refreshToken });
 };
 
-// Refresh token handler
-export async function refresh(req: Request, res: Response) {
+/**
+ * Refresh token handler to generate new access and refresh tokens
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @throws {UnauthorizedError} - If token has expired
+ * @throws {BadRequestError} - If token is invalid
+ * @throws {InternalServerError} - If authentication fails
+ * @returns {Promise<void>}
+ */
+export async function refresh(req: Request, res: Response): Promise<void> {
   try {
     const { refreshToken } = req.body;
 
