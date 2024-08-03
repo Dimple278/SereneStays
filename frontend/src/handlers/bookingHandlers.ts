@@ -66,49 +66,41 @@ export function setupBookingFormHandler(
 }
 
 export function setupBookingActionHandlers(
+  bookingId: string,
   listingId: string,
   token: string,
   listingPrice: number
 ) {
-  document.querySelectorAll(".edit-booking").forEach((button) => {
-    button.addEventListener("click", async (event) => {
-      const bookingId = (event.target as HTMLElement).getAttribute(
-        "data-booking-id"
-      );
-      if (bookingId) {
-        const bookingData = await bookingApi.getBookingById(bookingId);
-        showEditBookingModal(bookingId, bookingData, listingId, listingPrice);
-      }
-    });
-  });
+  const editButton = document.querySelector(
+    `.edit-booking[data-booking-id="${bookingId}"]`
+  );
+  const deleteButton = document.querySelector(
+    `.delete-booking[data-booking-id="${bookingId}"]`
+  );
 
-  document.querySelectorAll(".delete-booking").forEach((button) => {
-    button.addEventListener("click", async (event) => {
-      const bookingId = (event.target as HTMLElement).getAttribute(
-        "data-booking-id"
-      ) as string;
-      // if (
-      //   bookingId &&
-      //   confirm("Are you sure you want to delete this booking?")
-      // ) {
-      //   await bookingApi.deleteBooking(bookingId, token);
-      //   await renderUserBookings(listingId, listingPrice);
-      // }
-      if (bookingId) {
-        showCustomConfirm({
-          message: "Are you sure you want to delete this booking ?",
-          onConfirm: async () => {
-            await bookingApi.deleteBooking(bookingId, token);
-            showCustomAlert({
-              message: "Booking deleted successfully!",
-              type: "success",
-            });
-            await renderUserBookings(listingId, listingPrice);
-          },
-        });
-      }
+  if (editButton) {
+    editButton.addEventListener("click", async () => {
+      console.log("Edit booking button clicked", bookingId);
+      const bookingData = await bookingApi.getBookingById(bookingId);
+      showEditBookingModal(bookingId, bookingData, listingId, listingPrice);
     });
-  });
+  }
+
+  if (deleteButton) {
+    deleteButton.addEventListener("click", async () => {
+      showCustomConfirm({
+        message: "Are you sure you want to delete this booking?",
+        onConfirm: async () => {
+          await bookingApi.deleteBooking(bookingId, token);
+          showCustomAlert({
+            message: "Booking deleted successfully!",
+            type: "success",
+          });
+          await renderUserBookings(listingId, listingPrice);
+        },
+      });
+    });
+  }
 }
 
 export function setupEditBookingFormHandler(

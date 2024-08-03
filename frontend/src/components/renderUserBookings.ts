@@ -1,6 +1,5 @@
 import { bookingApi } from "../api/bookings";
 import { setupBookingActionHandlers } from "../handlers/bookingHandlers";
-// import { setupBookingActionHandlers } from "../handlers/bookingHandlers";
 import { IBooking } from "../interfaces/booking";
 
 export async function renderUserBookings(
@@ -67,8 +66,19 @@ export async function renderUserBookings(
       </table>
     `;
 
-    // Attach event handlers
-    setupBookingActionHandlers(listingId, token, listingPrice);
+    // Attach event handlers for each booking
+    userBookings.forEach((booking: IBooking) => {
+      if (booking.id) {
+        setupBookingActionHandlers(
+          booking.id.toString(),
+          listingId,
+          token,
+          listingPrice
+        );
+      } else {
+        console.error("Booking ID is undefined or null", booking);
+      }
+    });
   } catch (error) {
     console.error("Error fetching user bookings:", error);
     userBookingsTable.innerHTML = "<p>You have not booked this listing.</p>";
