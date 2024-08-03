@@ -18,6 +18,7 @@ import { renderEditPage } from "./pages/edit";
 import { renderDashboardPage } from "./pages/dashboard";
 import { getCurrUser } from "./api/getCurrUser";
 import { renderUserProfile } from "./pages/userProfile";
+import { renderNotFoundPage } from "./pages/notFound";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -43,8 +44,9 @@ const routes: Route[] = [
   {
     path: "/login",
     action: async () => {
+      console.log("Login route matched");
       if (mainContent) {
-        renderLoginPage(mainContent);
+        await renderLoginPage(mainContent);
       }
     },
   },
@@ -56,14 +58,7 @@ const routes: Route[] = [
       }
     },
   },
-  {
-    path: "/",
-    action: async () => {
-      if (mainContent) {
-        initializeListings(mainContent);
-      }
-    },
-  },
+
   {
     path: "/listings",
     action: async () => {
@@ -135,6 +130,22 @@ const routes: Route[] = [
       }
     },
   },
+  {
+    path: "/",
+    action: async () => {
+      if (mainContent) {
+        initializeListings(mainContent);
+      }
+    },
+  },
+  // {
+  //   path: "(.*)",
+  //   action: () => {
+  //     if (mainContent) {
+  //       renderNotFoundPage(mainContent);
+  //     }
+  //   },
+  // },
 ];
 
 // Create the router instance
