@@ -1,4 +1,5 @@
 export interface IBooking {
+  totalPrice: any;
   listingTitle: any;
   listingId: any;
   startDate: string | number | Date;

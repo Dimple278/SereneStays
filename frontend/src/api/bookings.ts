@@ -15,6 +15,11 @@ export const fetchBookings = async (page: number = 1, limit: number = 10) => {
 };
 
 export const bookingApi = {
+  getBookingById: async (bookingId: string) => {
+    const response = await axios.get(`${API_BASE_URL}/${bookingId}`);
+    return response.data;
+  },
+
   getBookingsForListing: async (listingId: string) => {
     const response = await axios.get(`${API_BASE_URL}/listing/${listingId}`);
     return response.data;
