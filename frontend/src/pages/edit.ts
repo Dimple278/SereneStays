@@ -1,5 +1,6 @@
 import axios from "axios";
 import { navigate } from "../main";
+import { compressImage } from "../utils/compressImage";
 
 export async function renderEditPage(container: HTMLElement, id: string) {
   try {
@@ -158,6 +159,22 @@ export async function renderEditPage(container: HTMLElement, id: string) {
         }
 
         try {
+          // Compress images before sending
+          const imageFiles = formData.getAll("images") as File[];
+          const compressedImages = await Promise.all(
+            imageFiles.map((file) =>
+              file.size > 0 ? compressImage(file) : Promise.resolve(file)
+            )
+          );
+
+          // Replace original images with compressed ones
+          formData.delete("images");
+          compressedImages.forEach((blob, index) => {
+            if (blob instanceof Blob) {
+              formData.append("images", blob, `compressed_image_${index}.jpg`);
+            }
+          });
+
           await axios.put(`/api/listings/${id}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",

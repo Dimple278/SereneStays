@@ -1,5 +1,6 @@
 import axios from "axios";
 import { navigate } from "../main";
+import { compressImage } from "../utils/compressImage";
 
 export function renderSignupPage(container: HTMLElement) {
   container.innerHTML = `
@@ -70,7 +71,6 @@ export function renderSignupPage(container: HTMLElement) {
       reader.readAsDataURL(imageInput.files[0]);
     }
   });
-
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const name = (document.getElementById("name") as HTMLInputElement).value;
@@ -83,13 +83,26 @@ export function renderSignupPage(container: HTMLElement) {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("password", password);
-    if (imageInput.files && imageInput.files[0]) {
-      formData.append("image", imageInput.files[0]);
-    }
 
     try {
       loadingScreen.style.display = "flex";
       container.style.opacity = "0.5";
+
+      if (imageInput.files && imageInput.files[0]) {
+        const originalImage = imageInput.files[0];
+        console.log(`Original image size: ${originalImage.size} bytes`);
+
+        const compressedImage = await compressImage(originalImage);
+        console.log(`Compressed image size: ${compressedImage.size} bytes`);
+        console.log(
+          `Size reduction: ${(
+            ((originalImage.size - compressedImage.size) / originalImage.size) *
+            100
+          ).toFixed(2)}%`
+        );
+
+        formData.append("image", compressedImage, "profile_picture.jpg");
+      }
 
       const response = await axios.post("/api/auth/signup", formData, {
         headers: {

@@ -1,8 +1,8 @@
 import axios from "axios";
-import { navigate } from "../main";
-import { loadNavbar } from "../components/header/navbar"; // Import the loadNavbar function
-import { currUser } from "../api/getCurrUser";
-import { fetchUserById, updateUser } from "../api/usersAPI";
+import { navigate } from "../../main";
+import { loadNavbar } from "../header/navbar"; // Import the loadNavbar function
+import { currUser } from "../../api/getCurrUser";
+import { fetchUserById, updateUser } from "../../api/usersAPI";
 
 export async function renderEditProfile(container: HTMLElement) {
   const userId = currUser.id;
