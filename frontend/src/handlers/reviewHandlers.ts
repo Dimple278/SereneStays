@@ -2,6 +2,7 @@ import { IReview } from "../interfaces/reviews";
 import { navigate } from "../main";
 import { deleteReview, updateReview } from "../api/reviewAPI";
 import { showCustomConfirm } from "../utils/showCustomConfirm";
+import { showCustomAlert } from "../utils/showCustomAlert";
 
 export function attachDeleteReviewListeners(listingId: string) {
   const deleteReviewForms = document.querySelectorAll(".delete-review-form");
@@ -15,6 +16,10 @@ export function attachDeleteReviewListeners(listingId: string) {
           onConfirm: async () => {
             await deleteReview(listingId, reviewId);
             navigate(`/show/${listingId}`);
+            showCustomAlert({
+              message: "Review deleted successfully",
+              type: "success",
+            });
           },
         });
       } else {

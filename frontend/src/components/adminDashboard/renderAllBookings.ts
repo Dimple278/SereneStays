@@ -110,8 +110,8 @@ function setupBookingActionListeners(container: HTMLElement) {
       const token = localStorage.getItem("token") as string;
       showCustomConfirm({
         message: "Are you sure you want to delete this booking ?",
-        onConfirm: () => {
-          bookingApi.deleteBooking(bookingId, token);
+        onConfirm: async () => {
+          await bookingApi.deleteBooking(bookingId, token);
           showCustomAlert({
             message: "Booking deleted successfully!",
             type: "success",

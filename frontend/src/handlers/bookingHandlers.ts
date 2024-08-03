@@ -94,17 +94,19 @@ export function setupBookingActionHandlers(
       //   await bookingApi.deleteBooking(bookingId, token);
       //   await renderUserBookings(listingId, listingPrice);
       // }
-      showCustomConfirm({
-        message: "Are you sure you want to delete this booking ?",
-        onConfirm: async () => {
-          await bookingApi.deleteBooking(bookingId, token);
-          showCustomAlert({
-            message: "Booking deleted successfully!",
-            type: "success",
-          });
-          await renderUserBookings(listingId, listingPrice);
-        },
-      });
+      if (bookingId) {
+        showCustomConfirm({
+          message: "Are you sure you want to delete this booking ?",
+          onConfirm: async () => {
+            await bookingApi.deleteBooking(bookingId, token);
+            showCustomAlert({
+              message: "Booking deleted successfully!",
+              type: "success",
+            });
+            await renderUserBookings(listingId, listingPrice);
+          },
+        });
+      }
     });
   });
 }
