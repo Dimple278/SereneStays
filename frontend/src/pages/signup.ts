@@ -104,7 +104,7 @@ export function renderSignupPage(container: HTMLElement) {
         formData.append("image", compressedImage, "profile_picture.jpg");
       }
 
-      const response = await axios.post("/api/auth/signup", formData, {
+      await axios.post("/api/auth/signup", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

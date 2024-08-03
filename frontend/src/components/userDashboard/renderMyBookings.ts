@@ -1,5 +1,7 @@
-import axios from "axios";
 import { navigate } from "../../main";
+import { bookingApi } from "../../api/bookings";
+import { getCurrUser } from "../../api/getCurrUser";
+import { IBooking } from "../../interfaces/booking";
 
 export async function renderMyBookings(container: HTMLElement) {
   const token = localStorage.getItem("token");
@@ -8,16 +10,10 @@ export async function renderMyBookings(container: HTMLElement) {
     return;
   }
 
-  const currUser = JSON.parse(atob(token.split(".")[1]));
+  const currUser = await getCurrUser();
 
   try {
-    const response = await axios.get(`/api/bookings/user/${currUser.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const bookings = response.data;
+    const bookings = await bookingApi.getUserBookings(currUser.id);
 
     container.innerHTML = `
       <div class="container mt-4">
@@ -32,7 +28,7 @@ export async function renderMyBookings(container: HTMLElement) {
           <tbody>
             ${bookings
               .map(
-                (booking: any) => `
+                (booking: IBooking) => `
               <tr>
                 <td class="listing-name text-primary" data-id="${
                   booking.listingId

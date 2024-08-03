@@ -1,11 +1,11 @@
 import axios from "axios";
 import { navigate } from "../main";
 import { compressImage } from "../utils/compressImage";
+import { getListingById } from "../api/listings";
 
 export async function renderEditPage(container: HTMLElement, id: string) {
   try {
-    const response = await axios.get(`/api/listings/${id}`);
-    const listing = response.data;
+    const listing = await getListingById(id);
     const token = localStorage.getItem("token");
 
     container.innerHTML = `

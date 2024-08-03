@@ -1,5 +1,7 @@
 import axios from "axios";
 import { navigate } from "../../main";
+import { getCurrUser } from "../../api/getCurrUser";
+import { deleteUser } from "../../api/usersAPI";
 
 export async function renderMyProfile(
   profileContent: HTMLElement,
@@ -12,10 +14,7 @@ export async function renderMyProfile(
   }
 
   try {
-    const currUserResponse = await axios.get(`/api/users/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const currUser = currUserResponse.data;
+    const currUser = await getCurrUser();
 
     const userId = id || currUser.id;
     const isCurrentUser = userId === currUser.id;
@@ -116,16 +115,9 @@ export async function renderMyProfile(
       profileContent
         .querySelector("#delete-profile")
         ?.addEventListener("click", async () => {
-          try {
-            await axios.delete(`/api/users/${currUser.id}`, {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            localStorage.removeItem("token");
-            navigate("/login");
-          } catch (error) {
-            console.error("Error deleting profile:", error);
-            alert("Failed to delete profile. Please try again.");
-          }
+          await deleteUser(currUser.id);
+          localStorage.removeItem("token");
+          navigate("/login");
         });
 
       profileContent.querySelector("#logout")?.addEventListener("click", () => {

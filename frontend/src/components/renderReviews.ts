@@ -1,14 +1,14 @@
-import axios from "axios";
 import { IReview } from "../interfaces/reviews";
 import { navigate } from "../main";
 import { renderReviewForm, renderEditReviewModal } from "./reviewForm";
-import { submitReviewForm } from "../api/reviewAPI";
+import { getReviewsByListingId, submitReviewForm } from "../api/reviewAPI";
 import {
   attachDeleteReviewListeners,
   attachEditReviewListeners,
   renderReviewsList,
   attachAuthorLinkListeners,
 } from "../handlers/reviewHandlers";
+import { getCurrUser } from "../api/getCurrUser";
 
 export async function renderReviews(
   container: HTMLElement,
@@ -17,18 +17,8 @@ export async function renderReviews(
 ) {
   let reviews: IReview[] = [];
 
-  try {
-    const reviewsResponse = await axios.get(
-      `/api/reviews/listing/${listingId}`
-    );
-    reviews = reviewsResponse.data;
-  } catch (error) {
-    console.error("Error fetching reviews:", error);
-  }
-
-  const token = localStorage.getItem("token");
-  const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null;
-  console.log("Current user:", currUser);
+  reviews = await getReviewsByListingId(listingId);
+  const currUser = await getCurrUser();
 
   const reviewsContainer = document.createElement("div");
   reviewsContainer.className = "col-8 offset-2 mt-3";

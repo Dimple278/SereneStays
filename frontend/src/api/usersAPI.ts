@@ -26,3 +26,9 @@ export async function fetchUsers(
   const response = await axios.get(`/api/users?page=${page}&limit=${limit}`);
   return response.data;
 }
+
+export async function deleteUser(userId: string) {
+  await axios.delete(`/api/users/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}

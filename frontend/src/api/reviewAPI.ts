@@ -1,4 +1,5 @@
 import axios from "axios";
+import { showCustomAlert } from "../utils/showCustomAlert";
 
 // Helper function to get the authorization token
 function getAuthToken(): string | null {
@@ -24,7 +25,10 @@ export async function submitReviewForm(listingId: string) {
     await axios.post(`/api/reviews/listing/${listingId}`, review, {
       headers: getAuthHeaders(),
     });
-    alert("Review submitted successfully!");
+    showCustomAlert({
+      message: "Review Added successfully!",
+      type: "success",
+    });
   } catch (error) {
     console.error("Error submitting review:", error);
   }
@@ -55,5 +59,17 @@ export async function deleteReview(listingId: string, reviewId: string) {
     });
   } catch (error) {
     console.error("Error deleting review:", error);
+  }
+}
+
+export async function getReviewsByListingId(listingId: string) {
+  try {
+    const reviewsResponse = await axios.get(
+      `/api/reviews/listing/${listingId}`
+    );
+    const reviews = reviewsResponse.data;
+    return reviews;
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
   }
 }

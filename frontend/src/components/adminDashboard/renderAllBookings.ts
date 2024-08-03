@@ -1,5 +1,4 @@
-import axios from "axios";
-import { fetchBookings } from "../../api/bookings";
+import { bookingApi, fetchBookings } from "../../api/bookings";
 import { setupPagination } from "../../handlers/paginationHandler";
 import { IBooking } from "../../interfaces/booking";
 import { navigate } from "../../main";
@@ -10,7 +9,6 @@ export async function renderAllBookings(
 ) {
   container.innerHTML = "";
   const limit = 10;
-  const token = localStorage.getItem("token");
 
   try {
     const { bookings, totalCount } = await fetchBookings(page, limit);
@@ -106,22 +104,10 @@ function setupBookingActionListeners(container: HTMLElement) {
   container.querySelectorAll(".delete-booking").forEach((button) => {
     button.addEventListener("click", async (event) => {
       const target = event.target as HTMLButtonElement;
-      const bookingId = parseInt(
-        target.closest("button")!.dataset.id as string,
-        10
-      );
+      const bookingId = target.closest("button")!.dataset.id as string;
+      const token = localStorage.getItem("token") as string;
       if (confirm("Are you sure you want to delete this booking?")) {
-        try {
-          const token = localStorage.getItem("token");
-          await axios.delete(`/api/bookings/${bookingId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          // Re-render the bookings list
-          renderAllBookings(container);
-        } catch (error) {
-          console.error("Error deleting booking:", error);
-          alert("Failed to delete booking. Please try again.");
-        }
+        bookingApi.deleteBooking(bookingId, token);
       }
     });
   });

@@ -1,14 +1,13 @@
-import axios from "axios";
 import { loadCss } from "../utils/loadCss";
 import { renderShowListing } from "../components/renderShowListing";
 import { renderReviews } from "../components/renderReviews";
 import { renderBookingForm } from "../components/renderBookingForm";
 import { renderMap } from "../components/renderMap";
+import { getListingById } from "../api/listings";
 
 export async function renderShowPage(container: HTMLElement, id: string) {
   try {
-    const listingResponse = await axios.get(`/api/listings/${id}`);
-    const listing = listingResponse.data;
+    const listing = await getListingById(id);
 
     loadCss("/src/styles/show.css");
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 const API_BASE_URL = "/api/bookings";
+const token = localStorage.getItem("token");
 
 export const fetchBookings = async (page: number = 1, limit: number = 10) => {
   try {
@@ -25,8 +26,8 @@ export const bookingApi = {
     return response.data;
   },
 
-  getUserBookings: async (token: string) => {
-    const response = await axios.get(`${API_BASE_URL}/user`, {
+  getUserBookings: async (userId: string) => {
+    const response = await axios.get(`${API_BASE_URL}/user/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

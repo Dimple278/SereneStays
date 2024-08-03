@@ -1,11 +1,9 @@
-import axios from "axios";
-import { fetchUsers } from "../../api/usersAPI";
+import { deleteUser, fetchUsers } from "../../api/usersAPI";
 import { setupPagination } from "../../handlers/paginationHandler";
 import { IUser } from "../../interfaces/users";
 import { navigate } from "../../main";
 
 export async function renderAllUsers(container: HTMLElement, page: number = 1) {
-  const token = localStorage.getItem("token");
   container.innerHTML = "";
 
   try {
@@ -74,14 +72,10 @@ export async function renderAllUsers(container: HTMLElement, page: number = 1) {
     deleteButtons.forEach((button) => {
       button.addEventListener("click", async (event) => {
         const target = event.target as HTMLButtonElement;
-        const userId = parseInt(
-          target.closest("button")!.dataset.id as string,
-          10
-        );
+        const userId = target.closest("button")!.dataset.id as string;
+
         if (confirm("Are you sure you want to delete this user?")) {
-          await axios.delete(`/api/users/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          deleteUser(userId);
           await renderAllUsers(container, page); // Re-render the user list
         }
       });

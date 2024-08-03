@@ -1,6 +1,7 @@
-import axios from "axios";
 import { navigate } from "../../main";
 import { IListing } from "../../interfaces/listing";
+import { getListingsByUserId } from "../../api/listings";
+import { getCurrUser } from "../../api/getCurrUser";
 
 export async function renderMyListings(container: HTMLElement, id?: string) {
   // Get token from localStorage
@@ -10,25 +11,18 @@ export async function renderMyListings(container: HTMLElement, id?: string) {
     return navigate("/login");
   }
 
-  // Decode token to get user ID
-  const currUser = JSON.parse(atob(token.split(".")[1]));
+  const currUser = await getCurrUser();
   const userId = id || currUser.id; // Use provided id if it exists, otherwise use current user's id
 
   try {
-    // Fetch listings for the specified user
-    const response = await axios.get(`/api/listings/users/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const listings: IListing[] = response.data;
+    const listings = await getListingsByUserId(userId);
 
     // Create accordion HTML
     container.innerHTML = `
       <div class="accordion mt-3" id="listingsAccordion">
         ${listings
           .map(
-            (listing, index) => `
+            (listing: IListing, index: number) => `
           <div class="accordion-item">
             <h2 class="accordion-header" id="heading${index}">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">

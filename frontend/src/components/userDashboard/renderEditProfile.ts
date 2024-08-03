@@ -1,4 +1,3 @@
-import axios from "axios";
 import { navigate } from "../../main";
 import { loadNavbar } from "../header/navbar"; // Import the loadNavbar function
 import { currUser } from "../../api/getCurrUser";

@@ -1,6 +1,6 @@
 import { loadCss } from "../../utils/loadCss";
 import { navigate } from "../../main";
-import axios from "axios";
+import { getCurrUser } from "../../api/getCurrUser";
 
 export async function loadNavbar() {
   loadCss("/src/styles/navbar.css");
@@ -19,11 +19,7 @@ export async function loadNavbar() {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const userResponse = await axios.get(`/api/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const currUser = userResponse.data;
-
+        const currUser = await getCurrUser();
         const userIconContainer = document.getElementById(
           "user-icon-container"
         );

@@ -2,11 +2,14 @@ import { navigate } from "../main";
 import { IListing } from "../interfaces/listing";
 import { confirmDialog } from "../utils/confirmDialogBox";
 import { deleteListing } from "../api/listings";
+import { getCurrUser } from "../api/getCurrUser";
 
-export function renderShowListing(container: HTMLElement, listing: IListing) {
+export async function renderShowListing(
+  container: HTMLElement,
+  listing: IListing
+) {
   const images = listing.images;
-  const token = localStorage.getItem("token");
-  const currUser = token ? JSON.parse(atob(token.split(".")[1])) : null; // Decode user info from token
+  const currUser = await getCurrUser();
   const imageSlides = images
     .map(
       (image, index) => `
