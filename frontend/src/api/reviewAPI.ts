@@ -24,7 +24,7 @@ export async function submitReviewForm(listingId: string) {
     await axios.post(`/api/reviews/listing/${listingId}`, review, {
       headers: getAuthHeaders(),
     });
-    // alert("Review submitted successfully!");
+    alert("Review submitted successfully!");
   } catch (error) {
     console.error("Error submitting review:", error);
   }

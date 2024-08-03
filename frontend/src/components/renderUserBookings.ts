@@ -71,7 +71,6 @@ export async function renderUserBookings(
     setupBookingActionHandlers(listingId, token, listingPrice);
   } catch (error) {
     console.error("Error fetching user bookings:", error);
-    userBookingsTable.innerHTML =
-      "<p>Error fetching your bookings. Please try again later.</p>";
+    userBookingsTable.innerHTML = "<p>You have not booked this listing.</p>";
   }
 }

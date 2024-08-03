@@ -15,7 +15,7 @@ export function createNoResultsMessage(): string {
     message += `in ${state.currentCountry} `;
   }
 
-  message += "Please try adjusting your filters or search criteria.";
+  message += "Please try adjusting your filters.";
 
   return `
       <div class="alert alert-info mt-3" role="alert">

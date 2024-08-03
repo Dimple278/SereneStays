@@ -17,6 +17,9 @@ export function setupFilterHandlers(container: HTMLElement) {
       updateState({
         currentCategory: category,
         currentSearchQuery: "",
+        currentMinPrice: "",
+        currentMaxPrice: "",
+        currentCountry: "",
         currentPage: 1,
       });
       const { listings, totalCount } = await fetchListingsByCategory(
@@ -25,6 +28,7 @@ export function setupFilterHandlers(container: HTMLElement) {
         LISTINGS_PER_PAGE
       );
       updateState({ currentFilteredListings: listings });
+
       renderListings(container, listings, totalCount);
     });
   });

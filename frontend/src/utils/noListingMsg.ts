@@ -5,7 +5,7 @@ export function createNoListingsMessage(category: string): string {
           <i class="far fa-frown fa-5x mb-4 text-danger"></i>
           <h2 class="display-6 fw-bold text-danger mb-3">Oops! No listings found</h2>
           <p class="lead mb-4 ">We couldn't find any listings for "${category}".</p>
-          <p class="text-muted mb-4">Try adjusting your search or filters to find more options.</p>
+          <p class="text-muted mb-4">Try adjusting your filter category for more options.</p>
         </div>
       </div>
     `;
