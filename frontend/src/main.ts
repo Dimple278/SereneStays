@@ -12,7 +12,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { renderLoginPage } from "./pages/login";
 import { renderSignupPage } from "./pages/signup";
 import { renderProfilePage } from "./pages/profile";
-import { renderEditProfile } from "./components/renderEditProfile";
+import { renderEditProfile } from "./components/userDashboard/renderEditProfile";
 import { renderEditPage } from "./pages/edit";
 
 import { renderDashboardPage } from "./pages/dashboard";
