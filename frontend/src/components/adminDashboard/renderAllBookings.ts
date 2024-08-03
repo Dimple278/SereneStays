@@ -2,6 +2,8 @@ import { bookingApi, fetchBookings } from "../../api/bookings";
 import { setupPagination } from "../../handlers/paginationHandler";
 import { IBooking } from "../../interfaces/booking";
 import { navigate } from "../../main";
+import { showCustomAlert } from "../../utils/showCustomAlert";
+import { showCustomConfirm } from "../../utils/showCustomConfirm";
 
 export async function renderAllBookings(
   container: HTMLElement,
@@ -106,9 +108,16 @@ function setupBookingActionListeners(container: HTMLElement) {
       const target = event.target as HTMLButtonElement;
       const bookingId = target.closest("button")!.dataset.id as string;
       const token = localStorage.getItem("token") as string;
-      if (confirm("Are you sure you want to delete this booking?")) {
-        bookingApi.deleteBooking(bookingId, token);
-      }
+      showCustomConfirm({
+        message: "Are you sure you want to delete this booking ?",
+        onConfirm: () => {
+          bookingApi.deleteBooking(bookingId, token);
+          showCustomAlert({
+            message: "Booking deleted successfully!",
+            type: "success",
+          });
+        },
+      });
     });
   });
 }

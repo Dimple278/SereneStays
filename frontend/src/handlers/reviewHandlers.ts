@@ -1,6 +1,7 @@
 import { IReview } from "../interfaces/reviews";
 import { navigate } from "../main";
 import { deleteReview, updateReview } from "../api/reviewAPI";
+import { showCustomConfirm } from "../utils/showCustomConfirm";
 
 export function attachDeleteReviewListeners(listingId: string) {
   const deleteReviewForms = document.querySelectorAll(".delete-review-form");
@@ -9,8 +10,13 @@ export function attachDeleteReviewListeners(listingId: string) {
       event.preventDefault();
       const reviewId = (event.target as HTMLFormElement).dataset.reviewId;
       if (reviewId) {
-        await deleteReview(listingId, reviewId);
-        navigate(`/show/${listingId}`);
+        showCustomConfirm({
+          message: "Are you sure you want to delete this review?",
+          onConfirm: async () => {
+            await deleteReview(listingId, reviewId);
+            navigate(`/show/${listingId}`);
+          },
+        });
       } else {
         console.error("Review ID is undefined");
       }

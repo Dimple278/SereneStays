@@ -1,6 +1,7 @@
 import axios from "axios";
 import { navigate } from "../main";
 import { compressImage } from "../utils/compressImage";
+import { showCustomAlert } from "../utils/showCustomAlert";
 
 export async function renderNewPage(container: HTMLElement) {
   container.innerHTML = `
@@ -157,6 +158,10 @@ export async function renderNewPage(container: HTMLElement) {
         }
 
         navigate(`/listings`);
+        showCustomAlert({
+          message: "Listing created successfully!",
+          type: "success",
+        });
       } catch (error) {
         console.error("Error creating listing:", error);
 

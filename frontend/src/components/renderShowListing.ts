@@ -1,8 +1,9 @@
 import { navigate } from "../main";
 import { IListing } from "../interfaces/listing";
-import { confirmDialog } from "../utils/confirmDialogBox";
 import { deleteListing } from "../api/listings";
 import { getCurrUser } from "../api/getCurrUser";
+import { showCustomAlert } from "../utils/showCustomAlert";
+import { showCustomConfirm } from "../utils/showCustomConfirm";
 
 export async function renderShowListing(
   container: HTMLElement,
@@ -82,13 +83,17 @@ export async function renderShowListing(
   if (deleteForm) {
     deleteForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const confirmed = await confirmDialog(
-        "Are you sure you want to delete this listing?"
-      );
-      if (confirmed) {
-        await deleteListing(listing.id);
-        navigate(`/listings`);
-      }
+      showCustomConfirm({
+        message: "Are you sure you want to delete this listing ?",
+        onConfirm: async () => {
+          await deleteListing(listing.id);
+          showCustomAlert({
+            type: "success",
+            message: "Listing deleted successfully!",
+          });
+          navigate(`/listings`);
+        },
+      });
     });
   }
 

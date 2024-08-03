@@ -2,6 +2,8 @@ import { deleteUser, fetchUsers } from "../../api/usersAPI";
 import { setupPagination } from "../../handlers/paginationHandler";
 import { IUser } from "../../interfaces/users";
 import { navigate } from "../../main";
+import { showCustomAlert } from "../../utils/showCustomAlert";
+import { showCustomConfirm } from "../../utils/showCustomConfirm";
 
 export async function renderAllUsers(container: HTMLElement, page: number = 1) {
   container.innerHTML = "";
@@ -74,10 +76,21 @@ export async function renderAllUsers(container: HTMLElement, page: number = 1) {
         const target = event.target as HTMLButtonElement;
         const userId = target.closest("button")!.dataset.id as string;
 
-        if (confirm("Are you sure you want to delete this user?")) {
-          deleteUser(userId);
-          await renderAllUsers(container, page); // Re-render the user list
-        }
+        // if (confirm("Are you sure you want to delete this user?")) {
+        //   deleteUser(userId);
+        //   await renderAllUsers(container, page); // Re-render the user list
+        // }
+        showCustomConfirm({
+          message: "Are you sure you want to delete this user?",
+          onConfirm: async () => {
+            await deleteUser(userId);
+            await renderAllUsers(container, page);
+            showCustomAlert({
+              type: "success",
+              message: "User deleted successfully!",
+            });
+          },
+        });
       });
     });
 

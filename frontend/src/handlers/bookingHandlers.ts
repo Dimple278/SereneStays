@@ -1,6 +1,8 @@
 import { bookingApi } from "../api/bookings";
 import { renderUserBookings } from "../components/renderUserBookings";
 import { showEditBookingModal } from "../components/renderEditBookingModal";
+import { showCustomConfirm } from "../utils/showCustomConfirm";
+import { showCustomAlert } from "../utils/showCustomAlert";
 
 let isBookingFormHandlerSet = false;
 let isEditBookingFormHandlerSet = false;
@@ -45,12 +47,17 @@ export function setupBookingFormHandler(
         );
 
         console.log("Booking response:", response);
-
-        alert("Booking successful!");
+        showCustomAlert({
+          message: "Your booking has been created successfully.",
+          type: "success",
+        });
         await renderUserBookings(listingId, listingPrice);
       } catch (error) {
         console.error("Error creating booking:", error);
-        alert("Failed to create booking.");
+        showCustomAlert({
+          message: "Failed to create booking. Please try again.",
+          type: "danger",
+        });
       }
     });
 
@@ -79,14 +86,25 @@ export function setupBookingActionHandlers(
     button.addEventListener("click", async (event) => {
       const bookingId = (event.target as HTMLElement).getAttribute(
         "data-booking-id"
-      );
-      if (
-        bookingId &&
-        confirm("Are you sure you want to delete this booking?")
-      ) {
-        await bookingApi.deleteBooking(bookingId, token);
-        await renderUserBookings(listingId, listingPrice);
-      }
+      ) as string;
+      // if (
+      //   bookingId &&
+      //   confirm("Are you sure you want to delete this booking?")
+      // ) {
+      //   await bookingApi.deleteBooking(bookingId, token);
+      //   await renderUserBookings(listingId, listingPrice);
+      // }
+      showCustomConfirm({
+        message: "Are you sure you want to delete this booking ?",
+        onConfirm: async () => {
+          await bookingApi.deleteBooking(bookingId, token);
+          showCustomAlert({
+            message: "Booking deleted successfully!",
+            type: "success",
+          });
+          await renderUserBookings(listingId, listingPrice);
+        },
+      });
     });
   });
 }
@@ -131,7 +149,10 @@ export function setupEditBookingFormHandler(
           },
           token!
         );
-        alert("Booking updated successfully!");
+        showCustomAlert({
+          message: "Booking updated successfully.",
+          type: "success",
+        });
         await renderUserBookings(listingId, listingPrice);
         const editBookingModalElement =
           document.getElementById("editBookingModal");
@@ -141,7 +162,10 @@ export function setupEditBookingFormHandler(
         }
       } catch (error) {
         console.error("Error updating booking:", error);
-        alert("Failed to update booking.");
+        showCustomAlert({
+          message: "Failed to update booking. Please try again.",
+          type: "danger",
+        });
       }
     });
     isEditBookingFormHandlerSet = true;

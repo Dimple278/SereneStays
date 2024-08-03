@@ -2,6 +2,7 @@ import axios from "axios";
 import { navigate } from "../main";
 import { compressImage } from "../utils/compressImage";
 import { getListingById } from "../api/listings";
+import { showCustomAlert } from "../utils/showCustomAlert";
 
 export async function renderEditPage(container: HTMLElement, id: string) {
   try {
@@ -186,6 +187,10 @@ export async function renderEditPage(container: HTMLElement, id: string) {
             loadingScreen.style.display = "none"; // Hide loading screen
             container.style.opacity = "1"; // Restore background opacity
           }
+          showCustomAlert({
+            type: "success",
+            message: "Listing updated successfully!",
+          });
 
           navigate(`/show/${id}`);
         } catch (error) {

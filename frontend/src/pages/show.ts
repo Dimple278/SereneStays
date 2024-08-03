@@ -31,8 +31,8 @@ export async function renderShowPage(container: HTMLElement, id: string) {
 
     const showBody = container.querySelector(".show-body") as HTMLElement;
 
-    renderShowListing(showBody, listing);
-    renderBookingForm(showBody, listing.ownerId, id, listing.price);
+    await renderShowListing(showBody, listing);
+    await renderBookingForm(showBody, listing.ownerId, id, listing.price);
     renderReviews(showBody, listing.ownerId, id);
 
     // Get coordinates from location and render map

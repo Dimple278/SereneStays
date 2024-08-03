@@ -1,5 +1,6 @@
 import axios from "axios";
 import { showCustomAlert } from "../utils/showCustomAlert";
+import { IReview } from "../interfaces/reviews";
 
 // Helper function to get the authorization token
 function getAuthToken(): string | null {
@@ -70,6 +71,8 @@ export async function getReviewsByListingId(listingId: string) {
     const reviews = reviewsResponse.data;
     return reviews;
   } catch (error) {
-    console.error("Error fetching reviews:", error);
+    const reviews: IReview[] = [];
+    return reviews;
+    // console.error("Error fetching reviews:", error);
   }
 }

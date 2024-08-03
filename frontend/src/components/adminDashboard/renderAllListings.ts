@@ -3,6 +3,8 @@ import { setupPagination } from "../../handlers/paginationHandler";
 import { IListing } from "../../interfaces/listing";
 import { navigate } from "../../main";
 import { state, updateState } from "../../state"; // Make sure to import state management
+import { showCustomAlert } from "../../utils/showCustomAlert";
+import { showCustomConfirm } from "../../utils/showCustomConfirm";
 
 export async function renderAllListings(
   container: HTMLElement,
@@ -91,8 +93,16 @@ function setupActionListeners(container: HTMLElement) {
       const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
       if (id) {
         await deleteListing(id);
-        alert("Listing deleted");
-        navigate("/dashboard");
+        showCustomConfirm({
+          message: "Are you sure you want to delete this listing?",
+          onConfirm: () => {
+            deleteListing(id);
+            showCustomAlert({
+              message: "Listing deleted successfully!",
+            });
+            navigate("/dashboard");
+          },
+        });
       }
     });
   });
