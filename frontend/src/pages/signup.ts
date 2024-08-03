@@ -4,38 +4,42 @@ import { navigate } from "../main";
 export function renderSignupPage(container: HTMLElement) {
   container.innerHTML = `
     <div class="container mt-5">
-      <div class="row">
-        <div class="col-md-6 mx-auto">
-          <h2 class="text-center mb-4">Signup</h2>
-          <form id="signup-form" class="needs-validation" novalidate enctype="multipart/form-data">
-            <div class="form-group mb-3">
-              <label for="name" class="form-label">Name</label>
-              <input type="text" class="form-control" id="name" required>
-              <div class="valid-feedback">Name looks good!</div>
-              <div class="invalid-feedback">Name is required.</div>
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-body p-5">
+              <h2 class="text-center mb-4" style="color: #FF5A5F;">Sign Up</h2>
+              <form id="signup-form" class="needs-validation" novalidate enctype="multipart/form-data">
+                <div class="form-group mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" required>
+                  <div class="invalid-feedback">Name is required.</div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="email" required>
+                  <div class="invalid-feedback">Email is required.</div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" required>
+                  <div class="invalid-feedback">Password is required.</div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="image" class="form-label">Upload Profile Picture</label>
+                  <input type="file" class="form-control" id="image" accept="image/*">
+                  <div id="imagePreview" class="mt-3"></div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 mb-3" style="background-color: #FF5A5F; border-color: #FF5A5F;">Sign Up</button>
+              </form>
+              <div id="message" class="mt-3"></div>
+              <hr class="my-4">
+              <div class="text-center">
+                <p class="mb-2">Already registered?</p>
+                <button id="login-button" class="btn btn-outline-secondary w-100">Log in</button>
+              </div>
             </div>
-            <div class="form-group mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" required>
-              <div class="valid-feedback">Email looks good!</div>
-              <div class="invalid-feedback">Email is required.</div>
-            </div>
-            <div class="form-group mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" required>
-              <div class="valid-feedback">Password looks good!</div>
-              <div class="invalid-feedback">Password is required.</div>
-            </div>
-            <div class="form-group mb-3">
-              <label for="image" class="form-label">Upload Profile Picture</label>
-              <input type="file" class="form-control" id="image" accept="image/*">
-              <div class="valid-feedback">Profile picture looks good!</div>
-              <div class="invalid-feedback">Profile picture is required.</div>
-              <div id="imagePreview" class="mt-3"></div>
-            </div>
-            <button type="submit" class="btn btn-danger w-100">Signup</button>
-          </form>
-          <div id="message" class="mt-3"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -53,6 +57,9 @@ export function renderSignupPage(container: HTMLElement) {
     "imagePreview"
   ) as HTMLDivElement;
   const loadingScreen = document.getElementById("loading") as HTMLDivElement;
+  const loginButton = document.getElementById(
+    "login-button"
+  ) as HTMLButtonElement;
 
   imageInput.addEventListener("change", () => {
     if (imageInput.files && imageInput.files[0]) {
@@ -81,8 +88,8 @@ export function renderSignupPage(container: HTMLElement) {
     }
 
     try {
-      loadingScreen.style.display = "flex"; // Show loading screen
-      container.style.opacity = "0.5"; // Apply blur effect
+      loadingScreen.style.display = "flex";
+      container.style.opacity = "0.5";
 
       const response = await axios.post("/api/auth/signup", formData, {
         headers: {
@@ -92,11 +99,10 @@ export function renderSignupPage(container: HTMLElement) {
 
       messageDiv.innerHTML =
         '<div class="alert alert-success">Signup successful!</div>';
-      setTimeout(() => navigate("/login"), 2000); // Redirect to login page after 2 seconds
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error: any) {
       console.error("Error:", error);
 
-      // Check if error response exists and display the message
       let errorMessage = "Signup failed";
       if (error.response) {
         if (error.response.data.message) {
@@ -107,8 +113,12 @@ export function renderSignupPage(container: HTMLElement) {
       }
       messageDiv.innerHTML = `<div class="alert alert-danger">${errorMessage}</div>`;
     } finally {
-      loadingScreen.style.display = "none"; // Hide loading screen
-      container.style.opacity = "1"; // Remove blur effect
+      loadingScreen.style.display = "none";
+      container.style.opacity = "1";
     }
+  });
+
+  loginButton.addEventListener("click", () => {
+    navigate("/login");
   });
 }
