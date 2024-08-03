@@ -234,3 +234,21 @@
         transform: scale(1);
     }
 }
+
+.social-icon {
+    display: flex;
+    align-items: center;
+  }
+  
+  .social-icon a {
+    margin-right: 10px;
+  }
+  
+  .social-icon a:last-child {
+    margin-right: 0;
+  }
+  
+  .social-icon img {
+    width: 24px;
+    height: 24px;
+  }

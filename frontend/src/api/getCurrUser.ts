@@ -1,4 +1,5 @@
 import axios from "axios";
+import { navigate } from "../main";
 
 /**
  * Fetches the current user's information from the API and stores it.
@@ -7,14 +8,18 @@ import axios from "axios";
 export const getCurrUser = async () => {
   const token = localStorage.getItem("token");
   if (!token) {
-    throw new Error("No token found in local storage");
+    return null; // Return null instead of throwing an error
   }
 
-  const currUserResponse = await axios.get(`/api/users/me`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  return currUserResponse.data;
+  try {
+    const currUserResponse = await axios.get(`/api/users/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return currUserResponse.data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return null;
+  }
 };
 
 export const currUser = await getCurrUser();

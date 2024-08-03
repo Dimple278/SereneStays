@@ -17,6 +17,7 @@ import { renderEditPage } from "./pages/edit";
 
 import { renderDashboardPage } from "./pages/dashboard";
 import { getCurrUser } from "./api/getCurrUser";
+import { renderUserProfile } from "./pages/userProfile";
 
 // Define an interface for route parameters
 interface RouteParams {
@@ -30,7 +31,12 @@ const mainContent = document.getElementById("main-content");
 loadNavbar();
 loadFooter();
 
-const currUser = await getCurrUser();
+let currUser = null;
+try {
+  currUser = await getCurrUser();
+} catch (error) {
+  console.error("Error getting current user:", error);
+}
 
 // Define route handlers
 const routes: Route[] = [
@@ -99,12 +105,13 @@ const routes: Route[] = [
   {
     path: "/dashboard",
     action: () => {
-      console.log(currUser);
       if (mainContent) {
-        if (currUser.role == "superadmin") {
+        if (currUser && currUser.role === "superadmin") {
           renderDashboardPage(mainContent);
-        } else {
+        } else if (currUser) {
           renderProfilePage(mainContent);
+        } else {
+          navigate("/login");
         }
       }
     },
@@ -117,20 +124,33 @@ const routes: Route[] = [
       }
     },
   },
+  {
+    path: "/user/:id",
+    action: ({ params }: { params: RouteParams }) => {
+      if (mainContent) {
+        const { id } = params;
+        if (id) {
+          renderUserProfile(mainContent, id);
+        }
+      }
+    },
+  },
 ];
 
 // Create the router instance
 const router = new UniversalRouter(routes);
 
 // Handle navigation
-export async function navigate(path: string) {
-  window.history.pushState({}, "", path);
+export async function navigate(path: string, pushState = true) {
+  if (pushState) {
+    window.history.pushState({}, "", path);
+  }
   await router.resolve({ pathname: path });
 }
 
 // Handle browser navigation (back/forward buttons)
-window.onpopstate = () => {
-  navigate(window.location.pathname);
+window.onpopstate = (event) => {
+  navigate(window.location.pathname, false);
 };
 
 // Initial load

@@ -1,6 +1,5 @@
 import { navigate } from "../main";
 import { IListing } from "../interfaces/listing";
-import axios from "axios";
 import { confirmDialog } from "../utils/confirmDialogBox";
 import { deleteListing } from "../api/listings";
 
@@ -36,9 +35,9 @@ export function renderShowListing(container: HTMLElement, listing: IListing) {
         </button>
       </div>
       <div class="card-body ms-1 mt-3 custom-card-body">
-        <p class="card-text"><b>Owned by :</b> <b><i>@${
+        <p class="card-text"><b>Owned by :</b> <b><i><a href="#" id="ownerLink">@${
           listing.ownerName
-        }</i></b></p>
+        }</a></i></b></p>
         <p class="card-text"><b>Description :</b> ${listing.description}</p>
         <p class="card-text"><b>Price :</b> &#8377; ${listing.price.toLocaleString(
           "en-IN"
@@ -87,6 +86,14 @@ export function renderShowListing(container: HTMLElement, listing: IListing) {
         await deleteListing(listing.id);
         navigate(`/listings`);
       }
+    });
+  }
+
+  const ownerLink = document.getElementById("ownerLink");
+  if (ownerLink) {
+    ownerLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      navigate(`/user/${listing.ownerId}`);
     });
   }
 }

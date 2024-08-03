@@ -2,7 +2,7 @@ import axios from "axios";
 import { navigate } from "../../main";
 import { IListing } from "../../interfaces/listing";
 
-export async function renderMyListings(container: HTMLElement) {
+export async function renderMyListings(container: HTMLElement, id?: string) {
   // Get token from localStorage
   const token = localStorage.getItem("token");
   if (!token) {
@@ -12,10 +12,10 @@ export async function renderMyListings(container: HTMLElement) {
 
   // Decode token to get user ID
   const currUser = JSON.parse(atob(token.split(".")[1]));
-  const userId = currUser.id;
+  const userId = id || currUser.id; // Use provided id if it exists, otherwise use current user's id
 
   try {
-    // Fetch listings for the current user
+    // Fetch listings for the specified user
     const response = await axios.get(`/api/listings/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
