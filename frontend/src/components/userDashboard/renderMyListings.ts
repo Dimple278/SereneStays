@@ -32,9 +32,7 @@ export async function renderMyListings(container: HTMLElement) {
           <div class="accordion-item">
             <h2 class="accordion-header" id="heading${index}">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
-                <span class="listing-title" id="title${index}">${
-              listing.title
-            }</span>
+                ${listing.title}
               </button>
             </h2>
             <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#listingsAccordion">
@@ -52,6 +50,9 @@ export async function renderMyListings(container: HTMLElement) {
                     )
                     .join("")}
                 </div>
+                <a href="#" class="btn btn-primary btn-sm mt-2 view-details" data-listing-id="${
+                  listing.id
+                }">View Details</a>
               </div>
             </div>
           </div>
@@ -61,15 +62,16 @@ export async function renderMyListings(container: HTMLElement) {
       </div>
     `;
 
-    // Add click event listeners to the titles to navigate to /show/:id
-    listings.forEach((listing, index) => {
-      const titleElement = document.getElementById(`title${index}`);
-      if (titleElement) {
-        titleElement.addEventListener("click", (event) => {
-          event.stopPropagation(); // Prevent the accordion from toggling
-          navigate(`/show/${listing.id}`);
-        });
-      }
+    // Add click event listeners to the "View Details" links
+    const viewDetailsLinks = container.querySelectorAll(".view-details");
+    viewDetailsLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const listingId = (event.target as HTMLElement).getAttribute(
+          "data-listing-id"
+        );
+        navigate(`/show/${listingId}`);
+      });
     });
   } catch (error) {
     console.error("Error fetching listings:", error);
