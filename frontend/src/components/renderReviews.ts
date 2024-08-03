@@ -10,7 +10,6 @@ export async function renderReviews(
   listingId: string
 ) {
   let reviews: IReview[] = [];
-  // let errorOccurred = false;
 
   try {
     const reviewsResponse = await axios.get(
@@ -19,7 +18,6 @@ export async function renderReviews(
     reviews = reviewsResponse.data;
   } catch (error) {
     console.error("Error fetching reviews:", error);
-    // errorOccurred = true;
   }
 
   const token = localStorage.getItem("token");

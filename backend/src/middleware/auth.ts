@@ -166,7 +166,7 @@ export const authorizeReviewOwner = async (
       throw new NotFoundError("Review not found");
     }
 
-    if (parseInt(review.authorId) !== user.id) {
+    if (parseInt(review.authorId) != user.id) {
       throw new UnauthorizedError(
         "You are not authorized to perform this action"
       );
