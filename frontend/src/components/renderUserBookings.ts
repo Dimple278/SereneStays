@@ -54,10 +54,10 @@ export async function renderUserBookings(
               <td>
                 <button class="btn btn-primary edit-booking" data-booking-id="${
                   booking.id
-                }">Edit</button>
+                }"><i class="fa-solid fa-edit"></i></button>
                 <button class="btn btn-danger delete-booking" data-booking-id="${
                   booking.id
-                }">Delete</button>
+                }"><i class="fa-solid fa-trash"></i></button>
               </td>
             </tr>
           `
