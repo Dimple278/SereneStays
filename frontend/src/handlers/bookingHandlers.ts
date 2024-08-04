@@ -4,7 +4,7 @@ import { showEditBookingModal } from "../components/renderEditBookingModal";
 import { showCustomConfirm } from "../utils/showCustomConfirm";
 import { showCustomAlert } from "../utils/showCustomAlert";
 
-let isBookingFormHandlerSet = false;
+// let isBookingFormHandlerSet = false;
 let isEditBookingFormHandlerSet = false;
 
 export function setupBookingFormHandler(
@@ -20,42 +20,42 @@ export function setupBookingFormHandler(
     "totalPrice"
   ) as HTMLInputElement;
 
-  if (!isBookingFormHandlerSet) {
-    bookingForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const startDate = startDateInput.value;
-      const endDate = endDateInput.value;
-      const totalPrice = parseFloat(
-        totalPriceInput.value.replace(/[^\d.-]/g, "")
+  // if (!isBookingFormHandlerSet) {
+  bookingForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+    const totalPrice = parseFloat(
+      totalPriceInput.value.replace(/[^\d.-]/g, "")
+    );
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await bookingApi.createBooking(
+        listingId,
+        {
+          start_date: startDate,
+          end_date: endDate,
+          total_price: totalPrice,
+        },
+        token!
       );
-      const token = localStorage.getItem("token");
+      showCustomAlert({
+        message: "Your booking has been created successfully.",
+        type: "success",
+      });
+      await renderUserBookings(listingId, listingPrice);
+    } catch (error) {
+      console.error("Error creating booking:", error);
+      showCustomAlert({
+        message: "Failed to create booking. Please try again.",
+        type: "danger",
+      });
+    }
+  });
 
-      try {
-        const response = await bookingApi.createBooking(
-          listingId,
-          {
-            start_date: startDate,
-            end_date: endDate,
-            total_price: totalPrice,
-          },
-          token!
-        );
-        showCustomAlert({
-          message: "Your booking has been created successfully.",
-          type: "success",
-        });
-        await renderUserBookings(listingId, listingPrice);
-      } catch (error) {
-        console.error("Error creating booking:", error);
-        showCustomAlert({
-          message: "Failed to create booking. Please try again.",
-          type: "danger",
-        });
-      }
-    });
-
-    isBookingFormHandlerSet = true;
-  }
+  // isBookingFormHandlerSet = true;
+  // }
 }
 
 export function setupBookingActionHandlers(

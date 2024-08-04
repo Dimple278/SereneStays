@@ -1,10 +1,14 @@
-import { bookingApi, fetchBookings } from "../../api/bookings";
+import { fetchBookings } from "../../api/bookings";
 import { setupPagination } from "../../handlers/paginationHandler";
 import { IBooking } from "../../interfaces/booking";
 import { navigate } from "../../main";
-import { showCustomAlert } from "../../utils/showCustomAlert";
-import { showCustomConfirm } from "../../utils/showCustomConfirm";
 
+/**
+ * Renders all bookings in a paginated table format.
+ *
+ * @param {HTMLElement} container - The container element where the bookings will be rendered.
+ * @param {number} [page=1] - The current page number for pagination.
+ */
 export async function renderAllBookings(
   container: HTMLElement,
   page: number = 1
@@ -68,6 +72,11 @@ export async function renderAllBookings(
   }
 }
 
+/**
+ * Sets up click event listeners for booking listing names to navigate to the show page.
+ *
+ * @param {HTMLElement} container - The container element where the event listeners will be added.
+ */
 function setupBookingActionListeners(container: HTMLElement) {
   // Listing name click event
   container.querySelectorAll(".booking-listing-name").forEach((name) => {
@@ -76,35 +85,4 @@ function setupBookingActionListeners(container: HTMLElement) {
       navigate(`/show/${id}`);
     });
   });
-
-  // // Edit booking event
-  // container.querySelectorAll(".edit-booking").forEach((button) => {
-  //   button.addEventListener("click", (event) => {
-  //     const target = event.target as HTMLButtonElement;
-  //     const bookingId = parseInt(
-  //       target.closest("button")!.dataset.id as string,
-  //       10
-  //     );
-  //     navigate(`/bookings/edit/${bookingId}`);
-  //   });
-  // });
-
-  // // Delete booking event
-  // container.querySelectorAll(".delete-booking").forEach((button) => {
-  //   button.addEventListener("click", async (event) => {
-  //     const target = event.target as HTMLButtonElement;
-  //     const bookingId = target.closest("button")!.dataset.id as string;
-  //     const token = localStorage.getItem("token") as string;
-  //     showCustomConfirm({
-  //       message: "Are you sure you want to delete this booking ?",
-  //       onConfirm: async () => {
-  //         await bookingApi.deleteBooking(bookingId, token);
-  //         showCustomAlert({
-  //           message: "Booking deleted successfully!",
-  //           type: "success",
-  //         });
-  //       },
-  //     });
-  //   });
-  // });
 }

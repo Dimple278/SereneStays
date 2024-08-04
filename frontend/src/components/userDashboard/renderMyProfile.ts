@@ -2,6 +2,7 @@ import axios from "axios";
 import { navigate } from "../../main";
 import { getCurrUser } from "../../api/getCurrUser";
 import { deleteUser } from "../../api/usersAPI";
+import { loadNavbar } from "../header/navbar";
 
 export async function renderMyProfile(
   profileContent: HTMLElement,
@@ -126,6 +127,7 @@ export async function renderMyProfile(
 
       profileContent.querySelector("#logout")?.addEventListener("click", () => {
         localStorage.removeItem("token");
+        loadNavbar();
         navigate("/login");
       });
     }

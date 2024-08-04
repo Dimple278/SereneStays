@@ -9,13 +9,20 @@ import { setupBookingFormHandler } from "../handlers/bookingHandlers";
 
 export async function renderBookingForm(
   container: HTMLElement,
-  ownerId: number,
+  ownerId: string,
   listingId: string,
   listingPrice: number
 ) {
   const bookingFormContainer = document.createElement("div");
   bookingFormContainer.className = "col-8 offset-2 mt-3";
-
+  if (!currUser) {
+    bookingFormContainer.innerHTML = `
+      <h4>Book Your Stay</h4>
+      <p>You must be logged in to book a stay.</p>
+    `;
+    container.appendChild(bookingFormContainer);
+    return;
+  }
   if (currUser && currUser.id != ownerId) {
     bookingFormContainer.innerHTML = `
       <h4>Book Your Stay</h4>
@@ -50,7 +57,7 @@ export async function renderBookingForm(
     );
     setupBookingFormHandler(listingId, listingPrice);
     renderUserBookings(listingId, listingPrice);
-  } else {
+  } else if (currUser) {
     await renderOwnerBookings(bookingFormContainer, listingId);
     container.appendChild(bookingFormContainer);
   }
@@ -60,7 +67,7 @@ async function renderOwnerBookings(container: HTMLElement, listingId: string) {
   const bookings = await bookingApi.getBookingsForListing(listingId);
   console.log("Bookings:", bookings);
   container.innerHTML = `
-    <h4>Bookings for Your Listing</h4>
+    <h4>Bookings for This Listing</h4>
     <table class="table">
       <thead>
         <tr>

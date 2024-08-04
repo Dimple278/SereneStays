@@ -1,6 +1,5 @@
 import { navigate } from "../../main";
 import { loadNavbar } from "../header/navbar";
-import { currUser } from "../../api/getCurrUser";
 import { fetchUserById, updateUser } from "../../api/usersAPI";
 import { showCustomAlert } from "../../utils/showCustomAlert";
 

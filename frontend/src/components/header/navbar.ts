@@ -34,6 +34,7 @@ export async function loadNavbar() {
           authLinkLogin.textContent = "LogOut";
           authLinkLogin.addEventListener("click", () => {
             localStorage.removeItem("token");
+            loadNavbar();
             navigate(`/login`);
           });
         }

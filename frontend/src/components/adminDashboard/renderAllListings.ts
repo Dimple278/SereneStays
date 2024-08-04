@@ -2,10 +2,15 @@ import { deleteListing, fetchListingsByCategory } from "../../api/listings";
 import { setupPagination } from "../../handlers/paginationHandler";
 import { IListing } from "../../interfaces/listing";
 import { navigate } from "../../main";
-import { state, updateState } from "../../state"; // Make sure to import state management
 import { showCustomAlert } from "../../utils/showCustomAlert";
 import { showCustomConfirm } from "../../utils/showCustomConfirm";
 
+/**
+ * Renders all listings in a paginated table format.
+ *
+ * @param {HTMLElement} container - The container element where the listings will be rendered.
+ * @param {number} [page=1] - The current page number for pagination.
+ */
 export async function renderAllListings(
   container: HTMLElement,
   page: number = 1
@@ -42,15 +47,16 @@ export async function renderAllListings(
     listings.forEach((listing: IListing) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td >${listing.id}</td>
-        <td >${listing.ownerName}</td>
+        <td>${listing.id}</td>
+        <td>${listing.ownerName}</td>
         <td class="listing-title" data-id="${listing.id}" style="cursor:pointer;">${listing.title}</td>
         <td>
-         <button class="btn btn-sm btn-primary edit" data-id="${listing.id}">
+          <button class="btn btn-sm btn-primary edit" data-id="${listing.id}">
             <i class="fas fa-edit"></i>
           </button>
           <button class="btn btn-sm btn-danger delete" data-id="${listing.id}">
             <i class="fas fa-trash-alt"></i>
+          </button>
         </td>
       `;
       tbody.appendChild(row);
@@ -73,6 +79,11 @@ export async function renderAllListings(
   }
 }
 
+/**
+ * Sets up click event listeners for listing actions such as view, edit, and delete.
+ *
+ * @param {HTMLElement} container - The container element where the event listeners will be added.
+ */
 function setupActionListeners(container: HTMLElement) {
   container.querySelectorAll(".listing-title").forEach((title) => {
     title.addEventListener("click", (event) => {
@@ -92,11 +103,10 @@ function setupActionListeners(container: HTMLElement) {
     btn.addEventListener("click", async (event) => {
       const id = (event.currentTarget as HTMLElement).getAttribute("data-id");
       if (id) {
-        await deleteListing(id);
         showCustomConfirm({
           message: "Are you sure you want to delete this listing?",
-          onConfirm: () => {
-            deleteListing(id);
+          onConfirm: async () => {
+            await deleteListing(id);
             showCustomAlert({
               message: "Listing deleted successfully!",
             });
