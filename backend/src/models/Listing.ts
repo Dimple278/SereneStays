@@ -1,9 +1,15 @@
 import db from "../database/db";
 import { IListing } from "../interface/listing";
 import { BaseModel } from "./base";
+
 class ListingModel extends BaseModel {
   private tableName: string = "listings";
 
+  /**
+   * Create a new listing.
+   * @param {IListing} listing - The listing details.
+   * @returns {Promise<IListing>} The newly created listing.
+   */
   public async create(listing: IListing): Promise<IListing> {
     const [newListing] = await db(this.tableName)
       .insert({
@@ -14,10 +20,21 @@ class ListingModel extends BaseModel {
     return newListing;
   }
 
+  /**
+   * Save a listing (alias for create).
+   * @param {IListing} listing - The listing details.
+   * @returns {Promise<IListing>} The saved listing.
+   */
   public async save(listing: IListing): Promise<IListing> {
     return await this.create(listing);
   }
 
+  /**
+   * Find all listings with pagination.
+   * @param {number} page - The page number for pagination.
+   * @param {number} limit - The number of items per page.
+   * @returns {Promise<IListing[]>} The list of listings with owner details.
+   */
   public async findAll(page: number, limit: number): Promise<IListing[]> {
     const listings = await db("listings")
       .select("listings.*", "users.name as ownerName")
@@ -28,6 +45,13 @@ class ListingModel extends BaseModel {
     return listings;
   }
 
+  /**
+   * Find listings by category with pagination.
+   * @param {string} category - The category of the listings.
+   * @param {number} page - The page number for pagination.
+   * @param {number} limit - The number of items per page.
+   * @returns {Promise<IListing[]>} The list of listings with owner details.
+   */
   public async findByCategory(
     category: string,
     page: number,
@@ -46,6 +70,11 @@ class ListingModel extends BaseModel {
     return listings;
   }
 
+  /**
+   * Count listings by category.
+   * @param {string} category - The category of the listings.
+   * @returns {Promise<number>} The total number of listings in the category.
+   */
   public async countByCategory(category: string): Promise<number> {
     const query = db("listings").count("* as count");
     if (category !== "ALL") {
@@ -55,6 +84,11 @@ class ListingModel extends BaseModel {
     return parseInt(`${count}`, 10);
   }
 
+  /**
+   * Find a listing by its ID.
+   * @param {number} id - The ID of the listing.
+   * @returns {Promise<IListing | undefined>} The listing details.
+   */
   public async findById(id: number): Promise<IListing | undefined> {
     return await db(this.tableName)
       .select(`${this.tableName}.*`, "users.name as ownerName")
@@ -63,6 +97,12 @@ class ListingModel extends BaseModel {
       .first();
   }
 
+  /**
+   * Update a listing by its ID.
+   * @param {number} id - The ID of the listing to update.
+   * @param {Partial<IListing>} listing - The updated listing details.
+   * @returns {Promise<IListing>} The updated listing.
+   */
   public async update(
     id: number,
     listing: Partial<IListing>
@@ -77,10 +117,22 @@ class ListingModel extends BaseModel {
     return updatedListing[0];
   }
 
+  /**
+   * Delete a listing by its ID.
+   * @param {number} id - The ID of the listing to delete.
+   * @returns {Promise<void>}
+   */
   public async delete(id: number): Promise<void> {
     await db(this.tableName).where({ id }).del();
   }
 
+  /**
+   * Search listings by a query with pagination.
+   * @param {string} query - The search query.
+   * @param {number} page - The page number for pagination.
+   * @param {number} limit - The number of items per page.
+   * @returns {Promise<IListing[]>} The list of matching listings.
+   */
   public async search(
     query: string,
     page: number,
@@ -95,6 +147,11 @@ class ListingModel extends BaseModel {
       .limit(limit);
   }
 
+  /**
+   * Count the number of listings matching a search query.
+   * @param {string} query - The search query.
+   * @returns {Promise<number>} The total number of matching listings.
+   */
   public async countSearch(query: string): Promise<number> {
     const [{ count }] = await db(this.tableName)
       .count("* as count")
@@ -104,6 +161,15 @@ class ListingModel extends BaseModel {
     return parseInt(`${count}`, 10);
   }
 
+  /**
+   * Find listings by filters with pagination.
+   * @param {number} [minPrice] - The minimum price.
+   * @param {number} [maxPrice] - The maximum price.
+   * @param {string} [country] - The country.
+   * @param {number} [page] - The page number for pagination.
+   * @param {number} [limit] - The number of items per page.
+   * @returns {Promise<IListing[]>} The list of filtered listings.
+   */
   public async findByFilters(
     minPrice?: number,
     maxPrice?: number,
@@ -128,6 +194,13 @@ class ListingModel extends BaseModel {
     return await listingsQuery.offset((page - 1) * limit).limit(limit);
   }
 
+  /**
+   * Count the number of listings matching filters.
+   * @param {number} [minPrice] - The minimum price.
+   * @param {number} [maxPrice] - The maximum price.
+   * @param {string} [country] - The country.
+   * @returns {Promise<number>} The total number of matching listings.
+   */
   public async countByFilters(
     minPrice?: number,
     maxPrice?: number,
@@ -155,6 +228,13 @@ class ListingModel extends BaseModel {
     return parseInt(`${count}`, 10);
   }
 
+  /**
+   * Find listings by user ID with pagination.
+   * @param {number} userId - The user ID.
+   * @param {number} page - The page number for pagination.
+   * @param {number} limit - The number of items per page.
+   * @returns {Promise<IListing[]>} The list of listings owned by the user.
+   */
   public async findByUserId(
     userId: number,
     page: number,

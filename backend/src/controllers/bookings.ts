@@ -1,10 +1,8 @@
-// controllers/BookingController.ts
 import { Request, Response } from "express";
 import * as BookingService from "../services/bookings";
 import { AuthRequest } from "../interface/auth.interface";
 import { IUser } from "../interface/user";
 import { IBooking } from "../interface/booking";
-import { NotFoundError } from "../error/NotFoundError";
 
 /**
  * Get all bookings with pagination
