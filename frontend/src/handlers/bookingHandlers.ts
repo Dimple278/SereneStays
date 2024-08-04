@@ -23,17 +23,12 @@ export function setupBookingFormHandler(
   if (!isBookingFormHandlerSet) {
     bookingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      console.log("Form submitted");
-
       const startDate = startDateInput.value;
       const endDate = endDateInput.value;
       const totalPrice = parseFloat(
         totalPriceInput.value.replace(/[^\d.-]/g, "")
       );
       const token = localStorage.getItem("token");
-      console.log("Start Date:", startDate);
-      console.log("End Date:", endDate);
-      console.log("Total Price:", totalPrice);
 
       try {
         const response = await bookingApi.createBooking(
@@ -45,8 +40,6 @@ export function setupBookingFormHandler(
           },
           token!
         );
-
-        console.log("Booking response:", response);
         showCustomAlert({
           message: "Your booking has been created successfully.",
           type: "success",
@@ -80,7 +73,6 @@ export function setupBookingActionHandlers(
 
   if (editButton) {
     editButton.addEventListener("click", async () => {
-      console.log("Edit booking button clicked", bookingId);
       const bookingData = await bookingApi.getBookingById(bookingId);
       showEditBookingModal(bookingId, bookingData, listingId, listingPrice);
     });

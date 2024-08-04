@@ -106,7 +106,6 @@ export async function getReviewsByListingId(
       const axiosError = error as AxiosError;
       if (axiosError.response?.status === 404) {
         // If the status is 404 (Not Found), return an empty array
-        console.log("No reviews found for this listing");
         return [];
       }
     }

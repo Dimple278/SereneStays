@@ -47,8 +47,6 @@ export async function setupFlatpickr(
       return dates;
     });
 
-    console.log("Unavailable dates:", unavailableDates);
-
     const flatpickrConfig = {
       enableTime: false,
       dateFormat: "Y-m-d",

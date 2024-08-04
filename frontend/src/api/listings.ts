@@ -25,7 +25,6 @@ export async function fetchListingsByCategory(
     }
 
     const data = await response.json();
-    console.log("Fetched listings:", data.listings);
     return data;
   } catch (error) {
     console.error("Error fetching listings:", error);

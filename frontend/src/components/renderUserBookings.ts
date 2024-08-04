@@ -24,15 +24,12 @@ export async function renderUserBookings(
   try {
     const currUser = await getCurrUser(); // Get the current user
     const isSuperAdmin = currUser && currUser.role === "superadmin";
-
-    console.log("Fetching bookings for listing...");
     let bookings;
     if (isSuperAdmin) {
       bookings = await bookingApi.getBookingsForListing(listingId);
     } else {
       bookings = await bookingApi.getUserBookingsForListing(token, listingId);
     }
-    console.log("Bookings fetched:", bookings);
 
     if (bookings.length === 0) {
       userBookingsTable.innerHTML = isSuperAdmin

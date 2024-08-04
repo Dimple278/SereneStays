@@ -31,7 +31,6 @@ export async function renderMap(
         .setLngLat([coordinates[0], coordinates[1]])
         .setPopup(new mapboxgl.Popup().setHTML(`<h3>${title}</h3>`))
         .addTo(map);
-      console.log(title);
     } else {
       console.error("Geocoding API error:", data.message);
     }
