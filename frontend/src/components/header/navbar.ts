@@ -23,7 +23,7 @@ export async function loadNavbar() {
         const userIconContainer = document.getElementById(
           "user-icon-container"
         );
-        if (userIconContainer) {
+        if (userIconContainer && currUser) {
           userIconContainer.innerHTML = `
             <img src="${currUser.image}" alt="User" id="user-img" class="user-icon" />
             <img src="/Icon/navbar-icon.png" alt="Nav Icon" id="png-img-bar" />
