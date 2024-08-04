@@ -2,7 +2,7 @@ import { renderFilter } from "../components/renderFilter";
 import { renderFilterModal } from "../components/renderFilterModal";
 import { fetchListingsByCategory } from "../api/listings";
 import { renderListings } from "../components/renderListings";
-import { state, updateState } from "../state";
+import { updateState } from "../state";
 import { LISTINGS_PER_PAGE } from "../constants";
 
 export async function initializeListings(container: HTMLElement) {

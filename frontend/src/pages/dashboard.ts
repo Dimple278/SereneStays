@@ -1,9 +1,6 @@
 import { renderAllBookings } from "../components/adminDashboard/renderAllBookings";
 import { renderAllListings } from "../components/adminDashboard/renderAllListings";
 import { renderAllUsers } from "../components/adminDashboard/renderAllUsers";
-
-import { renderMyBookings } from "../components/userDashboard/renderMyBookings";
-import { renderMyListings } from "../components/userDashboard/renderMyListings";
 import { renderMyProfile } from "../components/userDashboard/renderMyProfile";
 
 export function renderDashboardPage(container: HTMLElement) {
