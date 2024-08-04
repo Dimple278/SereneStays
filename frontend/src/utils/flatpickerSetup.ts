@@ -3,7 +3,17 @@ import { bookingApi } from "../api/bookings";
 import "flatpickr/dist/flatpickr.min.css";
 import { Instance, DayElement } from "flatpickr/dist/types/instance";
 import { showCustomAlert } from "./showCustomAlert";
+import { IBooking } from "../interfaces/booking";
 
+/**
+ * Sets up the flatpickr date pickers for booking dates and calculates the total price.
+ *
+ * @param {string} startDateId - The ID of the start date input element.
+ * @param {string} endDateId - The ID of the end date input element.
+ * @param {string} totalPriceId - The ID of the total price input element.
+ * @param {string} listingId - The ID of the listing.
+ * @param {number} listingPrice - The price per day of the listing.
+ */
 export async function setupFlatpickr(
   startDateId: string,
   endDateId: string,
@@ -19,6 +29,9 @@ export async function setupFlatpickr(
     totalPriceId
   ) as HTMLInputElement;
 
+  /**
+   * Calculates the total price based on the selected start and end dates.
+   */
   const calculateTotalPrice = () => {
     const startDate = new Date(startDateInput.value);
     const endDate = new Date(endDateInput.value);
@@ -33,20 +46,36 @@ export async function setupFlatpickr(
   };
 
   try {
+    // Fetch existing bookings for the listing
     const bookings = await bookingApi.getBookingsForListing(listingId);
     console.log("Bookings:", bookings);
 
-    const bookedRanges = bookings.map((booking: any) => ({
+    // Create an array of booked date ranges
+    const bookedRanges = bookings.map((booking: IBooking) => ({
       from: new Date(booking.startDate),
       to: new Date(booking.endDate),
     }));
 
+    /**
+     * Checks if a date is booked.
+     *
+     * @param {Date} date - The date to check.
+     * @returns {boolean} True if the date is booked, false otherwise.
+     */
     const isDateBooked = (date: Date) => {
       return bookedRanges.some(
-        (range: any) => date >= range.from && date <= range.to
+        (range: { from: Date; to: Date }) =>
+          date >= range.from && date <= range.to
       );
     };
 
+    /**
+     * Checks if a date range is available.
+     *
+     * @param {Date} start - The start date of the range.
+     * @param {Date} end - The end date of the range.
+     * @returns {boolean} True if the range is available, false otherwise.
+     */
     const isRangeAvailable = (start: Date, end: Date) => {
       let currentDate = new Date(start);
       while (currentDate <= end) {
@@ -66,6 +95,9 @@ export async function setupFlatpickr(
       dateFormat: "Y-m-d",
       minDate: "today",
       disable: [isDateBooked],
+      /**
+       * Adds a tooltip to disabled days in the calendar.
+       */
       onDayCreate: function (
         dObj: Date[],
         dStr: string,
@@ -82,6 +114,7 @@ export async function setupFlatpickr(
       },
     };
 
+    // Initialize the start date picker
     startPicker = flatpickr(startDateInput, {
       ...commonConfig,
       onChange: (selectedDates: Date[]) => {
@@ -92,6 +125,7 @@ export async function setupFlatpickr(
       },
     });
 
+    // Initialize the end date picker
     endPicker = flatpickr(endDateInput, {
       ...commonConfig,
       onChange: (selectedDates: Date[]) => {
@@ -102,6 +136,9 @@ export async function setupFlatpickr(
       },
     });
 
+    /**
+     * Validates the selected date range and updates the total price.
+     */
     function validateDateRange() {
       const startDate = startPicker.selectedDates[0];
       const endDate = endPicker.selectedDates[0];
