@@ -43,6 +43,7 @@ export async function renderShowListing(
           listing.ownerName
         }</a></i></b></p>
         <p class="card-text"><b>Description :</b> ${listing.description}</p>
+        <p class="card-text"><b>Category :</b> ${listing.category}</p>
         <p class="card-text"><b>Price :</b> &#8377; ${listing.price.toLocaleString(
           "en-IN"
         )}</p>

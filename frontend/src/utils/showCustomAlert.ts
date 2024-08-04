@@ -75,6 +75,8 @@ function getBootstrapAlertType(type: string): string {
       return "success";
     case "error":
       return "danger";
+    case "danger":
+      return "danger";
     case "warning":
       return "warning";
     case "info":
@@ -91,6 +93,8 @@ function getBootstrapIcon(type: string): string {
       return "bi-x-circle-fill";
     case "warning":
       return "bi-exclamation-triangle-fill";
+    case "danger":
+      return "bi-exclamation-circle-fill";
     case "info":
     default:
       return "bi-info-circle-fill";

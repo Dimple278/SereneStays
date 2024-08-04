@@ -9,6 +9,15 @@ export async function renderEditPage(container: HTMLElement, id: string) {
     const listing = await getListingById(id);
     const token = localStorage.getItem("token");
 
+    if (!token) {
+      showCustomAlert({
+        message: "You must be logged in to edit a listing.",
+        type: "danger",
+      });
+      navigate("/login");
+      return;
+    }
+
     container.innerHTML = `
       <div class="container mt-5">
         <div class="row">
@@ -43,7 +52,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
               <div class="mb-3">
                 <label for="images" class="form-label">Upload New Images</label>
                 <input type="file" name="images" class="form-control" id="imageInput" multiple>
-                <div class="invalid-feedback">Please upload images.</div>
+                <div class="invalid-feedback">Please upload at least one image.</div>
               </div>
               <div class="mb-3">
                 <label class="form-label">New Images Preview</label><br>
@@ -51,7 +60,8 @@ export async function renderEditPage(container: HTMLElement, id: string) {
               </div>
               <div class="mb-3">
                 <label for="category" class="form-label">Choose Category</label>
-                <select id="category" name="category" class="form-select" multiple>
+                <select id="category" name="category" class="form-select" required>
+                  <option value="">Select a category</option>
                   <option value="Beachfront">Beachfront</option>
                   <option value="Cabins">Cabins</option>
                   <option value="Omg">OMG</option>
@@ -75,6 +85,7 @@ export async function renderEditPage(container: HTMLElement, id: string) {
                   <option value="Iconic Cities">Iconic cities</option>
                   <option value="Earth Homes">Earth homes</option>
                 </select>
+                <div class="invalid-feedback">Please select a category.</div>
               </div>
               <div class="row">
                 <div class="mb-3 col-md-4">
@@ -103,13 +114,15 @@ export async function renderEditPage(container: HTMLElement, id: string) {
                 }" name="location" class="form-control" required>
                 <div class="invalid-feedback">Location is required.</div>
               </div>
-              <button type="submit" class="btn btn-success mb-3">Edit</button>
+              <button type="submit" class="btn btn-success mb-3">Update</button>
             </form>
-             <div id="loading" class="loading-overlay align-items-center justify-content-center" style="display: none;">
-              <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
+            <div id="loading" class="position-fixed top-50 start-50 translate-middle bg-white p-4 rounded shadow-sm" style="display: none; z-index: 9999;">
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2 mb-0">Updating your listing...</p>
               </div>
-              <span class="ms-2 ">Editing...</span>
             </div>
           </div>
         </div>
@@ -128,6 +141,13 @@ export async function renderEditPage(container: HTMLElement, id: string) {
     const loadingScreen = document.getElementById(
       "loading"
     ) as HTMLDivElement | null;
+    const categorySelect = document.getElementById(
+      "category"
+    ) as HTMLSelectElement | null;
+
+    if (categorySelect) {
+      categorySelect.value = listing.category;
+    }
 
     if (imageInput && imagePreview) {
       imageInput.addEventListener("change", () => {
@@ -152,11 +172,18 @@ export async function renderEditPage(container: HTMLElement, id: string) {
     if (editForm) {
       editForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        // Trigger form validation
+        if (!editForm.checkValidity()) {
+          event.stopPropagation();
+          editForm.classList.add("was-validated");
+          return;
+        }
+
         const formData = new FormData(editForm);
 
         if (loadingScreen) {
-          loadingScreen.style.display = "flex"; // Show loading screen
-          container.style.opacity = "0.5"; // Dim the background
+          loadingScreen.style.display = "block"; // Show loading screen
         }
 
         try {
@@ -171,25 +198,29 @@ export async function renderEditPage(container: HTMLElement, id: string) {
           // Replace original images with compressed ones
           formData.delete("images");
           compressedImages.forEach((blob, index) => {
-            if (blob instanceof Blob) {
+            if (blob instanceof Blob && blob.size > 0) {
               formData.append("images", blob, `compressed_image_${index}.jpg`);
             }
           });
 
-          await axios.put(`/api/listings/${id}`, formData, {
+          const response = await axios.put(`/api/listings/${id}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
           });
 
+          if (response.status !== 200) {
+            throw new Error("Failed to update listing");
+          }
+
           if (loadingScreen) {
             loadingScreen.style.display = "none"; // Hide loading screen
-            container.style.opacity = "1"; // Restore background opacity
           }
+
           showCustomAlert({
-            type: "success",
             message: "Listing updated successfully!",
+            type: "success",
           });
 
           navigate(`/show/${id}`);
@@ -198,12 +229,20 @@ export async function renderEditPage(container: HTMLElement, id: string) {
 
           if (loadingScreen) {
             loadingScreen.style.display = "none"; // Hide loading screen
-            container.style.opacity = "1"; // Restore background opacity
           }
+
+          showCustomAlert({
+            message: "Failed to update listing. Please try again.",
+            type: "danger",
+          });
         }
       });
     }
   } catch (error) {
     console.error("Error rendering edit page:", error);
+    showCustomAlert({
+      message: "Failed to load listing. Please try again.",
+      type: "danger",
+    });
   }
 }

@@ -4,10 +4,11 @@ export interface AlertOptions {
     | "primary"
     | "secondary"
     | "success"
-    | "danger"
+    | "error"
     | "warning"
     | "info"
     | "light"
+    | "danger"
     | "dark";
   duration?: number;
   dismissible?: boolean;
