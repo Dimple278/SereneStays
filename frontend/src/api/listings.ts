@@ -1,13 +1,13 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { IListing } from "../interfaces/listing";
-
+import { handleError } from "./handleError";
 const token = localStorage.getItem("token");
 
 export async function fetchListingsByCategory(
   category: string,
   page: number,
   limit: number
-): Promise<{ listings: IListing[]; totalCount: number; error?: string }> {
+): Promise<{ listings: IListing[]; totalCount: number }> {
   try {
     const response = await fetch(
       `/api/listings?category=${encodeURIComponent(
@@ -21,7 +21,7 @@ export async function fetchListingsByCategory(
     );
 
     if (!response.ok) {
-      return { listings: [], totalCount: 0, error: "Failed to fetch listings" };
+      throw new Error(`Failed to fetch listings: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -29,11 +29,7 @@ export async function fetchListingsByCategory(
     return data;
   } catch (error) {
     console.error("Error fetching listings:", error);
-    return {
-      listings: [],
-      totalCount: 0,
-      error: "An unexpected error occurred",
-    };
+    throw handleError(error);
   }
 }
 
@@ -43,13 +39,14 @@ export async function fetchFilteredListings(
   country: string,
   page: number,
   limit: number
-): Promise<{ listings: IListing[]; totalCount: number; error?: string }> {
-  const params = new URLSearchParams();
-  if (minPrice) params.append("minPrice", minPrice);
-  if (maxPrice) params.append("maxPrice", maxPrice);
-  if (country) params.append("country", country);
-  params.append("page", page.toString());
-  params.append("limit", limit.toString());
+): Promise<{ listings: IListing[]; totalCount: number }> {
+  const params = new URLSearchParams({
+    ...(minPrice && { minPrice }),
+    ...(maxPrice && { maxPrice }),
+    ...(country && { country }),
+    page: page.toString(),
+    limit: limit.toString(),
+  });
 
   try {
     const response = await fetch(`/api/listings/filter?${params.toString()}`);
@@ -57,21 +54,14 @@ export async function fetchFilteredListings(
       if (response.status === 404) {
         return { listings: [], totalCount: 0 };
       }
-      return {
-        listings: [],
-        totalCount: 0,
-        error: "Failed to fetch filtered listings",
-      };
+      throw new Error(
+        `Failed to fetch filtered listings: ${response.statusText}`
+      );
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     console.error("Error fetching filtered listings:", error);
-    return {
-      listings: [],
-      totalCount: 0,
-      error: "An unexpected error occurred",
-    };
+    throw handleError(error);
   }
 }
 
@@ -79,7 +69,7 @@ export async function searchListings(
   query: string,
   page: number,
   limit: number
-): Promise<{ listings: IListing[]; totalCount: number; error?: string }> {
+): Promise<{ listings: IListing[]; totalCount: number }> {
   try {
     const response = await fetch(
       `/api/listings/search?q=${encodeURIComponent(
@@ -87,50 +77,48 @@ export async function searchListings(
       )}&page=${page}&limit=${limit}`
     );
     if (!response.ok) {
-      return {
-        listings: [],
-        totalCount: 0,
-        error: "Failed to search listings",
-      };
+      throw new Error(`Failed to search listings: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     console.error("Error searching listings:", error);
-    return {
-      listings: [],
-      totalCount: 0,
-      error: "An unexpected error occurred",
-    };
+    throw handleError(error);
   }
 }
 
-export async function deleteListing(
-  id: string
-): Promise<{ success: boolean; error?: string }> {
+export async function deleteListing(id: string): Promise<void> {
   try {
     await axios.delete(`/api/listings/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return { success: true };
   } catch (error) {
     console.error("Error deleting listing:", error);
-    return { success: false, error: "Failed to delete listing" };
+    throw handleError(error);
   }
 }
 
-export async function getListingsByUserId(userId: string) {
-  const response = await axios.get(`/api/listings/users/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+export async function getListingsByUserId(userId: string): Promise<IListing[]> {
+  try {
+    const response = await axios.get(`/api/listings/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching listings by user ID:", error);
+    throw handleError(error);
+  }
 }
 
-export async function getListingById(id: string) {
-  const response = await axios.get(`/api/listings/${id}`);
-  return response.data;
+export async function getListingById(id: string): Promise<IListing> {
+  try {
+    const response = await axios.get(`/api/listings/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching listing by ID:", error);
+    throw handleError(error);
+  }
 }
