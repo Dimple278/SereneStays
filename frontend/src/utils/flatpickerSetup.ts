@@ -1,6 +1,8 @@
 import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
 import { bookingApi } from "../api/bookings";
+import "flatpickr/dist/flatpickr.min.css";
+import { Instance, DayElement } from "flatpickr/dist/types/instance";
+import { showCustomAlert } from "./showCustomAlert";
 
 export async function setupFlatpickr(
   startDateId: string,
@@ -34,48 +36,90 @@ export async function setupFlatpickr(
     const bookings = await bookingApi.getBookingsForListing(listingId);
     console.log("Bookings:", bookings);
 
-    const unavailableDates: Date[] = bookings.flatMap((booking: any) => {
-      const dates = [];
-      const currentDate = new Date(booking.startDate);
-      const endDate = new Date(booking.endDate);
+    const bookedRanges = bookings.map((booking: any) => ({
+      from: new Date(booking.startDate),
+      to: new Date(booking.endDate),
+    }));
 
-      while (currentDate <= endDate) {
-        dates.push(new Date(currentDate));
+    const isDateBooked = (date: Date) => {
+      return bookedRanges.some(
+        (range: any) => date >= range.from && date <= range.to
+      );
+    };
+
+    const isRangeAvailable = (start: Date, end: Date) => {
+      let currentDate = new Date(start);
+      while (currentDate <= end) {
+        if (isDateBooked(currentDate)) {
+          return false;
+        }
         currentDate.setDate(currentDate.getDate() + 1);
       }
+      return true;
+    };
 
-      return dates;
-    });
+    let startPicker: Instance;
+    let endPicker: Instance;
 
-    const flatpickrConfig = {
+    const commonConfig: flatpickr.Options.Options = {
       enableTime: false,
       dateFormat: "Y-m-d",
-      onChange: calculateTotalPrice,
-      disable: unavailableDates,
-      onDayCreate: (
-        _dObj: any,
-        dStr: any,
-        fp: any,
-        dayElem: {
-          dateObj: any;
-          classList: { add: (arg0: string) => void };
-          title: string;
-        }
-      ) => {
-        const date = dayElem.dateObj;
-        const isUnavailable = unavailableDates.some(
-          (unavailableDate) => unavailableDate.getTime() === date.getTime()
-        );
-
-        if (isUnavailable) {
-          dayElem.classList.add("unavailable");
-          dayElem.title = "Already booked";
+      minDate: "today",
+      disable: [isDateBooked],
+      onDayCreate: function (
+        dObj: Date[],
+        dStr: string,
+        fp: Instance,
+        dayElem: DayElement
+      ) {
+        if (dayElem.classList.contains("flatpickr-disabled")) {
+          if (dayElem.dateObj < fp.config.minDate!) {
+            dayElem.title = "Invalid date";
+          } else if (isDateBooked(dayElem.dateObj)) {
+            dayElem.title = "Already booked";
+          }
         }
       },
     };
 
-    flatpickr(startDateInput, flatpickrConfig);
-    flatpickr(endDateInput, flatpickrConfig);
+    startPicker = flatpickr(startDateInput, {
+      ...commonConfig,
+      onChange: (selectedDates: Date[]) => {
+        if (selectedDates[0]) {
+          endPicker.set("minDate", selectedDates[0]);
+        }
+        validateDateRange();
+      },
+    });
+
+    endPicker = flatpickr(endDateInput, {
+      ...commonConfig,
+      onChange: (selectedDates: Date[]) => {
+        if (selectedDates[0]) {
+          startPicker.set("maxDate", selectedDates[0]);
+        }
+        validateDateRange();
+      },
+    });
+
+    function validateDateRange() {
+      const startDate = startPicker.selectedDates[0];
+      const endDate = endPicker.selectedDates[0];
+
+      if (startDate && endDate) {
+        if (!isRangeAvailable(startDate, endDate)) {
+          showCustomAlert({
+            message:
+              "Selected range includes booked dates. Please choose different dates.",
+            type: "danger",
+          });
+          startPicker.clear();
+          endPicker.clear();
+        } else {
+          calculateTotalPrice();
+        }
+      }
+    }
   } catch (error) {
     console.error("Error fetching bookings:", error);
     // Initialize flatpickr without unavailable dates
