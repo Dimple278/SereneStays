@@ -1,6 +1,7 @@
 import { bookingApi } from "../api/bookings";
 import { setupBookingActionHandlers } from "../handlers/bookingHandlers";
 import { IBooking } from "../interfaces/booking";
+import { getCurrUser } from "../api/getCurrUser"; // Import the getCurrUser function
 
 export async function renderUserBookings(
   listingId: string,
@@ -16,40 +17,53 @@ export async function renderUserBookings(
   if (!token) {
     console.error("No token found");
     userBookingsTable.innerHTML =
-      "<p>You must be logged in to view your bookings.</p>";
+      "<p>You must be logged in to view bookings.</p>";
     return;
   }
 
   try {
-    console.log("Fetching user bookings for listing...");
-    const userBookings = await bookingApi.getUserBookingsForListing(
-      token,
-      listingId
-    );
-    console.log("User bookings fetched:", userBookings);
+    const currUser = await getCurrUser(); // Get the current user
+    const isSuperAdmin = currUser && currUser.role === "superadmin";
 
-    if (userBookings.length === 0) {
-      userBookingsTable.innerHTML =
-        "<p>You have no bookings for this listing yet.</p>";
+    console.log("Fetching bookings for listing...");
+    let bookings;
+    if (isSuperAdmin) {
+      bookings = await bookingApi.getBookingsForListing(listingId);
+    } else {
+      bookings = await bookingApi.getUserBookingsForListing(token, listingId);
+    }
+    console.log("Bookings fetched:", bookings);
+
+    if (bookings.length === 0) {
+      userBookingsTable.innerHTML = isSuperAdmin
+        ? "<p>There are no bookings for this listing yet.</p>"
+        : "<p>You have no bookings for this listing yet.</p>";
       return;
     }
 
+    const tableTitle = isSuperAdmin
+      ? "All Bookings for this listing:"
+      : "Your Bookings for this listing:";
+
     userBookingsTable.innerHTML = `
+      <h4>${tableTitle}</h4>
       <table class="table">
         <thead>
           <tr>
             <th scope="col">Start Date</th>
             <th scope="col">End Date</th>
+            ${isSuperAdmin ? '<th scope="col">User</th>' : ""}
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          ${userBookings
+          ${bookings
             .map(
               (booking: IBooking) => `
             <tr>
               <td>${new Date(booking.startDate).toLocaleDateString()}</td>
               <td>${new Date(booking.endDate).toLocaleDateString()}</td>
+              ${isSuperAdmin ? `<td>${booking.userName}</td>` : ""}
               <td>
                 <button class="btn btn-primary edit-booking" data-booking-id="${
                   booking.id
@@ -67,7 +81,7 @@ export async function renderUserBookings(
     `;
 
     // Attach event handlers for each booking
-    userBookings.forEach((booking: IBooking) => {
+    bookings.forEach((booking: IBooking) => {
       if (booking.id) {
         setupBookingActionHandlers(
           booking.id.toString(),
@@ -80,7 +94,8 @@ export async function renderUserBookings(
       }
     });
   } catch (error) {
-    console.error("Error fetching user bookings:", error);
-    userBookingsTable.innerHTML = "<p>You have not booked this listing.</p>";
+    console.error("Error fetching bookings:", error);
+    userBookingsTable.innerHTML =
+      "<p>Unable to fetch bookings at this time.</p>";
   }
 }

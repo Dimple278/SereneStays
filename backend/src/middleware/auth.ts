@@ -166,7 +166,10 @@ export const authorizeReviewOwner = async (
       throw new NotFoundError("Review not found");
     }
 
-    if (parseInt(review.authorId) != user.id) {
+    console.log(user.role === "superadmin");
+    console.log(parseInt(review.authorId) === user.id);
+    if (parseInt(review.authorId) !== user.id && user.role !== "superadmin") {
+      console.log("Unauthorized");
       throw new UnauthorizedError(
         "You are not authorized to perform this action"
       );

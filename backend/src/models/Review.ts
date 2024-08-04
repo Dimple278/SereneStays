@@ -32,13 +32,19 @@ class ReviewModel {
   /**
    * Updates an existing review in the database.
    * @param {number} id - The ID of the review to update.
-   * @param {Review} review - The review data to update.
+   * @param {Pick<Review, 'rating' | 'comment'>} reviewUpdate - The review data to update.
    * @returns {Promise<Review>} A promise that resolves to the updated review.
    */
-  static async update(id: number, review: Review) {
+  static async update(
+    id: number,
+    reviewUpdate: Pick<Review, "rating" | "comment">
+  ) {
     const [updatedReview] = await db("reviews")
       .where({ id })
-      .update(review)
+      .update({
+        rating: reviewUpdate.rating,
+        comment: reviewUpdate.comment,
+      })
       .returning("*");
     return updatedReview;
   }

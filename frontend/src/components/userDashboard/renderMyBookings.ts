@@ -2,6 +2,7 @@ import { navigate } from "../../main";
 import { bookingApi } from "../../api/bookings";
 import { getCurrUser } from "../../api/getCurrUser";
 import { IBooking } from "../../interfaces/booking";
+import { IUser } from "../../interfaces/users";
 
 export async function renderMyBookings(container: HTMLElement) {
   const token = localStorage.getItem("token");
@@ -10,7 +11,7 @@ export async function renderMyBookings(container: HTMLElement) {
     return;
   }
 
-  const currUser = await getCurrUser();
+  const currUser = (await getCurrUser()) as IUser;
 
   try {
     const bookings = await bookingApi.getUserBookings(currUser.id);

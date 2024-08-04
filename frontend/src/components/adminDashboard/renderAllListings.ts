@@ -31,7 +31,7 @@ export async function renderAllListings(
     thead.innerHTML = `
       <tr>
         <th>ID</th>
-        <th>Owner ID</th>
+        <th>Owner</th>
         <th>Title</th>
         <th>Actions</th>
       </tr>

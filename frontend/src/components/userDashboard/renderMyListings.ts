@@ -2,6 +2,7 @@ import { navigate } from "../../main";
 import { IListing } from "../../interfaces/listing";
 import { getListingsByUserId } from "../../api/listings";
 import { getCurrUser } from "../../api/getCurrUser";
+import { IUser } from "../../interfaces/users";
 
 export async function renderMyListings(container: HTMLElement, id?: string) {
   // Get token from localStorage
@@ -11,7 +12,7 @@ export async function renderMyListings(container: HTMLElement, id?: string) {
     return navigate("/login");
   }
 
-  const currUser = await getCurrUser();
+  const currUser = (await getCurrUser()) as IUser;
   const userId = id || currUser.id; // Use provided id if it exists, otherwise use current user's id
 
   try {

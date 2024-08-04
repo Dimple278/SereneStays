@@ -9,7 +9,7 @@ import { setupBookingFormHandler } from "../handlers/bookingHandlers";
 
 export async function renderBookingForm(
   container: HTMLElement,
-  ownerId: string,
+  ownerId: number,
   listingId: string,
   listingPrice: number
 ) {
@@ -36,7 +36,6 @@ export async function renderBookingForm(
       </form>
       <hr class="my-4">
       <div id="userBookingsContainer">
-        <h4>Your Bookings For this Listing:</h4>
         <div id="userBookingsTable"></div>
       </div>
     `;

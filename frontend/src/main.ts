@@ -98,7 +98,8 @@ const routes: Route[] = [
   {
     path: "/edit-profile/:id",
     action: async ({ params }: { params: RouteParams }) => {
-      if (mainContent && params.id) await renderEditProfile(mainContent);
+      if (mainContent && params.id)
+        await renderEditProfile(mainContent, params.id);
       return true;
     },
   },

@@ -4,12 +4,10 @@ import { currUser } from "../../api/getCurrUser";
 import { fetchUserById, updateUser } from "../../api/usersAPI";
 import { showCustomAlert } from "../../utils/showCustomAlert";
 
-export async function renderEditProfile(container: HTMLElement) {
-  let userId: string | undefined;
-  if (currUser) {
-    userId = currUser.id.toString();
-  }
-
+export async function renderEditProfile(
+  container: HTMLElement,
+  userId: string
+) {
   if (!userId) {
     showCustomAlert({
       message: "User ID is not available. Please log in again.",
@@ -54,7 +52,7 @@ export async function renderEditProfile(container: HTMLElement) {
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2 mb-0">Updating your profile...</p>
+            <p class="mt-2 mb-0">Updating profile...</p>
           </div>
         </div>
       </div>

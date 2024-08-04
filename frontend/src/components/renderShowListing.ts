@@ -50,7 +50,8 @@ export async function renderShowListing(
         <p class="card-text"><strong>Location:</strong> ${listing.location}</p>
         <p class="card-text"><strong>Country:</strong> ${listing.country}</p>
          ${
-           currUser && currUser.id == listing.ownerId
+           currUser &&
+           (currUser.id == listing.ownerId || currUser.role == "superadmin")
              ? `
         <div class="d-flex justify-content-between">
           <button id="editButton" class="btn btn-primary">

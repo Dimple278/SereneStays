@@ -67,7 +67,7 @@ export async function renderAllUsers(container: HTMLElement, page: number = 1) {
           target.closest("button")!.dataset.id as string,
           10
         );
-        navigate(`/users/edit/${userId}`);
+        navigate(`/edit-profile/${userId}`);
       });
     });
 
@@ -76,10 +76,6 @@ export async function renderAllUsers(container: HTMLElement, page: number = 1) {
         const target = event.target as HTMLButtonElement;
         const userId = target.closest("button")!.dataset.id as string;
 
-        // if (confirm("Are you sure you want to delete this user?")) {
-        //   deleteUser(userId);
-        //   await renderAllUsers(container, page); // Re-render the user list
-        // }
         showCustomConfirm({
           message: "Are you sure you want to delete this user?",
           onConfirm: async () => {

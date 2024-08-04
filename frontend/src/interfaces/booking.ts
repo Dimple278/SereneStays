@@ -1,4 +1,5 @@
 export interface IBooking {
+  userId: any;
   totalPrice: any;
   listingTitle: any;
   listingId: any;

@@ -87,7 +87,8 @@ export function renderReviewsList(reviews: IReview[], currUser: any) {
                 </span>
               </div>
               ${
-                currUser && currUser.id == review.authorId
+                (currUser && currUser.id == review.authorId) ||
+                currUser.role === "superadmin"
                   ? renderReviewActions(review)
                   : ""
               }
@@ -102,7 +103,7 @@ export function renderReviewsList(reviews: IReview[], currUser: any) {
 function renderReviewActions(review: IReview) {
   return `
     <div class="d-flex justify-content-between">
-      <button type="button" class="btn btn-sm btn-primary edit-review-button" data-bs-toggle="modal" data-bs-target="#editReviewModal" data-review-id="${review.id}" data-review-rating="${review.rating}" data-review-comment="${review.comment}">
+      <button type="button" class="btn btn-sm btn-primary edit-review-button" data-bs-toggle="modal" data-bs-target="#editReviewModal" data-review-id="${review.id}" data-review-rating="${review.rating}" data-review-comment="${review.comment}" data-review-author-id="${review.authorId}">
         <i class="fa-solid fa-edit"></i>
       </button>
       <form class="delete-review-form" data-review-id="${review.id}">

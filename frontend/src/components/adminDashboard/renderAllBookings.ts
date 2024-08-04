@@ -26,7 +26,6 @@ export async function renderAllBookings(
         <th>Listing Name</th>
         <th>Start Date</th>
         <th>End Date</th>
-        <th>Actions</th>
       </tr>
     `;
 
@@ -42,18 +41,6 @@ export async function renderAllBookings(
         }" style="cursor:pointer;">${booking.listingTitle}</td>
         <td>${new Date(booking.startDate).toLocaleDateString()}</td>
         <td>${new Date(booking.endDate).toLocaleDateString()}</td>
-        <td>
-          <button class="btn btn-sm btn-primary edit-booking" data-id="${
-            booking.id
-          }">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="btn btn-sm btn-danger delete-booking" data-id="${
-            booking.id
-          }">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </td>
       `;
       tbody.appendChild(row);
     });
@@ -90,34 +77,34 @@ function setupBookingActionListeners(container: HTMLElement) {
     });
   });
 
-  // Edit booking event
-  container.querySelectorAll(".edit-booking").forEach((button) => {
-    button.addEventListener("click", (event) => {
-      const target = event.target as HTMLButtonElement;
-      const bookingId = parseInt(
-        target.closest("button")!.dataset.id as string,
-        10
-      );
-      navigate(`/bookings/edit/${bookingId}`);
-    });
-  });
+  // // Edit booking event
+  // container.querySelectorAll(".edit-booking").forEach((button) => {
+  //   button.addEventListener("click", (event) => {
+  //     const target = event.target as HTMLButtonElement;
+  //     const bookingId = parseInt(
+  //       target.closest("button")!.dataset.id as string,
+  //       10
+  //     );
+  //     navigate(`/bookings/edit/${bookingId}`);
+  //   });
+  // });
 
-  // Delete booking event
-  container.querySelectorAll(".delete-booking").forEach((button) => {
-    button.addEventListener("click", async (event) => {
-      const target = event.target as HTMLButtonElement;
-      const bookingId = target.closest("button")!.dataset.id as string;
-      const token = localStorage.getItem("token") as string;
-      showCustomConfirm({
-        message: "Are you sure you want to delete this booking ?",
-        onConfirm: async () => {
-          await bookingApi.deleteBooking(bookingId, token);
-          showCustomAlert({
-            message: "Booking deleted successfully!",
-            type: "success",
-          });
-        },
-      });
-    });
-  });
+  // // Delete booking event
+  // container.querySelectorAll(".delete-booking").forEach((button) => {
+  //   button.addEventListener("click", async (event) => {
+  //     const target = event.target as HTMLButtonElement;
+  //     const bookingId = target.closest("button")!.dataset.id as string;
+  //     const token = localStorage.getItem("token") as string;
+  //     showCustomConfirm({
+  //       message: "Are you sure you want to delete this booking ?",
+  //       onConfirm: async () => {
+  //         await bookingApi.deleteBooking(bookingId, token);
+  //         showCustomAlert({
+  //           message: "Booking deleted successfully!",
+  //           type: "success",
+  //         });
+  //       },
+  //     });
+  //   });
+  // });
 }

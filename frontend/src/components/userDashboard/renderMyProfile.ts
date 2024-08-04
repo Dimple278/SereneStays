@@ -10,11 +10,15 @@ export async function renderMyProfile(
   const token = localStorage.getItem("token");
   if (!token) {
     navigate(`/login`);
-    // return;
+    return;
   }
 
   try {
     const currUser = await getCurrUser();
+
+    if (!currUser) {
+      throw new Error("Failed to fetch current user data.");
+    }
 
     const userId = id || currUser.id;
     const isCurrentUser = userId === currUser.id;
@@ -115,7 +119,7 @@ export async function renderMyProfile(
       profileContent
         .querySelector("#delete-profile")
         ?.addEventListener("click", async () => {
-          await deleteUser(currUser.id);
+          await deleteUser(currUser.id.toString());
           localStorage.removeItem("token");
           navigate("/login");
         });
